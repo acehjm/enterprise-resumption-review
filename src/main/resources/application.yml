@@ -3,7 +3,7 @@ spring:
     name: EnterpriseResumptionReview
 
 
-# DataSource Config
+  # DataSource Config
   datasource:
     platform: mysql
     url: jdbc:mysql://127.0.0.1:3306/solby?useSSL=false
@@ -12,5 +12,20 @@ spring:
 
 # mybatis plus config
 mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: me.solby.xboot.**.entity
   global-config:
+    db-config:
+      id-type: id_worker
+      table-underline: true
+      # 逻辑删除
+      logic-delete-value: -1
+      # 逻辑不删除
+      logic-not-delete-value: 0
+      # 表前缀（组件多的话可以按组件配置表前缀
+    #      table-prefix: t_
     banner: off
+    # 是否缓存SQL解析
+  #    sql-parser-cache: true
+  configuration:
+    map-underscore-to-camel-case: true
