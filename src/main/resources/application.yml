@@ -6,9 +6,15 @@ spring:
   # DataSource Config
   datasource:
     platform: mysql
-    url: jdbc:mysql://127.0.0.1:3306/solby?useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/enterprise_resumption_review?useSSL=false
     username: root
     password: root
+
+  # flyway
+  flyway:
+    #schemas: public
+    baseline-on-migrate: true
+    table: schema_version
 
 # mybatis plus config
 mybatis-plus:
