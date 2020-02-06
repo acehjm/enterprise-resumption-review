@@ -3,7 +3,9 @@ package cn.dyoon.review.controller;
 import cn.dyoon.review.common.response.Result;
 import cn.dyoon.review.controller.param.*;
 import cn.dyoon.review.controller.vo.*;
+import cn.dyoon.review.service.PolicyService;
 import org.apache.ibatis.javassist.bytecode.ByteArray;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,15 +22,12 @@ import java.util.List;
 @RequestMapping("/policy")
 public class PolicyController {
 
-    @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public Result<Void> upload(@RequestParam String policyId, @RequestParam List<MultipartFile> files) {
-
-        return new Result<>();
-    }
+    @Autowired
+    private PolicyService policyService;
 
     @PostMapping("/create")
     public Result<Void> create(@RequestBody PolicyParam param) {
-
+        policyService.create(param);
         return new Result<>();
     }
 
@@ -40,12 +39,18 @@ public class PolicyController {
 
     @GetMapping("/{policyId}")
     public Result<PolicyInfoVO> getInfo(@PathVariable String policyId) {
-
+        policyService.findById(policyId);
         return new Result<>();
     }
 
     @DeleteMapping("/{policyId}")
     public Result<Void> delete(@PathVariable String policyId) {
+        policyService.deleteById(policyId);
+        return new Result<>();
+    }
+
+    @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public Result<Void> upload(@RequestParam String policyId, @RequestParam List<MultipartFile> files) {
 
         return new Result<>();
     }
@@ -58,7 +63,7 @@ public class PolicyController {
 
     @PostMapping("/publish")
     public Result<Void> review(@RequestBody PolicyPublishParam param) {
-
+        policyService.publish(param);
         return new Result<>();
     }
 
