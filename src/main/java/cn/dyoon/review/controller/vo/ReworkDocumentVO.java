@@ -2,19 +2,19 @@ package cn.dyoon.review.controller.vo;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 复工附件文档
  */
 @Data
-public class ReworkDocumentVo {
+public class ReworkDocumentVO {
     private Integer id;
     private String fileName;
     private Double fileSize;
     private String uploadUserName;
-    private Date createDate;
-    private Date updateDate;
+    private LocalDateTime createDate;
+    private LocalDateTime updateDate;
     private String path;
     private Integer enterpriseTag;
 }
