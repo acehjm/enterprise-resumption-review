@@ -1,4 +1,4 @@
-package cn.dyoon.review.pojo.vo;
+package cn.dyoon.review.controller.vo;
 
 import cn.dyoon.review.common.enums.UserType;
 import lombok.Data;
