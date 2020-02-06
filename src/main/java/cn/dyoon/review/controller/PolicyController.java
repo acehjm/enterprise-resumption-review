@@ -1,7 +1,5 @@
 package cn.dyoon.review.controller;
 
-import cn.dyoon.review.common.enums.EnterpriseTypeEnum;
-import cn.dyoon.review.common.enums.StreetTypeEnum;
 import cn.dyoon.review.common.response.Result;
 import cn.dyoon.review.controller.param.*;
 import cn.dyoon.review.controller.vo.*;
@@ -10,9 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * cn.dyoon.review.controller
@@ -30,7 +26,7 @@ public class PolicyController {
         return new Result<>();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public Result<Void> create(@RequestBody PolicyParam param) {
 
         return new Result<>();
