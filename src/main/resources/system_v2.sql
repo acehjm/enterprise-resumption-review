@@ -28,6 +28,7 @@ CREATE TABLE `enterprise_info`  (
   `review_status` int(1) NULL DEFAULT NULL COMMENT '审核状态',
   `review_user` varchar(32) NULL DEFAULT NULL COMMENT '审核人',
   `review_time` datetime(0) NULL DEFAULT NULL COMMENT '审核时间',
+  `review_result` varchar (255) NULL DEFAULT NULL COMMENT '审核结果',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 

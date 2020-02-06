@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * cn.dyoon.review.controller
+ * cn.dyoon.review.controller-
  *
  * @author majhdk
  * @date 2020/2/6
@@ -12,7 +12,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-
-
 
 }
