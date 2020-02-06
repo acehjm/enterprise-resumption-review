@@ -18,17 +18,13 @@ public class UserSession {
      */
     private String username;
     /**
-     * 用户ID
-     */
-    private String userid;
-    /**
      * 所属街道/镇
      */
     private String street;
     /**
      * 角色权限
      */
-    private String role;
+    private String userType;
 
     /**
      * 菜单权限

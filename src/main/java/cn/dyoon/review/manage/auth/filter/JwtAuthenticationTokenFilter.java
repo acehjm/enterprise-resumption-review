@@ -1,5 +1,6 @@
 package cn.dyoon.review.manage.auth.filter;
 
+import cn.dyoon.review.common.enums.UserTypeEnum;
 import cn.dyoon.review.manage.auth.constant.UserSession;
 import cn.dyoon.review.manage.auth.constant.UserSessionHolder;
 import cn.dyoon.review.manage.auth.jwt.JwtTokenUtil;
@@ -19,6 +20,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,9 +47,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             JwtUser user = JwtTokenUtil.parseToken(token, JwtUser.class);
 
             //获取用户认证信息
-            List<SimpleGrantedAuthority> authorities = user.getAuthorities().stream()
-                    .map(SimpleGrantedAuthority::new)
-                    .collect(Collectors.toList());
+            List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(user.getUsername()));
 
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(user.getUsername(), null, authorities);
@@ -88,8 +88,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
      */
     private UserSession getUserSession(JwtUser user) {
         UserSession userSession = new UserSession();
-        userSession.setUserid(user.getUserid());
         userSession.setUsername(user.getUsername());
+        userSession.setUserType(user.getUserType());
         return userSession;
     }
 }

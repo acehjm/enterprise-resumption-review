@@ -9,9 +9,9 @@ import java.util.List;
  */
 @Data
 public class UserVO {
-    private Integer userid;
+    private String userid;
     private String username;
-    private String userType;
+    private Integer userType;
     private String token;
     private List<String> menus;
 }

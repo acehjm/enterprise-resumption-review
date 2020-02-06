@@ -3,6 +3,9 @@ package cn.dyoon.review.controller;
 import cn.dyoon.review.common.response.Result;
 import cn.dyoon.review.controller.param.UserLoginParam;
 import cn.dyoon.review.controller.vo.UserVO;
+import cn.dyoon.review.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,15 +21,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/users")
 public class UserController {
 
-    @PostMapping("/login")
-    public Result<UserVO> login(@RequestBody UserLoginParam param) {
+    @Autowired
+    private UserService userService;
 
-        return new Result<>();
+    @PostMapping("/login")
+    public Result<UserVO> login(@Validated @RequestBody UserLoginParam param) {
+        return new Result<>(userService.login(param));
     }
 
     @PostMapping("/signout")
     public Result<Void> signout() {
-
+        userService.signout("");
         return new Result<>();
     }
 

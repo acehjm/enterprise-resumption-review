@@ -17,7 +17,7 @@ public class JwtUser {
 
     private Long expired;
     private String username;
-    private String userid;
+    private String userType;
     private List<String> authorities;
 
     public JwtUser() {
@@ -25,7 +25,7 @@ public class JwtUser {
 
     public JwtUser(String username, String userid, List<String> authorities) {
         this.username = username;
-        this.userid = userid;
+        this.userType = userid;
         this.authorities = authorities;
         this.expired = expired();
     }

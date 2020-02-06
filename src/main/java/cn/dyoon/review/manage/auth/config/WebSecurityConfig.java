@@ -52,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //配置哪些路径可以不用权限访问
                 .antMatchers("/css/**", "/fonts/**", "/js/**", "/index.html").permitAll()
                 //所有 /login 的请求 都放行
-                .antMatchers("/login", "/enterprises/registered").permitAll()
+                .antMatchers("/users/login", "/enterprises/registered").permitAll()
                 //以"/admin/" 开头的URL只能由拥有 "ROLE_ADMIN"角色的用户访问.
                 .antMatchers("/admin/**").hasAuthority("ADMIN")
                 //尚未匹配的任何URL要求用户进行身份验证
