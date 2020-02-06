@@ -1,4 +1,4 @@
-package cn.dyoon.review.common.constant;
+package cn.dyoon.review.common.auth.constant;
 
 import lombok.Data;
 

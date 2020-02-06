@@ -1,6 +1,6 @@
 package cn.dyoon.review.util.verify;
 
-import me.solby.xtool.exception.VerifyException;
+import cn.dyoon.review.common.exception.VerifyException;
 
 import java.util.Objects;
 
