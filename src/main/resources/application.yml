@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: EnterpriseResumptionReview
+
+
+# DataSource Config
+  datasource:
+    platform: mysql
+    url: jdbc:mysql://127.0.0.1:3306/solby?useSSL=false
+    username: root
+    password: root
+
+# mybatis plus config
+mybatis-plus:
+  global-config:
+    banner: off
