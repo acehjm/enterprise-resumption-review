@@ -6,7 +6,7 @@ import lombok.Data;
  * 联系方式
  */
 @Data
-public class ContactInfoVo {
+public class ContactInfoVO {
     private Integer id;
     private String department;
     private String phone;
