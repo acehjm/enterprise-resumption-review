@@ -3,7 +3,7 @@ package cn.dyoon.review.common.enums;
 import lombok.Getter;
 
 @Getter
-public enum ReviewStatus {
+public enum ReviewStatusEnum {
     NOT_STARTED(0, "未开始"),
     IN_REVIEW(1, "审核中"),
     PASS(2, "批准"),
@@ -12,7 +12,7 @@ public enum ReviewStatus {
     private int code;
     private String desc;
 
-    ReviewStatus(int code, String desc) {
+    ReviewStatusEnum(int code, String desc) {
         this.code = code;
         this.desc = desc;
     }

@@ -1,6 +1,6 @@
 package cn.dyoon.review.controller.vo;
 
-import cn.dyoon.review.common.enums.PublishStatus;
+import cn.dyoon.review.common.enums.PublishStatusEnum;
 import lombok.Data;
 
 import java.util.Date;
@@ -15,5 +15,5 @@ public class PolicyInfoVo {
     private String desc;
     private Date createDate;
     private Date releaseDate;
-    private PublishStatus status;
+    private PublishStatusEnum status;
 }

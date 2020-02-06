@@ -3,7 +3,7 @@ package cn.dyoon.review.common.enums;
 import lombok.Getter;
 
 @Getter
-public enum UserType {
+public enum UserTypeEnum {
     SUPER_ADMIN(0, "超级管理员"),
 
     ENTERPRISE(1, "企业用户"),
@@ -18,7 +18,7 @@ public enum UserType {
 
     private String desc;
 
-    UserType(Integer code, String desc) {
+    UserTypeEnum(Integer code, String desc) {
         this.code = code;
         this.desc = desc;
     }
