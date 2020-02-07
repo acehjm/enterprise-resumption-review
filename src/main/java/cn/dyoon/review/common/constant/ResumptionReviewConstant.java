@@ -23,6 +23,11 @@ public class ResumptionReviewConstant {
      */
     public static final String POLICY_PATH = BASE_PATH + "/policy";
 
+    /**
+     * 标准时间格式
+     */
+    public static final String STANDARD_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
 
 
 }

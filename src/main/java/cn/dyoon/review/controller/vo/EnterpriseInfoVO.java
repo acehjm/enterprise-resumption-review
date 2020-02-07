@@ -18,6 +18,7 @@ public class EnterpriseInfoVO {
     private String name;
     private String unifiedSocialCreditCode;
     private Integer type;
+    private Integer scaleType;
     private Integer street;
     private String transactorName;
     private String phone;
@@ -32,6 +33,7 @@ public class EnterpriseInfoVO {
         this.name = enterpriseDO.getName();
         this.unifiedSocialCreditCode = enterpriseDO.getUnifiedSocialCreditCode();
         this.type = enterpriseDO.getType();
+        this.scaleType = enterpriseDO.getScaleType();
         this.street = enterpriseDO.getStreet();
         this.transactorName = enterpriseDO.getTransactorName();
         this.phone = enterpriseDO.getPhone();

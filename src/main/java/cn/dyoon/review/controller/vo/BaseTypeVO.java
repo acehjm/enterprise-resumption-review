@@ -9,7 +9,9 @@ import lombok.Data;
  * @date 2020/2/6
  */
 @Data
-public class EnterpriseStreetVO {
+public class BaseTypeVO {
+
     private Integer code;
     private String name;
+
 }

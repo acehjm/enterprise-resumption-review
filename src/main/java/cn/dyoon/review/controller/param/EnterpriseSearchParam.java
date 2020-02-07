@@ -19,6 +19,7 @@ public class EnterpriseSearchParam {
     @Max(value = 500, message = "分页页面大小不能超过500")
     private Integer pageSize;
     private Integer type;
+    private Integer scaleType;
     private Integer street;
     private String reviewStatus;
     private String name;

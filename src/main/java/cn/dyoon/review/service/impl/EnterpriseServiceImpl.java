@@ -34,6 +34,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static cn.dyoon.review.common.constant.ResumptionReviewConstant.STANDARD_DATETIME_FORMAT;
+
 /**
  * cn.dyoon.review.service.impl
  *
@@ -163,15 +165,15 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                     dto.setStreet(StreetTypeEnum.getDesc(it.getStreet()));
                     dto.setTransactorName(it.getTransactorName());
                     dto.setPhone(it.getPhone());
-                    dto.setApplyTime(it.getApplyTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                    dto.setApplyTime(it.getApplyTime().format(DateTimeFormatter.ofPattern(STANDARD_DATETIME_FORMAT)));
                     dto.setReviewStatus(ReviewStatusEnum.getDesc(it.getReviewStatus()));
-                    dto.setReviewTime(it.getReviewTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                    dto.setReviewTime(it.getReviewTime().format(DateTimeFormatter.ofPattern(STANDARD_DATETIME_FORMAT)));
                     dto.setReviewResult(it.getReviewResult());
                     return dto;
                 })
                 .collect(Collectors.toList());
         String fileName = "企业复工申请统计报表_" + LocalDateTime.now()
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                .format(DateTimeFormatter.ofPattern(STANDARD_DATETIME_FORMAT))
                 .replaceAll("[[\\s-:punct:]]", "");
         new ExcelWriterImpl().writeExcelRsp(collect, EnterpriseExcelDTO.class, true, fileName, response);
     }

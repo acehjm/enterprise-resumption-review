@@ -11,6 +11,7 @@ import lombok.Data;
 @Data
 public class EnterpriseExportParam {
     private Integer type;
+    private Integer scaleType;
     private Integer street;
     private Integer reviewStatus;
     private String name;

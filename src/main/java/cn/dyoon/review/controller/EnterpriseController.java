@@ -1,5 +1,6 @@
 package cn.dyoon.review.controller;
 
+import cn.dyoon.review.common.enums.EnterpriseScaleEnum;
 import cn.dyoon.review.common.enums.EnterpriseTypeEnum;
 import cn.dyoon.review.common.enums.StreetTypeEnum;
 import cn.dyoon.review.common.response.Result;
@@ -7,10 +8,9 @@ import cn.dyoon.review.controller.param.EnterpriseExportParam;
 import cn.dyoon.review.controller.param.EnterpriseParam;
 import cn.dyoon.review.controller.param.EnterpriseReviewParam;
 import cn.dyoon.review.controller.param.EnterpriseSearchParam;
+import cn.dyoon.review.controller.vo.BaseTypeVO;
 import cn.dyoon.review.controller.vo.EnterpriseInfoVO;
 import cn.dyoon.review.controller.vo.EnterpriseListVO;
-import cn.dyoon.review.controller.vo.EnterpriseStreetVO;
-import cn.dyoon.review.controller.vo.EnterpriseTypeVO;
 import cn.dyoon.review.controller.vo.PageVO;
 import cn.dyoon.review.manage.auth.constant.UserSession;
 import cn.dyoon.review.manage.auth.constant.UserSessionHolder;
@@ -48,15 +48,28 @@ public class EnterpriseController {
 
     @PostMapping("/registered")
     public Result<Void> registered(@Validated @RequestBody EnterpriseParam param) {
-
+        enterpriseService.registered(param);
         return new Result<>();
     }
 
     @GetMapping("/types")
-    public Result<List<EnterpriseTypeVO>> getTypes() {
-        List<EnterpriseTypeVO> collect = Arrays.stream(EnterpriseTypeEnum.values())
+    public Result<List<BaseTypeVO>> getTypes() {
+        List<BaseTypeVO> collect = Arrays.stream(EnterpriseTypeEnum.values())
                 .map(it -> {
-                    EnterpriseTypeVO vo = new EnterpriseTypeVO();
+                    BaseTypeVO vo = new BaseTypeVO();
+                    vo.setCode(it.getCode());
+                    vo.setName(it.getDesc());
+                    return vo;
+                })
+                .collect(Collectors.toList());
+        return new Result<>(collect);
+    }
+
+    @GetMapping("/scales")
+    public Result<List<BaseTypeVO>> getScales() {
+        List<BaseTypeVO> collect = Arrays.stream(EnterpriseScaleEnum.values())
+                .map(it -> {
+                    BaseTypeVO vo = new BaseTypeVO();
                     vo.setCode(it.getCode());
                     vo.setName(it.getDesc());
                     return vo;
@@ -66,10 +79,10 @@ public class EnterpriseController {
     }
 
     @GetMapping("/streets")
-    public Result<List<EnterpriseStreetVO>> getStreets() {
-        List<EnterpriseStreetVO> collect = Arrays.stream(StreetTypeEnum.values())
+    public Result<List<BaseTypeVO>> getStreets() {
+        List<BaseTypeVO> collect = Arrays.stream(StreetTypeEnum.values())
                 .map(it -> {
-                    EnterpriseStreetVO vo = new EnterpriseStreetVO();
+                    BaseTypeVO vo = new BaseTypeVO();
                     vo.setCode(it.getCode());
                     vo.setName(it.getDesc());
                     return vo;
@@ -80,19 +93,23 @@ public class EnterpriseController {
 
     @PostMapping
     public Result<PageVO<EnterpriseListVO>> getPage(@Validated @RequestBody EnterpriseSearchParam param) {
-
-        return new Result<>();
+        return new Result<>(enterpriseService.getPage(param));
     }
 
     @GetMapping("/{enterpriseId}")
     public Result<EnterpriseInfoVO> getInfo(@PathVariable String enterpriseId) {
+        return new Result<>(enterpriseService.getInfo(enterpriseId));
+    }
 
-        return new Result<>();
+    @GetMapping("/actions/byUser")
+    public Result<EnterpriseInfoVO> getInfoByUsername() {
+        UserSession userSession = UserSessionHolder.userSessionThreadLocal.get();
+        return new Result<>(enterpriseService.getInfo(userSession.getUsername()));
     }
 
     @DeleteMapping("/{enterpriseId}")
     public Result<Void> delete(@PathVariable String enterpriseId) {
-
+        enterpriseService.delete(enterpriseId);
         return new Result<>();
     }
 
