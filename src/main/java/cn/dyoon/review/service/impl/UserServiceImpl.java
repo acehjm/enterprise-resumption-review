@@ -44,6 +44,7 @@ public class UserServiceImpl implements UserService {
         vo.setUserid(user.getId());
         vo.setUsername(user.getUsername());
         vo.setUserType(user.getUserType());
+        vo.setRole(user.getRole());
         // 配置JWT令牌
         vo.setToken(getToken(user));
         // 配置用户菜单权限
@@ -84,6 +85,7 @@ public class UserServiceImpl implements UserService {
         JwtUser jwtUser = new JwtUser();
         jwtUser.setUsername(user.getUsername());
         jwtUser.setUserType(UserTypeEnum.get(user.getUserType()).getName());
+        jwtUser.setRole(UserRoleEnum.get(user.getRole()).getName());
         return JwtTokenUtil.token(JsonUtil.toJson(jwtUser));
     }
 }

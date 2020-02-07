@@ -12,6 +12,7 @@ public class UserVO {
     private String userid;
     private String username;
     private Integer userType;
+    private Integer role;
     private String token;
     private List<String> menus;
 }

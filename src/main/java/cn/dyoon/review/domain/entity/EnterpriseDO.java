@@ -45,6 +45,9 @@ public class EnterpriseDO {
     @TableField("scale_type")
     private Integer scaleType;
 
+    @TableField("resumption_type")
+    private Integer resumptionType;
+
     @TableField("industry_type")
     private Integer industryType;
 

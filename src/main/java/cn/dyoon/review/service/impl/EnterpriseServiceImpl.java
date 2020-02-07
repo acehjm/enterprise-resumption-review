@@ -1,10 +1,13 @@
 package cn.dyoon.review.service.impl;
 
 import cn.dyoon.review.common.constant.ResumptionReviewConstant;
+import cn.dyoon.review.common.enums.EnterpriseScaleEnum;
 import cn.dyoon.review.common.enums.EnterpriseTypeEnum;
 import cn.dyoon.review.common.enums.IndustryTypeEnum;
 import cn.dyoon.review.common.enums.ReviewStatusEnum;
 import cn.dyoon.review.common.enums.StreetTypeEnum;
+import cn.dyoon.review.common.enums.UserRoleEnum;
+import cn.dyoon.review.common.enums.UserTypeEnum;
 import cn.dyoon.review.common.exception.BaseExceptionEnum;
 import cn.dyoon.review.common.exception.BusinessException;
 import cn.dyoon.review.controller.param.EnterpriseExportParam;
@@ -19,20 +22,20 @@ import cn.dyoon.review.domain.ReworkDocumentMapper;
 import cn.dyoon.review.domain.entity.EnterpriseDO;
 import cn.dyoon.review.domain.entity.ReworkDocumentDO;
 import cn.dyoon.review.dto.EnterpriseExcelDTO;
+import cn.dyoon.review.manage.auth.constant.UserSession;
 import cn.dyoon.review.manage.excel.service.impl.ExcelWriterImpl;
 import cn.dyoon.review.service.EnterpriseService;
 import cn.dyoon.review.service.UserService;
 import cn.dyoon.review.util.base.FileUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import org.apache.ibatis.javassist.bytecode.ByteArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.net.URLEncoder;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -67,6 +70,10 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         enterprise.setName(param.getName());
         enterprise.setUnifiedSocialCreditCode(param.getUnifiedSocialCreditCode());
         enterprise.setType(param.getType());
+        enterprise.setScaleType(param.getScaleType());
+        enterprise.setResumptionType(param.getResumptionType());
+        enterprise.setIndustryType(param.getIndustryType());
+        enterprise.setEmployeeNum(param.getEmployeeNum());
         enterprise.setStreet(param.getStreet());
         enterprise.setUsername(param.getUsername());
         enterprise.setTransactorName(param.getTransactorName());
@@ -154,14 +161,58 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void review(String username, EnterpriseReviewParam param) {
+    public void reviewPass(UserSession userSession, EnterpriseReviewParam param) {
         EnterpriseDO enterprise = enterpriseMapper.selectById(param.getEnterpriseId());
         if (null == enterprise) {
             throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_EXISTS);
         }
-        enterprise.setReviewStatus(param.getReviewStatus());
+        // 审核--受理人
+        if (UserRoleEnum.ASSIGNEE_USER.getName().equals(userSession.getRole())) {
+            enterprise.setReviewStatus(ReviewStatusEnum.STREET_REVIEW.getCode());
+        }
+        // 审核--审核人
+        if (UserRoleEnum.REVIEW_USER.getName().equals(userSession.getRole())) {
+            // 街道审核人
+            if (UserTypeEnum.ZF_STREET.getName().equals(userSession.getUserType())) {
+                // 规（限）上企业
+                if (EnterpriseScaleEnum.ENTERPRISE_ABOVE_SCALE.getCode().equals(enterprise.getScaleType())) {
+                    enterprise.setReviewStatus(ReviewStatusEnum.DEPARTMENT_REVIEW.getCode());
+                }
+                // 规（限）下企业；员工20人以下微型企业复工审核流程
+                else {
+                    enterprise.setReviewStatus(ReviewStatusEnum.PASS.getCode());
+                }
+            }
+            // 商务局审核人
+            if (UserTypeEnum.ZF_SHANGWU.getName().equals(userSession.getUserType())) {
+                if (EnterpriseTypeEnum.INDUSTRIAL.getCode().equals(enterprise.getType())) {
+                    throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_MATCH);
+                }
+                enterprise.setReviewStatus(ReviewStatusEnum.PASS.getCode());
+            }
+            // 经信局审核人
+            if (UserTypeEnum.ZF_JINGXIN.getName().equals(userSession.getUserType())) {
+                if (EnterpriseTypeEnum.BUSINESS.getCode().equals(enterprise.getType())) {
+                    throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_MATCH);
+                }
+                enterprise.setReviewStatus(ReviewStatusEnum.PASS.getCode());
+            }
+        }
         enterprise.setReviewResult(param.getReviewResult());
-        enterprise.setReviewUser(username);
+        enterprise.setReviewUser(userSession.getUsername());
+        enterprise.setReviewTime(LocalDateTime.now());
+        enterpriseMapper.updateById(enterprise);
+    }
+
+    @Override
+    public void reviewReturn(UserSession userSession, EnterpriseReviewParam param) {
+        EnterpriseDO enterprise = enterpriseMapper.selectById(param.getEnterpriseId());
+        if (null == enterprise) {
+            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_EXISTS);
+        }
+        enterprise.setReviewStatus(ReviewStatusEnum.NOT_PASS.getCode());
+        enterprise.setReviewResult(param.getReviewResult());
+        enterprise.setReviewUser(userSession.getUsername());
         enterprise.setReviewTime(LocalDateTime.now());
         enterpriseMapper.updateById(enterprise);
     }
@@ -205,7 +256,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                 ReworkDocumentDO reworkDocument = new ReworkDocumentDO();
                 reworkDocument.setCreateTime(LocalDateTime.now());
                 reworkDocument.setFileName(fileName);
-                reworkDocument.setFileSize((double) file.getSize()/1024);
+                reworkDocument.setFileSize((double) file.getSize() / 1024);
                 reworkDocument.setEnterpriseId(enterpriseInfo.getId());
                 reworkDocument.setPath(filePath);
                 reworkDocument.setUploadUserName(uploadUserName);

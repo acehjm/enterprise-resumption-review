@@ -22,9 +22,13 @@ public class UserSession {
      */
     private String street;
     /**
-     * 角色权限
+     * 用户类型
      */
     private String userType;
+    /**
+     * 用户角色
+     */
+    private String role;
 
     /**
      * 菜单权限

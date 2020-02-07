@@ -18,6 +18,7 @@ public class JwtUser {
     private Long expired;
     private String username;
     private String userType;
+    private String role;
     private List<String> authorities;
 
     public JwtUser() {

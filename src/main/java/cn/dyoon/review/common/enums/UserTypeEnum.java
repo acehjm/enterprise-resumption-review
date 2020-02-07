@@ -23,7 +23,7 @@ public enum UserTypeEnum {
         }
     },
 
-    ZF_COMMON(2, "COMMON", "经信局/商务局") {
+    ZF_JINGXIN(2, "JINGXIN", "经信局") {
         @Override
         public List<String> authorities() {
             return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.POLICY_FILE_DOWNLOAD.getName(),
@@ -31,7 +31,7 @@ public enum UserTypeEnum {
         }
     },
 
-    ZF_STREET(3, "STREET", "镇/街道/园区") {
+    ZF_SHANGWU(3, "SHANGWU", "商务局") {
         @Override
         public List<String> authorities() {
             return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.POLICY_FILE_DOWNLOAD.getName(),
@@ -39,7 +39,15 @@ public enum UserTypeEnum {
         }
     },
 
-    ZF_PREVENTION(4, "PREVENTION", "区防控领导小组") {
+    ZF_STREET(4, "STREET", "镇/街道/园区") {
+        @Override
+        public List<String> authorities() {
+            return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.POLICY_FILE_DOWNLOAD.getName(),
+                    MenusEnum.CONTACT_DETAILS.getName());
+        }
+    },
+
+    ZF_PREVENTION(5, "PREVENTION", "区防控领导小组") {
         @Override
         public List<String> authorities() {
             return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.POLICY_FILE_DOWNLOAD.getName(),
@@ -48,7 +56,6 @@ public enum UserTypeEnum {
     },
 
     ;
-
     private Integer code;
     private String name;
     private String desc;
@@ -63,7 +70,14 @@ public enum UserTypeEnum {
         return Arrays.stream(UserTypeEnum.values())
                 .filter(it -> it.getCode().equals(code))
                 .findFirst()
-                .orElse(ZF_COMMON);
+                .orElse(SUPER_ADMIN);
+    }
+
+    public static UserTypeEnum get(String name) {
+        return Arrays.stream(UserTypeEnum.values())
+                .filter(it -> it.getName().equals(name))
+                .findFirst()
+                .orElse(SUPER_ADMIN);
     }
 
     public abstract List<String> authorities();

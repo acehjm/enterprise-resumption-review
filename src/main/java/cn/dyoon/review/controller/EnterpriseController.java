@@ -86,10 +86,17 @@ public class EnterpriseController {
         return new Result<>();
     }
 
-    @PostMapping("/review")
-    public Result<Void> review(@Validated @RequestBody EnterpriseReviewParam param) {
+    @PostMapping("/actions/reviewPass")
+    public Result<Void> reviewPass(@Validated @RequestBody EnterpriseReviewParam param) {
         UserSession userSession = UserSessionHolder.userSessionThreadLocal.get();
-        enterpriseService.review(userSession.getUsername(), param);
+        enterpriseService.reviewPass(userSession, param);
+        return new Result<>();
+    }
+
+    @PostMapping("/actions/reviewReturn")
+    public Result<Void> reviewReturn(@Validated @RequestBody EnterpriseReviewParam param) {
+        UserSession userSession = UserSessionHolder.userSessionThreadLocal.get();
+        enterpriseService.reviewReturn(userSession, param);
         return new Result<>();
     }
 

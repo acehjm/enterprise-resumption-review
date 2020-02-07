@@ -7,6 +7,7 @@ import cn.dyoon.review.controller.param.EnterpriseSearchParam;
 import cn.dyoon.review.controller.vo.EnterpriseInfoVO;
 import cn.dyoon.review.controller.vo.EnterpriseListVO;
 import cn.dyoon.review.controller.vo.PageVO;
+import cn.dyoon.review.manage.auth.constant.UserSession;
 import org.apache.ibatis.javassist.bytecode.ByteArray;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -85,12 +86,20 @@ public interface EnterpriseService {
     void submitApply(String enterpriseId);
 
     /**
-     * 审核
+     * 审核通过
      *
-     * @param username
+     * @param userSession
      * @param param
      */
-    void review(String username, EnterpriseReviewParam param);
+    void reviewPass(UserSession userSession, EnterpriseReviewParam param);
+
+    /**
+     * 审核不通过（退回）
+     *
+     * @param userSession
+     * @param param
+     */
+    void reviewReturn(UserSession userSession, EnterpriseReviewParam param);
 
     /**
      * 导出

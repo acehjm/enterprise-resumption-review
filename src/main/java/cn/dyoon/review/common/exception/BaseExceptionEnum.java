@@ -22,6 +22,8 @@ public enum BaseExceptionEnum implements BaseError {
 
     POLICY_NOT_EXISTS("0x0a0007", "政策信息不存在"),
 
+    ENTERPRISE_NOT_MATCH("0x0a00008", "当前用户没有权限处理该企业"),
+
     ;
 
     private String code;

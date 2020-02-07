@@ -90,6 +90,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         UserSession userSession = new UserSession();
         userSession.setUsername(user.getUsername());
         userSession.setUserType(user.getUserType());
+        userSession.setRole(user.getRole());
         return userSession;
     }
 }
