@@ -12,4 +12,5 @@ import lombok.Data;
 public class EnterpriseReviewParam {
     private String enterpriseId;
     private Integer reviewStatus;
+    private String reviewResult;
 }

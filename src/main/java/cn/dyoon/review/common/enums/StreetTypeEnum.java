@@ -2,6 +2,8 @@ package cn.dyoon.review.common.enums;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+
 @Getter
 public enum StreetTypeEnum {
     ZH_ZBS(1, "招宝山街道"),
@@ -12,11 +14,19 @@ public enum StreetTypeEnum {
     ZH_JLH(6, "九龙湖镇"),
     ZH_GS(7, "贵泗街道");
 
-    private int code;
+    private Integer code;
     private String desc;
 
     StreetTypeEnum(int code, String desc) {
         this.code = code;
         this.desc = desc;
+    }
+
+    public static String getDesc(Integer code) {
+        return Arrays.stream(StreetTypeEnum.values())
+                .filter(it -> it.getCode().equals(code))
+                .map(StreetTypeEnum::getDesc)
+                .findFirst()
+                .orElse("NOT_EXIST");
     }
 }

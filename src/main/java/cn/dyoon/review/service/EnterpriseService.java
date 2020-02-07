@@ -10,6 +10,7 @@ import cn.dyoon.review.controller.vo.PageVO;
 import org.apache.ibatis.javassist.bytecode.ByteArray;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -86,6 +87,6 @@ public interface EnterpriseService {
      *
      * @param param
      */
-    void export(EnterpriseExportParam param);
+    void export(EnterpriseExportParam param, HttpServletResponse response);
 
 }
