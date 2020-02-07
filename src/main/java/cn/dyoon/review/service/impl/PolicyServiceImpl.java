@@ -1,6 +1,7 @@
 package cn.dyoon.review.service.impl;
 
 import cn.dyoon.review.common.enums.PublishStatusEnum;
+import cn.dyoon.review.common.exception.BaseExceptionEnum;
 import cn.dyoon.review.common.exception.BusinessException;
 import cn.dyoon.review.controller.param.PolicyPublishParam;
 import cn.dyoon.review.controller.vo.PolicyInfoVO;
@@ -9,6 +10,7 @@ import cn.dyoon.review.domain.PolicyInfoMapper;
 import cn.dyoon.review.domain.entity.PolicyDocumentDO;
 import cn.dyoon.review.domain.entity.PolicyInfoDO;
 import cn.dyoon.review.service.PolicyService;
+import cn.dyoon.review.util.base.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,7 @@ import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -34,6 +37,11 @@ public class PolicyServiceImpl implements PolicyService {
 
     @Override
     public PolicyInfoVO create(String title, String desc, String uploadUserName, List<MultipartFile> files) {
+        boolean exists = policyInfoMapper.exists(title);
+        if (exists) {
+            throw new BusinessException(BaseExceptionEnum.POLICY_TITLE_HAS_EXISTS);
+        }
+
         PolicyInfoDO policyInfoDO = new PolicyInfoDO();
         policyInfoDO.setTitle(title);
         policyInfoDO.setDesc(desc);
@@ -84,7 +92,12 @@ public class PolicyServiceImpl implements PolicyService {
 
     @Override
     public void deleteById(String policyId) {
-
+        List<PolicyDocumentDO> policyDocumentDOS = policyDocumentMapper.selectByPolicyId(policyId);
+        Optional<PolicyDocumentDO> policyDocumentDO = policyDocumentDOS.stream().findAny();
+        String dictoryPath = policyDocumentDO.get().getPath();
+        FileUtil.DeleteFolder(dictoryPath);
+        policyInfoMapper.deleteById(policyId);
+        policyDocumentMapper.deleteByPolicyId(policyId);
     }
 
     @Override
