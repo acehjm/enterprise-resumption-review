@@ -18,6 +18,8 @@ public enum BaseExceptionEnum implements BaseError {
 
     ENTERPRISE_NO_DATA_BY_CONDITION("0x0a00005", "企业数据为空"),
 
+    POLICY_TITLE_HAS_EXISTS("0x0a0006", "政策标题已存在, 请重新输入"),
+
     ;
 
     private String code;
