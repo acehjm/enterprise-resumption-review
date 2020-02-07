@@ -1,8 +1,8 @@
 package cn.dyoon.review.domain;
 
 import cn.dyoon.review.domain.entity.UserDO;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -23,7 +23,7 @@ public interface UserMapper extends BaseMapper<UserDO> {
      * @return
      */
     default UserDO selectByUsername(String username) {
-        return selectOne(new QueryWrapper<UserDO>().eq("user_name", username));
+        return selectOne(Wrappers.<UserDO>lambdaQuery().eq(UserDO::getUsername, username));
     }
 
 }

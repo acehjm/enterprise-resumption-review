@@ -12,7 +12,11 @@ import cn.dyoon.review.controller.vo.EnterpriseListVO;
 import cn.dyoon.review.controller.vo.EnterpriseStreetVO;
 import cn.dyoon.review.controller.vo.EnterpriseTypeVO;
 import cn.dyoon.review.controller.vo.PageVO;
+import cn.dyoon.review.manage.auth.constant.UserSession;
+import cn.dyoon.review.manage.auth.constant.UserSessionHolder;
+import cn.dyoon.review.service.EnterpriseService;
 import org.apache.ibatis.javassist.bytecode.ByteArray;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,6 +43,9 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/enterprises")
 public class EnterpriseController {
+
+    @Autowired
+    private EnterpriseService enterpriseService;
 
     @PostMapping("/registered")
     public Result<Void> registered(@Validated @RequestBody EnterpriseParam param) {
@@ -103,19 +111,20 @@ public class EnterpriseController {
 
     @GetMapping("/{enterpriseId}/actions/apply")
     public Result<Void> submitApply(@PathVariable String enterpriseId) {
-
+        enterpriseService.submitApply(enterpriseId);
         return new Result<>();
     }
 
     @PostMapping("/review")
-    public Result<Void> review(@RequestBody EnterpriseReviewParam param) {
-
+    public Result<Void> review(@Validated @RequestBody EnterpriseReviewParam param) {
+        UserSession userSession = UserSessionHolder.userSessionThreadLocal.get();
+        enterpriseService.review(userSession.getUsername(), param);
         return new Result<>();
     }
 
     @PostMapping("/export")
-    public Result<Void> export(@RequestBody EnterpriseExportParam param) {
-
+    public Result<Void> export(@RequestBody EnterpriseExportParam param, HttpServletResponse response) {
+        enterpriseService.export(param, response);
         return new Result<>();
     }
 

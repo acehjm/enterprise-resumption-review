@@ -26,3 +26,7 @@ mybatis-plus:
   #    sql-parser-cache: true
   configuration:
     map-underscore-to-camel-case: true
+
+logging:
+  level:
+    cn.dyoon.review.domain: debug
