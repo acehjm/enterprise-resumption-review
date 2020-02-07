@@ -1,4 +1,4 @@
-package cn.dyoon.review.util.base;
+package cn.dyoon.review.util;
 
 import cn.dyoon.review.common.exception.VerifyException;
 import org.apache.commons.lang3.StringUtils;

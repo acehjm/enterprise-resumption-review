@@ -14,17 +14,15 @@ import cn.dyoon.review.domain.PolicyInfoMapper;
 import cn.dyoon.review.domain.entity.PolicyDocumentDO;
 import cn.dyoon.review.domain.entity.PolicyInfoDO;
 import cn.dyoon.review.service.PolicyService;
-import cn.dyoon.review.util.base.FileUtil;
+import cn.dyoon.review.util.FileUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;

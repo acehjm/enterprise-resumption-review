@@ -66,7 +66,7 @@ public class EnterpriseController {
     @GetMapping("/actions/byUser")
     public Result<EnterpriseInfoVO> getInfoByUsername() {
         UserSession userSession = UserSessionHolder.userSessionThreadLocal.get();
-        return new Result<>(enterpriseService.getInfo(userSession.getUsername()));
+        return new Result<>(enterpriseService.getInfoByUsername(userSession.getUsername()));
     }
 
     @PreAuthorize("hasAuthority('ENTERPRISE_USER')")
@@ -95,6 +95,13 @@ public class EnterpriseController {
     @GetMapping(value = "/download")
     public Result<Void> download(@RequestParam String fileId, HttpServletResponse response) {
         enterpriseService.download(fileId, response);
+        return new Result<>();
+    }
+
+    @PreAuthorize("hasAuthority('ENTERPRISE_USER')")
+    @DeleteMapping(value = "/actions/deleteFile")
+    public Result<Void> deleteFile(@RequestParam String fileId) {
+        enterpriseService.deleteFile(fileId);
         return new Result<>();
     }
 

@@ -1,4 +1,4 @@
-package cn.dyoon.review.util.base;
+package cn.dyoon.review.util;
 
 import cn.dyoon.review.common.exception.BusinessException;
 import cn.dyoon.review.domain.entity.ReworkDocumentDO;

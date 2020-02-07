@@ -48,6 +48,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -173,14 +174,12 @@ public class EnterpriseServiceImpl implements EnterpriseService {
             return;
         }
         enterpriseMapper.deleteById(enterpriseId);
-        reworkDocumentMapper.deleteByEnterpriseId(enterpriseId);
-
+        this.deleteFiles(reworkDocumentMapper.findByEnterpriseId(enterpriseId));
         userService.deleteByUsername(enterprise.getUsername());
     }
 
     @Override
     public void upload(String enterpriseId, String uploadUserName, List<MultipartFile> files) {
-        // TODO 清除旧文件
         EnterpriseDO enterprise = enterpriseMapper.selectById(enterpriseId);
         if (null == enterprise) {
             throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_EXISTS);
@@ -210,6 +209,16 @@ public class EnterpriseServiceImpl implements EnterpriseService {
             log.error("[下载文件] - 失败", e);
             throw new BusinessException(BaseExceptionEnum.DOWNLOAD_FILES_FAILURE);
         }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void deleteFile(String fileId) {
+        ReworkDocumentDO document = reworkDocumentMapper.selectById(fileId);
+        if (null == document) {
+            throw new BusinessException(BaseExceptionEnum.DOWNLOAD_FILES_NOT_EXISTS);
+        }
+        this.deleteFiles(Collections.singletonList(document));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -304,6 +313,25 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                 .format(DateTimeFormatter.ofPattern(STANDARD_DATETIME_FORMAT))
                 .replaceAll("[[\\s-:punct:]]", "");
         new ExcelWriterImpl().writeExcelRsp(collect, EnterpriseExcelDTO.class, true, fileName, response);
+    }
+
+    /**
+     * 批量删除复工文件
+     *
+     * @param documents
+     */
+    private void deleteFiles(List<ReworkDocumentDO> documents) {
+        documents.forEach(document -> {
+            try {
+                boolean delete = Files.deleteIfExists(Paths.get(document.getPath(), document.getVirtualName()));
+                if (delete) {
+                    reworkDocumentMapper.deleteById(document.getId());
+                }
+            } catch (IOException e) {
+                log.error("[删除文件] - 失败", e);
+                throw new BusinessException(BaseExceptionEnum.DELETE_FILES_FAILURE);
+            }
+        });
     }
 
     /**

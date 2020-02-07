@@ -3,7 +3,7 @@ package cn.dyoon.review.domain;
 import cn.dyoon.review.controller.param.EnterpriseExportParam;
 import cn.dyoon.review.controller.param.EnterpriseSearchParam;
 import cn.dyoon.review.domain.entity.EnterpriseDO;
-import cn.dyoon.review.util.base.ObjectUtil;
+import cn.dyoon.review.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;

@@ -5,7 +5,7 @@ import cn.dyoon.review.common.enums.UserRoleEnum;
 import cn.dyoon.review.common.enums.UserTypeEnum;
 import cn.dyoon.review.domain.UserMapper;
 import cn.dyoon.review.domain.entity.UserDO;
-import cn.dyoon.review.util.security.SHAUtil;
+import cn.dyoon.review.util.SHAUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

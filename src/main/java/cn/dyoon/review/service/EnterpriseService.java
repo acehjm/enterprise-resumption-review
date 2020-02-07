@@ -88,6 +88,13 @@ public interface EnterpriseService {
     void download(String fileId, HttpServletResponse response);
 
     /**
+     * 删除文件
+     *
+     * @param fileId
+     */
+    void deleteFile(String fileId);
+
+    /**
      * 提交申请
      *
      * @param enterpriseId

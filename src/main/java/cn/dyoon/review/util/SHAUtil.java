@@ -1,4 +1,4 @@
-package cn.dyoon.review.util.security;
+package cn.dyoon.review.util;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

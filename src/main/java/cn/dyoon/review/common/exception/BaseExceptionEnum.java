@@ -34,6 +34,7 @@ public enum BaseExceptionEnum implements BaseError {
 
     DOWNLOAD_FILES_FAILURE("0x0a00013", "下载文件失败"),
 
+    DELETE_FILES_FAILURE("0x0a00014", "删除文件失败"),
 
     ;
 

@@ -1,4 +1,4 @@
-package cn.dyoon.review.util.base;
+package cn.dyoon.review.util;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
