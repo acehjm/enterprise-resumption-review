@@ -1,5 +1,6 @@
 package cn.dyoon.review.service.impl;
 
+import cn.dyoon.review.common.enums.UserRoleEnum;
 import cn.dyoon.review.common.enums.UserTypeEnum;
 import cn.dyoon.review.common.exception.BaseExceptionEnum;
 import cn.dyoon.review.common.exception.BusinessException;
@@ -57,11 +58,12 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void add(String username, String password, Integer userType) {
+    public void addEnterpriseUser(String username, String password) {
         UserDO userDO = new UserDO();
         userDO.setUsername(username);
         userDO.setPassword(password);
-        userDO.setUserType(userType);
+        userDO.setUserType(UserTypeEnum.ENTERPRISE.getCode());
+        userDO.setRole(UserRoleEnum.GENERAL_USER.getCode());
         userDO.setCreateTime(LocalDateTime.now());
         userMapper.insert(userDO);
     }

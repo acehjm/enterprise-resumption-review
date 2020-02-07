@@ -5,10 +5,8 @@ import cn.dyoon.review.common.enums.EnterpriseTypeEnum;
 import cn.dyoon.review.common.enums.IndustryTypeEnum;
 import cn.dyoon.review.common.enums.ReviewStatusEnum;
 import cn.dyoon.review.common.enums.StreetTypeEnum;
-import cn.dyoon.review.common.enums.UserTypeEnum;
 import cn.dyoon.review.common.exception.BaseExceptionEnum;
 import cn.dyoon.review.common.exception.BusinessException;
-import cn.dyoon.review.controller.param.EnterpriseApplyParam;
 import cn.dyoon.review.controller.param.EnterpriseExportParam;
 import cn.dyoon.review.controller.param.EnterpriseParam;
 import cn.dyoon.review.controller.param.EnterpriseReviewParam;
@@ -76,7 +74,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         enterprise.setReviewStatus(ReviewStatusEnum.NOT_STARTED.getCode());
         enterpriseMapper.insert(enterprise);
 
-        userService.add(param.getUsername(), param.getPassword(), UserTypeEnum.ENTERPRISE.getCode());
+        userService.addEnterpriseUser(param.getUsername(), param.getPassword());
     }
 
     @Override
@@ -142,15 +140,15 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void submitApply(EnterpriseApplyParam param) {
-        EnterpriseDO enterprise = enterpriseMapper.selectById(param.getEnterpriseId());
+    public void submitApply(String enterpriseId) {
+        EnterpriseDO enterprise = enterpriseMapper.selectById(enterpriseId);
         if (null == enterprise) {
             throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_EXISTS);
         }
-        enterprise.setScaleType(param.getScaleType());
-        enterprise.setEmployeeNum(param.getEmployeeNum());
         enterprise.setApplyTime(LocalDateTime.now());
-        enterprise.setReviewStatus(ReviewStatusEnum.IN_REVIEW.getCode());
+        enterprise.setReviewStatus(ReviewStatusEnum.ACCEPTED.getCode());
+        // 清空审核意见
+        enterprise.setReviewResult(null);
         enterpriseMapper.updateById(enterprise);
     }
 

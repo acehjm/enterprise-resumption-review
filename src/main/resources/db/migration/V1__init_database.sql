@@ -7,8 +7,12 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `enterprise_info`;
 CREATE TABLE `enterprise_info`  (
   `id` varchar(32) NOT NULL COMMENT '企业ID',
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '企业名称',
+  `name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '企业名称',
   `type` tinyint(1) NULL DEFAULT NULL COMMENT '企业类型',
+  `scale_type` tinyint(1) NULL DEFAULT NULL COMMENT '企业规模',
+  `resumption_type` tinyint(1) NULL DEFAULT NULL COMMENT '复工类型',
+  `industry_type` tinyint(1) NULL DEFAULT NULL COMMENT '行业类型',
+  `employee_num` tinyint(1) NULL DEFAULT NULL COMMENT '企业人员数量',
   `unified_social_credit_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '统一社会信用代码',
   `street` tinyint(1) NULL DEFAULT NULL COMMENT '所属街道',
   `transactor_name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '填报人姓名',
@@ -17,7 +21,7 @@ CREATE TABLE `enterprise_info`  (
   `review_status` tinyint(1) NULL DEFAULT NULL COMMENT '审核状态',
   `review_user` varchar(32) NULL DEFAULT NULL COMMENT '审核人',
   `review_time` datetime(0) NULL DEFAULT NULL COMMENT '审核时间',
-  `review_result` varchar (255) NULL DEFAULT NULL COMMENT '审核结果',
+  `review_result` varchar (1000) NULL DEFAULT NULL COMMENT '审核结果',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
@@ -77,6 +81,7 @@ CREATE TABLE `user`  (
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建日期',
   `user_type` tinyint(1) NULL DEFAULT NULL COMMENT '用户类型',
+  `role` tinyint(1) NULL DEFAULT NULL COMMENT '用户角色',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 

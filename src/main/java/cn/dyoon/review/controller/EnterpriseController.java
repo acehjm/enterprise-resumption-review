@@ -1,7 +1,6 @@
 package cn.dyoon.review.controller;
 
 import cn.dyoon.review.common.response.Result;
-import cn.dyoon.review.controller.param.EnterpriseApplyParam;
 import cn.dyoon.review.controller.param.EnterpriseExportParam;
 import cn.dyoon.review.controller.param.EnterpriseParam;
 import cn.dyoon.review.controller.param.EnterpriseReviewParam;
@@ -81,9 +80,9 @@ public class EnterpriseController {
         return new Result<>();
     }
 
-    @PostMapping("/{enterpriseId}/actions/apply")
-    public Result<Void> submitApply(@Validated @RequestBody EnterpriseApplyParam param) {
-        enterpriseService.submitApply(param);
+    @GetMapping("/{enterpriseId}/actions/apply")
+    public Result<Void> submitApply(@PathVariable String enterpriseId) {
+        enterpriseService.submitApply(enterpriseId);
         return new Result<>();
     }
 

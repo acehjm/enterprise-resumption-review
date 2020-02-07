@@ -31,9 +31,8 @@ public interface UserService {
      *
      * @param username
      * @param password
-     * @param userType
      */
-    void add(String username, String password, Integer userType);
+    void addEnterpriseUser(String username, String password);
 
     /**
      * 删除用户
