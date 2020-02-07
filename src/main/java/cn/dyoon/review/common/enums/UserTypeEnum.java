@@ -15,7 +15,7 @@ public enum UserTypeEnum {
         }
     },
 
-    ENTERPRISE(1, "ENTERPRISE", "企业用户") {
+    ENTERPRISE(1, "ENTERPRISE_USER", "企业用户") {
         @Override
         public List<String> authorities() {
             return Arrays.asList(MenusEnum.ENTERPRISE_BASE_INFO.getName(), MenusEnum.POLICY_FILE_DOWNLOAD.getName(),
@@ -23,7 +23,7 @@ public enum UserTypeEnum {
         }
     },
 
-    ZF_JINGXIN(2, "JINGXIN", "经信局") {
+    ZF_JINGXIN(2, "JINGXINJU_USER", "经信局") {
         @Override
         public List<String> authorities() {
             return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.POLICY_FILE_DOWNLOAD.getName(),
@@ -31,7 +31,7 @@ public enum UserTypeEnum {
         }
     },
 
-    ZF_SHANGWU(3, "SHANGWU", "商务局") {
+    ZF_SHANGWU(3, "SHANGWUJU_USER", "商务局") {
         @Override
         public List<String> authorities() {
             return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.POLICY_FILE_DOWNLOAD.getName(),
@@ -39,7 +39,7 @@ public enum UserTypeEnum {
         }
     },
 
-    ZF_STREET(4, "STREET", "镇/街道/园区") {
+    ZF_STREET(4, "STREET_USER", "镇/街道/园区") {
         @Override
         public List<String> authorities() {
             return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.POLICY_FILE_DOWNLOAD.getName(),
@@ -47,7 +47,7 @@ public enum UserTypeEnum {
         }
     },
 
-    ZF_PREVENTION(5, "PREVENTION", "区防控领导小组") {
+    ZF_PREVENTION(5, "PREVENTION_USER", "防控领导小组") {
         @Override
         public List<String> authorities() {
             return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.POLICY_FILE_DOWNLOAD.getName(),
