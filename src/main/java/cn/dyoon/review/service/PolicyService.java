@@ -1,7 +1,11 @@
 package cn.dyoon.review.service;
 
+import cn.dyoon.review.controller.param.PolicyListParam;
 import cn.dyoon.review.controller.param.PolicyPublishParam;
+import cn.dyoon.review.controller.vo.PageVO;
 import cn.dyoon.review.controller.vo.PolicyInfoVO;
+import cn.dyoon.review.controller.vo.PolicyListVO;
+import cn.dyoon.review.domain.entity.PolicyInfoDO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -16,4 +20,6 @@ public interface PolicyService {
     PolicyInfoVO publish(PolicyPublishParam param);
 
     void download(String fileId);
+
+    PageVO<PolicyListVO> getPage(PolicyListParam param);
 }

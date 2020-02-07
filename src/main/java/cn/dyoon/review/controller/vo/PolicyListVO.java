@@ -1,5 +1,6 @@
 package cn.dyoon.review.controller.vo;
 
+import cn.dyoon.review.domain.entity.PolicyInfoDO;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -12,4 +13,13 @@ public class PolicyListVO {
     private LocalDateTime createDate;
     private LocalDateTime releaseDate;
     private Integer status;
+
+    public PolicyListVO(PolicyInfoDO policyInfoDO) {
+        this.id = policyInfoDO.getId();
+        this.title = policyInfoDO.getTitle();
+        this.desc = policyInfoDO.getDesc();
+        this.createDate = policyInfoDO.getCreateTime();
+        this.releaseDate = policyInfoDO.getReleaseTime();
+        this.status = policyInfoDO.getStatus();
+    }
 }
