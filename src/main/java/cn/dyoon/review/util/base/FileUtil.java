@@ -1,6 +1,13 @@
 package cn.dyoon.review.util.base;
 
+import org.springframework.util.Assert;
+
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.text.MessageFormat;
 
 /**
  * 文件操作工具类
@@ -66,4 +73,23 @@ public class FileUtil {
         }
         return flag;
     }
+
+
+    /**
+     * 目录是否为空
+     *
+     * @param dirPath 目录
+     * @return 是否为空
+     * @throws RuntimeException IOException
+     */
+    public static boolean isDirEmpty(Path dirPath) {
+        try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(dirPath)) {
+            return !dirStream.iterator().hasNext();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
 }
