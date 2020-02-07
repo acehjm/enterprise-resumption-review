@@ -1,14 +1,14 @@
 package cn.dyoon.review.service;
 
 import cn.dyoon.review.controller.param.EnterpriseExportParam;
-import cn.dyoon.review.controller.param.EnterpriseParam;
+import cn.dyoon.review.controller.param.EnterpriseRegisteredParam;
 import cn.dyoon.review.controller.param.EnterpriseReviewParam;
 import cn.dyoon.review.controller.param.EnterpriseSearchParam;
+import cn.dyoon.review.controller.param.EnterpriseUpdateParam;
 import cn.dyoon.review.controller.vo.EnterpriseInfoVO;
 import cn.dyoon.review.controller.vo.EnterpriseListVO;
 import cn.dyoon.review.controller.vo.PageVO;
 import cn.dyoon.review.manage.auth.constant.UserSession;
-import org.apache.ibatis.javassist.bytecode.ByteArray;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -27,7 +27,7 @@ public interface EnterpriseService {
      *
      * @param param
      */
-    void registered(EnterpriseParam param);
+    void registered(EnterpriseRegisteredParam param);
 
     /**
      * 分页获取企业列表
@@ -52,6 +52,14 @@ public interface EnterpriseService {
      * @return
      */
     EnterpriseInfoVO getInfoByUsername(String username);
+
+    /**
+     * 更新企业信息
+     *
+     * @param enterpriseId
+     * @param param
+     */
+    void update(String enterpriseId, EnterpriseUpdateParam param);
 
     /**
      * 删除企业

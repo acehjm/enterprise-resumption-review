@@ -11,9 +11,10 @@ import cn.dyoon.review.common.enums.UserTypeEnum;
 import cn.dyoon.review.common.exception.BaseExceptionEnum;
 import cn.dyoon.review.common.exception.BusinessException;
 import cn.dyoon.review.controller.param.EnterpriseExportParam;
-import cn.dyoon.review.controller.param.EnterpriseParam;
+import cn.dyoon.review.controller.param.EnterpriseRegisteredParam;
 import cn.dyoon.review.controller.param.EnterpriseReviewParam;
 import cn.dyoon.review.controller.param.EnterpriseSearchParam;
+import cn.dyoon.review.controller.param.EnterpriseUpdateParam;
 import cn.dyoon.review.controller.vo.EnterpriseInfoVO;
 import cn.dyoon.review.controller.vo.EnterpriseListVO;
 import cn.dyoon.review.controller.vo.PageVO;
@@ -38,6 +39,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,7 +63,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void registered(EnterpriseParam param) {
+    public void registered(EnterpriseRegisteredParam param) {
         boolean exists = enterpriseMapper.exists(param.getUsername());
         if (exists) {
             throw new BusinessException(BaseExceptionEnum.USER_NAME_HAS_EXISTS);
@@ -111,6 +113,33 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         }
         List<ReworkDocumentDO> files = reworkDocumentMapper.findByEnterpriseId(enterprise.getId());
         return new EnterpriseInfoVO(enterprise, files);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void update(String enterpriseId, EnterpriseUpdateParam param) {
+        EnterpriseDO enterprise = enterpriseMapper.selectById(enterpriseId);
+        if (null == enterprise) {
+            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_EXISTS);
+        }
+        // 不允许修改审批中的企业信息
+        Integer[] status = {ReviewStatusEnum.NOT_STARTED.getCode(), ReviewStatusEnum.PASS.getCode(),
+                ReviewStatusEnum.NOT_PASS.getCode()};
+        if (!Arrays.asList(status).contains(enterprise.getReviewStatus())) {
+            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_IN_PROCESSING);
+        }
+
+        enterprise.setUnifiedSocialCreditCode(param.getUnifiedSocialCreditCode());
+        enterprise.setName(param.getName());
+        enterprise.setType(param.getType());
+        enterprise.setScaleType(param.getScaleType());
+        enterprise.setResumptionType(param.getResumptionType());
+        enterprise.setIndustryType(param.getIndustryType());
+        enterprise.setEmployeeNum(param.getEmployeeNum());
+        enterprise.setStreet(param.getStreet());
+        enterprise.setTransactorName(param.getTransactorName());
+        enterprise.setPhone(param.getPhone());
+        enterpriseMapper.insert(enterprise);
     }
 
     @Transactional(rollbackFor = Exception.class)

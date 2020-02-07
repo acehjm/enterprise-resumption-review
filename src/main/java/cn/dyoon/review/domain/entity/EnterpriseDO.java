@@ -57,6 +57,9 @@ public class EnterpriseDO {
     @TableField("apply_time")
     private LocalDateTime applyTime;
 
+    @TableField("update_time")
+    private LocalDateTime updateTime;
+
     @TableField("review_status")
     private Integer reviewStatus;
 

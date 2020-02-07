@@ -35,8 +35,11 @@ public interface EnterpriseMapper extends BaseMapper<EnterpriseDO> {
         if (ObjectUtil.isNotEmpty(param.getType())) {
             wrapper.eq(EnterpriseDO::getType, param.getType());
         }
-        if (ObjectUtil.isNotEmpty(param.getScaleType())) {
-            wrapper.eq(EnterpriseDO::getScaleType, param.getScaleType());
+        if (ObjectUtil.isNotEmpty(param.getResumptionType())) {
+            wrapper.eq(EnterpriseDO::getResumptionType, param.getResumptionType());
+        }
+        if (ObjectUtil.isNotEmpty(param.getIndustryType())) {
+            wrapper.eq(EnterpriseDO::getIndustryType, param.getIndustryType());
         }
         if (ObjectUtil.isNotEmpty(param.getStreet())) {
             wrapper.eq(EnterpriseDO::getStreet, param.getStreet());
@@ -62,6 +65,12 @@ public interface EnterpriseMapper extends BaseMapper<EnterpriseDO> {
         wrapper.isNotNull(EnterpriseDO::getId);
         if (ObjectUtil.isNotEmpty(param.getStreet())) {
             wrapper.eq(EnterpriseDO::getStreet, param.getStreet());
+        }
+        if (ObjectUtil.isNotEmpty(param.getResumptionType())) {
+            wrapper.eq(EnterpriseDO::getResumptionType, param.getResumptionType());
+        }
+        if (ObjectUtil.isNotEmpty(param.getIndustryType())) {
+            wrapper.eq(EnterpriseDO::getIndustryType, param.getIndustryType());
         }
         if (ObjectUtil.isNotEmpty(param.getScaleType())) {
             wrapper.eq(EnterpriseDO::getScaleType, param.getScaleType());

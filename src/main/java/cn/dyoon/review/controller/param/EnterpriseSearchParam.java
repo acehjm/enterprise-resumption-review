@@ -20,6 +20,8 @@ public class EnterpriseSearchParam {
     private Integer pageSize;
     private Integer type;
     private Integer scaleType;
+    private Integer resumptionType;
+    private Integer industryType;
     private Integer street;
     private String reviewStatus;
     private String name;

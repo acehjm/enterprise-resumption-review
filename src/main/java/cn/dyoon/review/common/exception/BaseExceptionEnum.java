@@ -24,6 +24,8 @@ public enum BaseExceptionEnum implements BaseError {
 
     ENTERPRISE_NOT_MATCH("0x0a00008", "当前用户没有权限处理该企业"),
 
+    ENTERPRISE_IN_PROCESSING("0x0a00009", "企业复工申请审批中，不允许修改"),
+
     ;
 
     private String code;

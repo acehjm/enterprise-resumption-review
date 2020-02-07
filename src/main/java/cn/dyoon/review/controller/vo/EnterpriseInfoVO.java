@@ -25,6 +25,9 @@ public class EnterpriseInfoVO {
     private Integer street;
     private String transactorName;
     private String phone;
+    private LocalDateTime applyTime;
+    private LocalDateTime updateTime;
+
     private Review review;
     private List<ReworkDocument> files;
 
@@ -43,6 +46,8 @@ public class EnterpriseInfoVO {
         this.street = enterpriseDO.getStreet();
         this.transactorName = enterpriseDO.getTransactorName();
         this.phone = enterpriseDO.getPhone();
+        this.applyTime = enterpriseDO.getApplyTime();
+        this.updateTime = enterpriseDO.getUpdateTime();
         this.review = Review.builder()
                 .reviewStatus(enterpriseDO.getReviewStatus())
                 .reviewUser(enterpriseDO.getReviewUser())

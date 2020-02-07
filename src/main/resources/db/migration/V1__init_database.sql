@@ -18,6 +18,7 @@ CREATE TABLE `enterprise_info`  (
   `transactor_name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '填报人姓名',
   `phone` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '联系电话',
   `apply_time` datetime(0) NULL DEFAULT NULL COMMENT '申请时间',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `review_status` tinyint(1) NULL DEFAULT NULL COMMENT '审核状态',
   `review_user` varchar(32) NULL DEFAULT NULL COMMENT '审核人',
   `review_time` datetime(0) NULL DEFAULT NULL COMMENT '审核时间',

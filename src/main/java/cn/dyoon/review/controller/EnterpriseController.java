@@ -2,9 +2,10 @@ package cn.dyoon.review.controller;
 
 import cn.dyoon.review.common.response.Result;
 import cn.dyoon.review.controller.param.EnterpriseExportParam;
-import cn.dyoon.review.controller.param.EnterpriseParam;
+import cn.dyoon.review.controller.param.EnterpriseRegisteredParam;
 import cn.dyoon.review.controller.param.EnterpriseReviewParam;
 import cn.dyoon.review.controller.param.EnterpriseSearchParam;
+import cn.dyoon.review.controller.param.EnterpriseUpdateParam;
 import cn.dyoon.review.controller.vo.EnterpriseInfoVO;
 import cn.dyoon.review.controller.vo.EnterpriseListVO;
 import cn.dyoon.review.controller.vo.PageVO;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,7 +43,7 @@ public class EnterpriseController {
     private EnterpriseService enterpriseService;
 
     @PostMapping("/registered")
-    public Result<Void> registered(@Validated @RequestBody EnterpriseParam param) {
+    public Result<Void> registered(@Validated @RequestBody EnterpriseRegisteredParam param) {
         enterpriseService.registered(param);
         return new Result<>();
     }
@@ -60,6 +62,12 @@ public class EnterpriseController {
     public Result<EnterpriseInfoVO> getInfoByUsername() {
         UserSession userSession = UserSessionHolder.userSessionThreadLocal.get();
         return new Result<>(enterpriseService.getInfo(userSession.getUsername()));
+    }
+
+    @PutMapping("/{enterpriseId}")
+    public Result<Void> update(@PathVariable String enterpriseId, @Validated @RequestBody EnterpriseUpdateParam param) {
+        enterpriseService.update(enterpriseId, param);
+        return new Result<>();
     }
 
     @DeleteMapping("/{enterpriseId}")
