@@ -26,6 +26,15 @@ public enum BaseExceptionEnum implements BaseError {
 
     ENTERPRISE_IN_PROCESSING("0x0a00009", "企业复工申请审批中，不允许修改"),
 
+    UPLOAD_FILES_IS_EMPTY("0x0a00010", "上传文件为空"),
+
+    UPLOAD_FILES_FAILURE("0x0a00011", "上传文件失败"),
+
+    DOWNLOAD_FILES_NOT_EXISTS("0x0a00012", "文件不存在"),
+
+    DOWNLOAD_FILES_FAILURE("0x0a00013", "下载文件失败"),
+
+
     ;
 
     private String code;

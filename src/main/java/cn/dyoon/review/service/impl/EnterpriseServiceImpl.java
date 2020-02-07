@@ -29,16 +29,22 @@ import cn.dyoon.review.manage.auth.constant.UserSession;
 import cn.dyoon.review.manage.excel.service.impl.ExcelWriterImpl;
 import cn.dyoon.review.service.EnterpriseService;
 import cn.dyoon.review.service.UserService;
-import cn.dyoon.review.util.base.FileUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -53,6 +59,7 @@ import static cn.dyoon.review.common.constant.ResumptionReviewConstant.STANDARD_
  * @author majhdk
  * @date 2020/2/7
  */
+@Slf4j
 @Service
 public class EnterpriseServiceImpl implements EnterpriseService {
 
@@ -178,16 +185,31 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         if (null == enterprise) {
             throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_EXISTS);
         }
-
-        String filePath = ResumptionReviewConstant.ENTERPRISE_RESUMPTION_PATH + enterprise.getName() + "\\";
-        uploadFiles(uploadUserName, files, enterprise, filePath);
-
+        this.uploadFiles(uploadUserName, enterprise.getId(), files);
     }
 
     @Override
     public void download(String fileId, HttpServletResponse response) {
         ReworkDocumentDO reworkDocument = reworkDocumentMapper.selectById(fileId);
-        FileUtil.downloadFile(response, reworkDocument.getFileName(), reworkDocument.getPath());
+
+        Path path = Paths.get(reworkDocument.getPath(), reworkDocument.getVirtualName());
+        boolean exists = Files.exists(path);
+        if (!exists) {
+            throw new BusinessException(BaseExceptionEnum.DOWNLOAD_FILES_NOT_EXISTS);
+        }
+        try (OutputStream os = response.getOutputStream()) {
+            byte[] bytes = Files.readAllBytes(path);
+
+            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+            response.setHeader("Content-Disposition", "attachment;filename="
+                    + URLEncoder.encode(reworkDocument.getFileName(), "utf-8"));
+
+            os.write(bytes);
+            os.flush();
+        } catch (IOException e) {
+            log.error("[下载文件] - 失败", e);
+            throw new BusinessException(BaseExceptionEnum.DOWNLOAD_FILES_FAILURE);
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -284,36 +306,66 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         new ExcelWriterImpl().writeExcelRsp(collect, EnterpriseExcelDTO.class, true, fileName, response);
     }
 
-    private void uploadFiles(String uploadUserName, List<MultipartFile> files, EnterpriseDO enterpriseInfo, String filePath) {
-        File dir = new File(filePath);
-        if (!dir.exists()) {
-            dir.mkdirs();
+    /**
+     * 上传文件
+     *
+     * @param username
+     * @param enterpriseId
+     * @param files
+     */
+    private void uploadFiles(String username, String enterpriseId, List<MultipartFile> files) {
+        if (files.isEmpty()) {
+            throw new BusinessException(BaseExceptionEnum.UPLOAD_FILES_IS_EMPTY);
         }
-
-        for (int i = 0; i < files.size(); i++) {
-            MultipartFile file = files.get(i);
-            if (file.isEmpty()) {
-                throw new BusinessException("500", "文件为空");
+        String filePath = ResumptionReviewConstant.ENTERPRISE_RESUMPTION_PATH;
+        try {
+            Path path = Paths.get(filePath);
+            if (!Files.exists(path)) {
+                Files.createDirectory(path);
             }
-            String fileName = file.getOriginalFilename();
+            files.forEach(file -> {
+                if (file.isEmpty()) {
+                    // 处理下一个文件
+                    return;
+                }
+                try {
+                    String actualName = file.getOriginalFilename();
+                    String virtualName = IdWorker.get32UUID();
+                    saveMetadata(username, enterpriseId, file.getSize(), actualName, filePath, virtualName);
 
-            File dest = new File(filePath + fileName);
-            try {
-                ReworkDocumentDO reworkDocument = new ReworkDocumentDO();
-                reworkDocument.setCreateTime(LocalDateTime.now());
-                reworkDocument.setFileName(fileName);
-                reworkDocument.setFileSize((double) file.getSize() / 1024);
-                reworkDocument.setEnterpriseId(enterpriseInfo.getId());
-                reworkDocument.setPath(filePath);
-                reworkDocument.setUploadUserName(uploadUserName);
-                reworkDocumentMapper.insert(reworkDocument);
-
-                file.transferTo(dest);
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new BusinessException("500", "上传文件失败");
-            }
+                    Files.write(Paths.get(filePath, virtualName), file.getBytes());
+                } catch (IOException e) {
+                    log.error("[上传文件] - 失败", e);
+                    throw new BusinessException(BaseExceptionEnum.UPLOAD_FILES_FAILURE);
+                }
+            });
+        } catch (Exception e) {
+            log.error("[上传文件] - 失败", e);
+            throw new BusinessException(BaseExceptionEnum.UPLOAD_FILES_FAILURE);
         }
+    }
+
+    /**
+     * 保存文件元数据
+     *
+     * @param username
+     * @param enterpriseId
+     * @param fileSize
+     * @param fileName
+     * @param filePath
+     * @param virtualName
+     */
+    private void saveMetadata(String username, String enterpriseId, long fileSize, String fileName,
+                              String filePath, String virtualName) {
+        ReworkDocumentDO reworkDocument = new ReworkDocumentDO();
+        reworkDocument.setCreateTime(LocalDateTime.now());
+        reworkDocument.setFileName(fileName);
+        reworkDocument.setVirtualName(virtualName);
+        reworkDocument.setFileSize((double) fileSize / 1024);
+        reworkDocument.setEnterpriseId(enterpriseId);
+        reworkDocument.setPath(filePath);
+        reworkDocument.setUploadUserName(username);
+        reworkDocumentMapper.insert(reworkDocument);
     }
 
 }

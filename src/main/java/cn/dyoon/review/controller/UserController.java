@@ -5,6 +5,7 @@ import cn.dyoon.review.controller.param.UserLoginParam;
 import cn.dyoon.review.controller.vo.UserVO;
 import cn.dyoon.review.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +30,7 @@ public class UserController {
         return new Result<>(userService.login(param));
     }
 
+    @PreAuthorize("permitAll()")
     @PostMapping("/signout")
     public Result<Void> signout() {
         userService.signout("");

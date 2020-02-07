@@ -14,6 +14,7 @@ import cn.dyoon.review.manage.auth.constant.UserSessionHolder;
 import cn.dyoon.review.service.EnterpriseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,53 +49,63 @@ public class EnterpriseController {
         return new Result<>();
     }
 
+    @PreAuthorize("!hasAuthority('ENTERPRISE_USER')")
     @PostMapping
     public Result<PageVO<EnterpriseListVO>> getPage(@Validated @RequestBody EnterpriseSearchParam param) {
         UserSession userSession = UserSessionHolder.userSessionThreadLocal.get();
         return new Result<>(enterpriseService.getPage(userSession, param));
     }
 
+    @PreAuthorize("!hasAuthority('ENTERPRISE_USER')")
     @GetMapping("/{enterpriseId}")
     public Result<EnterpriseInfoVO> getInfo(@PathVariable String enterpriseId) {
         return new Result<>(enterpriseService.getInfo(enterpriseId));
     }
 
+    @PreAuthorize("hasAuthority('ENTERPRISE_USER')")
     @GetMapping("/actions/byUser")
     public Result<EnterpriseInfoVO> getInfoByUsername() {
         UserSession userSession = UserSessionHolder.userSessionThreadLocal.get();
         return new Result<>(enterpriseService.getInfo(userSession.getUsername()));
     }
 
+    @PreAuthorize("hasAuthority('ENTERPRISE_USER')")
     @PutMapping("/{enterpriseId}")
     public Result<Void> update(@PathVariable String enterpriseId, @Validated @RequestBody EnterpriseUpdateParam param) {
         enterpriseService.update(enterpriseId, param);
         return new Result<>();
     }
 
+    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     @DeleteMapping("/{enterpriseId}")
     public Result<Void> delete(@PathVariable String enterpriseId) {
         enterpriseService.delete(enterpriseId);
         return new Result<>();
     }
 
+    @PreAuthorize("permitAll()")
     @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public Result<Void> upload(@RequestParam String enterpriseId, @RequestParam String uploadUserName, @RequestParam List<MultipartFile> files) {
-        enterpriseService.upload(enterpriseId, uploadUserName, files);
+    public Result<Void> upload(@RequestParam String enterpriseId, @RequestParam List<MultipartFile> files) {
+        UserSession userSession = UserSessionHolder.userSessionThreadLocal.get();
+        enterpriseService.upload(enterpriseId, userSession.getUsername(), files);
         return new Result<>();
     }
 
-    @GetMapping(value = "/download", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    @PreAuthorize("permitAll()")
+    @GetMapping(value = "/download")
     public Result<Void> download(@RequestParam String fileId, HttpServletResponse response) {
         enterpriseService.download(fileId, response);
         return new Result<>();
     }
 
+    @PreAuthorize("hasAuthority('ENTERPRISE_USER')")
     @GetMapping("/{enterpriseId}/actions/apply")
     public Result<Void> submitApply(@PathVariable String enterpriseId) {
         enterpriseService.submitApply(enterpriseId);
         return new Result<>();
     }
 
+    @PreAuthorize("hasAnyAuthority('JINGXINJU_USER','SHANGWUJU_USER','STREET_USER','PREVENTION_USER')")
     @PostMapping("/actions/reviewPass")
     public Result<Void> reviewPass(@Validated @RequestBody EnterpriseReviewParam param) {
         UserSession userSession = UserSessionHolder.userSessionThreadLocal.get();
@@ -102,6 +113,7 @@ public class EnterpriseController {
         return new Result<>();
     }
 
+    @PreAuthorize("hasAnyAuthority('JINGXINJU_USER','SHANGWUJU_USER','STREET_USER','PREVENTION_USER')")
     @PostMapping("/actions/reviewReturn")
     public Result<Void> reviewReturn(@Validated @RequestBody EnterpriseReviewParam param) {
         UserSession userSession = UserSessionHolder.userSessionThreadLocal.get();
@@ -109,6 +121,7 @@ public class EnterpriseController {
         return new Result<>();
     }
 
+    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     @PostMapping("/export")
     public Result<Void> export(@RequestBody EnterpriseExportParam param, HttpServletResponse response) {
         enterpriseService.export(param, response);

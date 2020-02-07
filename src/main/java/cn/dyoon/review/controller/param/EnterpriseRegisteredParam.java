@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 /**
  * cn.dyoon.review.controller.param
@@ -34,6 +35,7 @@ public class EnterpriseRegisteredParam {
     @NotBlank(message = "填报人姓名不能为空")
     private String transactorName;
     @NotBlank(message = "联系电话不能为空")
+    @Pattern(regexp = "^(1[3-9]([0-9]{9}))$", message = "联系电话格式不正确")
     private String phone;
     @NotNull(message = "所属街道不能为空")
     private Integer street;

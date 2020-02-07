@@ -24,6 +24,9 @@ public class ReworkDocumentDO {
     @TableField("file_name")
     private String fileName;
 
+    @TableField("virtual_name")
+    private String virtualName;
+
     @TableField("file_size")
     private Double fileSize;
 
