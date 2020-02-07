@@ -25,10 +25,16 @@ public class PolicyController {
     @Autowired
     private PolicyService policyService;
 
+    /**
+     * 新建政策信息
+     * @param title 标题
+     * @param desc 描述
+     * @param files 附件
+     * @return 政策信息
+     */
     @PostMapping("/create")
-    public Result<Void> create(@RequestBody PolicyParam param) {
-        policyService.create(param);
-        return new Result<>();
+    public Result<PolicyInfoVO> create(@RequestParam String title, @RequestParam String desc, @RequestParam String uploadUserName, @RequestParam List<MultipartFile> files) {
+        return new Result<>(policyService.create(title, desc, uploadUserName, files));
     }
 
     @PostMapping
@@ -39,8 +45,7 @@ public class PolicyController {
 
     @GetMapping("/{policyId}")
     public Result<PolicyInfoVO> getInfo(@PathVariable String policyId) {
-        policyService.findById(policyId);
-        return new Result<>();
+        return new Result<>(policyService.findById(policyId));
     }
 
     @DeleteMapping("/{policyId}")

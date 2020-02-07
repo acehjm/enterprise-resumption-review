@@ -1,10 +1,8 @@
 package cn.dyoon.review.controller.vo;
 
-import cn.dyoon.review.common.enums.PublishStatusEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -12,11 +10,11 @@ import java.util.List;
  */
 @Data
 public class PolicyInfoVO {
-    private Integer id;
+    private String id;
     private String title;
     private String desc;
-    private Date createDate;
-    private Date releaseDate;
+    private LocalDateTime createDate;
+    private LocalDateTime releaseDate;
     private Integer status;
     private List<File> files;
 
@@ -24,7 +22,7 @@ public class PolicyInfoVO {
     public static class File {
         private String fileId;
         private String fileName;
-        private Integer fileSize;
+        private Double fileSize;
         private String uploadUser;
         private LocalDateTime uploadTime;
     }
