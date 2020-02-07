@@ -43,8 +43,8 @@ public class UserServiceImpl implements UserService {
         UserVO vo = new UserVO();
         vo.setUserid(user.getId());
         vo.setUsername(user.getUsername());
-        vo.setUserType(user.getUserType());
-        vo.setRole(user.getRole());
+        vo.setUserType(UserTypeEnum.get(user.getUserType()).getName());
+        vo.setRole(UserRoleEnum.get(user.getRole()).getName());
         // 配置JWT令牌
         vo.setToken(getToken(user));
         // 配置用户菜单权限
