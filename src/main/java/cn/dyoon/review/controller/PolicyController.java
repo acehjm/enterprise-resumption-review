@@ -39,8 +39,7 @@ public class PolicyController {
 
     @PostMapping
     public Result<PageVO<PolicyListVO>> getPage(@RequestBody PolicyListParam param) {
-
-        return new Result<>();
+        return new Result<>(policyService.getPage(param));
     }
 
     @GetMapping("/{policyId}")

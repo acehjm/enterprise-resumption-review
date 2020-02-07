@@ -3,14 +3,18 @@ package cn.dyoon.review.service.impl;
 import cn.dyoon.review.common.enums.PublishStatusEnum;
 import cn.dyoon.review.common.exception.BaseExceptionEnum;
 import cn.dyoon.review.common.exception.BusinessException;
+import cn.dyoon.review.controller.param.PolicyListParam;
 import cn.dyoon.review.controller.param.PolicyPublishParam;
+import cn.dyoon.review.controller.vo.PageVO;
 import cn.dyoon.review.controller.vo.PolicyInfoVO;
+import cn.dyoon.review.controller.vo.PolicyListVO;
 import cn.dyoon.review.domain.PolicyDocumentMapper;
 import cn.dyoon.review.domain.PolicyInfoMapper;
 import cn.dyoon.review.domain.entity.PolicyDocumentDO;
 import cn.dyoon.review.domain.entity.PolicyInfoDO;
 import cn.dyoon.review.service.PolicyService;
 import cn.dyoon.review.util.base.FileUtil;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,9 +24,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -81,17 +85,27 @@ public class PolicyServiceImpl implements PolicyService {
             }
         }
 
-        return getPolicyInfoVO(policyInfoDO, policyInfoDO.getId());
+        List<PolicyDocumentDO> policyFiles = policyDocumentMapper.selectByPolicyId(policyInfoDO.getId());
+
+        return new PolicyInfoVO(policyInfoDO, policyFiles);
     }
 
     @Override
     public PolicyInfoVO findById(String policyId) {
-        PolicyInfoDO policyInfoDO = policyInfoMapper.selectById(policyId);
-        return getPolicyInfoVO(policyInfoDO, policyId);
+        PolicyInfoDO policyInfo = policyInfoMapper.selectById(policyId);
+        if (null == policyInfo) {
+            throw new BusinessException(BaseExceptionEnum.POLICY_NOT_EXISTS);
+        }
+        List<PolicyDocumentDO> files = policyDocumentMapper.selectByPolicyId(policyId);
+        return new PolicyInfoVO(policyInfo, files);
     }
 
     @Override
     public void deleteById(String policyId) {
+        PolicyInfoDO policyInfo = policyInfoMapper.selectById(policyId);
+        if (null == policyInfo) {
+            return;
+        }
         List<PolicyDocumentDO> policyDocumentDOS = policyDocumentMapper.selectByPolicyId(policyId);
         Optional<PolicyDocumentDO> policyDocumentDO = policyDocumentDOS.stream().findAny();
         String dictoryPath = policyDocumentDO.get().getPath();
@@ -104,32 +118,11 @@ public class PolicyServiceImpl implements PolicyService {
     public PolicyInfoVO publish(PolicyPublishParam param) {
         PolicyInfoDO policyInfoDO = new PolicyInfoDO();
         policyInfoDO.setStatus(param.getStatus());
+        policyInfoDO.setReleaseTime(LocalDateTime.now());
         policyInfoMapper.publish(policyInfoDO, param.getPolicyId());
         policyInfoDO = policyInfoMapper.selectById(param.getPolicyId());
-        return getPolicyInfoVO(policyInfoDO, param.getPolicyId());
-    }
-
-    private PolicyInfoVO getPolicyInfoVO(PolicyInfoDO policyInfoDO, String id) {
-        PolicyInfoVO policyInfoVO = new PolicyInfoVO();
-        policyInfoVO.setId(policyInfoDO.getId());
-        policyInfoVO.setTitle(policyInfoDO.getTitle());
-        policyInfoVO.setDesc(policyInfoDO.getDesc());
-        policyInfoVO.setCreateDate(policyInfoDO.getCreateTime());
-        policyInfoVO.setReleaseDate(policyInfoVO.getReleaseDate());
-        policyInfoVO.setStatus(policyInfoDO.getStatus());
-        List<PolicyInfoVO.File> policyDocuments = new ArrayList<>();
-        List<PolicyDocumentDO> policyDocumentDOS = policyDocumentMapper.selectByPolicyId(id);
-        for (PolicyDocumentDO policyDocumentDO : policyDocumentDOS) {
-            PolicyInfoVO.File file = new PolicyInfoVO.File();
-            file.setFileId(policyDocumentDO.getId());
-            file.setFileName(policyDocumentDO.getFileName());
-            file.setFileSize(policyDocumentDO.getFileSize());
-            file.setUploadTime(policyDocumentDO.getCreateTime());
-            file.setUploadUser(policyDocumentDO.getUploadUserName());
-            policyDocuments.add(file);
-        }
-        policyInfoVO.setFiles(policyDocuments);
-        return policyInfoVO;
+        List<PolicyDocumentDO> files = policyDocumentMapper.selectByPolicyId(param.getPolicyId());
+        return new PolicyInfoVO(policyInfoDO, files);
     }
 
     @Override
@@ -176,5 +169,14 @@ public class PolicyServiceImpl implements PolicyService {
                 }
             }
         }
+    }
+
+    @Override
+    public PageVO<PolicyListVO> getPage(PolicyListParam param) {
+        IPage<PolicyInfoDO> page = policyInfoMapper.findPageByCondition(param);
+        List<PolicyListVO> collect = page.getRecords().stream()
+                .map(PolicyListVO::new)
+                .collect(Collectors.toList());
+        return new PageVO<>(param.getPageNo(), param.getPageSize(), page.getTotal(), collect);
     }
 }

@@ -20,6 +20,8 @@ public enum BaseExceptionEnum implements BaseError {
 
     POLICY_TITLE_HAS_EXISTS("0x0a0006", "政策标题已存在, 请重新输入"),
 
+    POLICY_NOT_EXISTS("0x0a0007", "政策信息不存在"),
+
     ;
 
     private String code;
