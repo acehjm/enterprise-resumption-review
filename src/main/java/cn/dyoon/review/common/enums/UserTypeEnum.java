@@ -31,7 +31,15 @@ public enum UserTypeEnum {
         }
     },
 
-    ZF_STREET(3, "STREET", "镇/街道") {
+    ZF_STREET(3, "STREET", "镇/街道/园区") {
+        @Override
+        public List<String> authorities() {
+            return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.POLICY_FILE_DOWNLOAD.getName(),
+                    MenusEnum.CONTACT_DETAILS.getName());
+        }
+    },
+
+    ZF_PREVENTION(4, "PREVENTION", "区防控领导小组") {
         @Override
         public List<String> authorities() {
             return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.POLICY_FILE_DOWNLOAD.getName(),

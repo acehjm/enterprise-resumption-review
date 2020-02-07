@@ -6,10 +6,10 @@ import java.util.Arrays;
 
 @Getter
 public enum ReviewStatusEnum {
-    NOT_STARTED(0, "未开始"),
+    NOT_STARTED(0, "待申请"),
     IN_REVIEW(1, "审核中"),
     PASS(2, "批准"),
-    NOT_PASS(3, "未通过");
+    NOT_PASS(3, "退回");
 
     private Integer code;
     private String desc;

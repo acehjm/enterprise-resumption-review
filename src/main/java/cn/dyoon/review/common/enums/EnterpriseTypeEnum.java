@@ -6,8 +6,8 @@ import java.util.Arrays;
 
 @Getter
 public enum EnterpriseTypeEnum {
-    INDUSTRIAL(0, "工业企业"),
-    SERVICE(1, "服务业企业");
+    INDUSTRIAL(1, "工业企业"),
+    SERVICE(2, "商贸业企业");
 
     private Integer code;
     private String desc;
