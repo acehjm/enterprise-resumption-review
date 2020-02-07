@@ -1,5 +1,6 @@
-package cn.dyoon.review.common.exception;
+package cn.dyoon.review.config.exception;
 
+import cn.dyoon.review.common.exception.BusinessException;
 import cn.dyoon.review.common.response.Result;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

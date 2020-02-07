@@ -61,6 +61,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         enterprise.setName(param.getName());
         enterprise.setUnifiedSocialCreditCode(param.getUnifiedSocialCreditCode());
         enterprise.setType(param.getType());
+        enterprise.setScaleType(param.getScaleType());
         enterprise.setStreet(param.getStreet());
         enterprise.setUsername(param.getUsername());
         enterprise.setTransactorName(param.getTransactorName());
@@ -169,7 +170,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                     return dto;
                 })
                 .collect(Collectors.toList());
-        String fileName = "企业复工申请报表_" + LocalDateTime.now()
+        String fileName = "企业复工申请统计报表_" + LocalDateTime.now()
                 .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
                 .replaceAll("[[\\s-:punct:]]", "");
         new ExcelWriterImpl().writeExcelRsp(collect, EnterpriseExcelDTO.class, true, fileName, response);

@@ -27,6 +27,9 @@ public class EnterpriseDO {
     @TableField("type")
     private Integer type;
 
+    @TableField("scale_type")
+    private Integer scaleType;
+
     @TableField("unified_social_credit_code")
     private String unifiedSocialCreditCode;
 
