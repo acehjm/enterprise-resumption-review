@@ -54,8 +54,8 @@ public class PolicyController {
     }
 
     @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public Result<Void> upload(@RequestParam String policyId, @RequestParam List<MultipartFile> files) {
-
+    public Result<Void> upload(@RequestParam String policyId, @RequestParam String uploadUserName, @RequestParam List<MultipartFile> files) {
+        policyService.upload(policyId, uploadUserName, files);
         return new Result<>();
     }
 

@@ -5,7 +5,6 @@ import cn.dyoon.review.controller.param.PolicyPublishParam;
 import cn.dyoon.review.controller.vo.PageVO;
 import cn.dyoon.review.controller.vo.PolicyInfoVO;
 import cn.dyoon.review.controller.vo.PolicyListVO;
-import cn.dyoon.review.domain.entity.PolicyInfoDO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -22,4 +21,6 @@ public interface PolicyService {
     void download(String fileId);
 
     PageVO<PolicyListVO> getPage(PolicyListParam param);
+
+    void upload(String policyId, String uploadUserName, List<MultipartFile> files);
 }

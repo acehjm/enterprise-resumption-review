@@ -55,35 +55,7 @@ public class PolicyServiceImpl implements PolicyService {
 
         //保存文件
         String filePath = "D:\\" + title + "\\";
-        File dir = new File(filePath);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-
-        for (int i = 0; i < files.size(); i++) {
-            MultipartFile file = files.get(i);
-            if (file.isEmpty()) {
-                throw new BusinessException("500", "文件为空");
-            }
-            String fileName = file.getOriginalFilename();
-
-            File dest = new File(filePath + fileName);
-            try {
-                PolicyDocumentDO policyDocumentDO = new PolicyDocumentDO();
-                policyDocumentDO.setCreateTime(LocalDateTime.now());
-                policyDocumentDO.setFileName(fileName);
-                policyDocumentDO.setFileSize((double) file.getSize()/1024);
-                policyDocumentDO.setPolicyId(policyInfoDO.getId());
-                policyDocumentDO.setPath(filePath);
-                policyDocumentDO.setUploadUserName(uploadUserName);
-                policyDocumentMapper.insert(policyDocumentDO);
-
-                file.transferTo(dest);
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new BusinessException("500", "上传文件失败");
-            }
-        }
+        uploadFiles(uploadUserName, files, policyInfoDO, filePath);
 
         List<PolicyDocumentDO> policyFiles = policyDocumentMapper.selectByPolicyId(policyInfoDO.getId());
 
@@ -178,5 +150,48 @@ public class PolicyServiceImpl implements PolicyService {
                 .map(PolicyListVO::new)
                 .collect(Collectors.toList());
         return new PageVO<>(param.getPageNo(), param.getPageSize(), page.getTotal(), collect);
+    }
+
+    @Override
+    public void upload(String policyId, String uploadUserName, List<MultipartFile> files) {
+        PolicyInfoDO policyInfo = policyInfoMapper.selectById(policyId);
+        if (null == policyInfo) {
+            throw new BusinessException(BaseExceptionEnum.POLICY_NOT_EXISTS);
+        }
+
+        String filePath = "D:\\" + policyInfo.getTitle() + "\\";
+        uploadFiles(uploadUserName, files, policyInfo, filePath);
+    }
+
+    private void uploadFiles(String uploadUserName, List<MultipartFile> files, PolicyInfoDO policyInfo, String filePath) {
+        File dir = new File(filePath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        for (int i = 0; i < files.size(); i++) {
+            MultipartFile file = files.get(i);
+            if (file.isEmpty()) {
+                throw new BusinessException("500", "文件为空");
+            }
+            String fileName = file.getOriginalFilename();
+
+            File dest = new File(filePath + fileName);
+            try {
+                PolicyDocumentDO policyDocumentDO = new PolicyDocumentDO();
+                policyDocumentDO.setCreateTime(LocalDateTime.now());
+                policyDocumentDO.setFileName(fileName);
+                policyDocumentDO.setFileSize((double) file.getSize()/1024);
+                policyDocumentDO.setPolicyId(policyInfo.getId());
+                policyDocumentDO.setPath(filePath);
+                policyDocumentDO.setUploadUserName(uploadUserName);
+                policyDocumentMapper.insert(policyDocumentDO);
+
+                file.transferTo(dest);
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new BusinessException("500", "上传文件失败");
+            }
+        }
     }
 }
