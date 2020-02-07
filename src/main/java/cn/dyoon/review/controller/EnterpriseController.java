@@ -1,14 +1,11 @@
 package cn.dyoon.review.controller;
 
-import cn.dyoon.review.common.enums.EnterpriseScaleEnum;
-import cn.dyoon.review.common.enums.EnterpriseTypeEnum;
-import cn.dyoon.review.common.enums.StreetTypeEnum;
 import cn.dyoon.review.common.response.Result;
+import cn.dyoon.review.controller.param.EnterpriseApplyParam;
 import cn.dyoon.review.controller.param.EnterpriseExportParam;
 import cn.dyoon.review.controller.param.EnterpriseParam;
 import cn.dyoon.review.controller.param.EnterpriseReviewParam;
 import cn.dyoon.review.controller.param.EnterpriseSearchParam;
-import cn.dyoon.review.controller.vo.BaseTypeVO;
 import cn.dyoon.review.controller.vo.EnterpriseInfoVO;
 import cn.dyoon.review.controller.vo.EnterpriseListVO;
 import cn.dyoon.review.controller.vo.PageVO;
@@ -29,9 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * cn.dyoon.review.controller
@@ -50,45 +45,6 @@ public class EnterpriseController {
     public Result<Void> registered(@Validated @RequestBody EnterpriseParam param) {
         enterpriseService.registered(param);
         return new Result<>();
-    }
-
-    @GetMapping("/types")
-    public Result<List<BaseTypeVO>> getTypes() {
-        List<BaseTypeVO> collect = Arrays.stream(EnterpriseTypeEnum.values())
-                .map(it -> {
-                    BaseTypeVO vo = new BaseTypeVO();
-                    vo.setCode(it.getCode());
-                    vo.setName(it.getDesc());
-                    return vo;
-                })
-                .collect(Collectors.toList());
-        return new Result<>(collect);
-    }
-
-    @GetMapping("/scales")
-    public Result<List<BaseTypeVO>> getScales() {
-        List<BaseTypeVO> collect = Arrays.stream(EnterpriseScaleEnum.values())
-                .map(it -> {
-                    BaseTypeVO vo = new BaseTypeVO();
-                    vo.setCode(it.getCode());
-                    vo.setName(it.getDesc());
-                    return vo;
-                })
-                .collect(Collectors.toList());
-        return new Result<>(collect);
-    }
-
-    @GetMapping("/streets")
-    public Result<List<BaseTypeVO>> getStreets() {
-        List<BaseTypeVO> collect = Arrays.stream(StreetTypeEnum.values())
-                .map(it -> {
-                    BaseTypeVO vo = new BaseTypeVO();
-                    vo.setCode(it.getCode());
-                    vo.setName(it.getDesc());
-                    return vo;
-                })
-                .collect(Collectors.toList());
-        return new Result<>(collect);
     }
 
     @PostMapping
@@ -125,9 +81,9 @@ public class EnterpriseController {
         return new Result<>();
     }
 
-    @GetMapping("/{enterpriseId}/actions/apply")
-    public Result<Void> submitApply(@PathVariable String enterpriseId) {
-        enterpriseService.submitApply(enterpriseId);
+    @PostMapping("/{enterpriseId}/actions/apply")
+    public Result<Void> submitApply(@Validated @RequestBody EnterpriseApplyParam param) {
+        enterpriseService.submitApply(param);
         return new Result<>();
     }
 

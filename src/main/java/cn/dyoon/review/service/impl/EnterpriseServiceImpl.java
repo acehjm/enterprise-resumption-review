@@ -1,11 +1,13 @@
 package cn.dyoon.review.service.impl;
 
 import cn.dyoon.review.common.enums.EnterpriseTypeEnum;
+import cn.dyoon.review.common.enums.IndustryTypeEnum;
 import cn.dyoon.review.common.enums.ReviewStatusEnum;
 import cn.dyoon.review.common.enums.StreetTypeEnum;
 import cn.dyoon.review.common.enums.UserTypeEnum;
 import cn.dyoon.review.common.exception.BaseExceptionEnum;
 import cn.dyoon.review.common.exception.BusinessException;
+import cn.dyoon.review.controller.param.EnterpriseApplyParam;
 import cn.dyoon.review.controller.param.EnterpriseExportParam;
 import cn.dyoon.review.controller.param.EnterpriseParam;
 import cn.dyoon.review.controller.param.EnterpriseReviewParam;
@@ -63,7 +65,6 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         enterprise.setName(param.getName());
         enterprise.setUnifiedSocialCreditCode(param.getUnifiedSocialCreditCode());
         enterprise.setType(param.getType());
-        enterprise.setScaleType(param.getScaleType());
         enterprise.setStreet(param.getStreet());
         enterprise.setUsername(param.getUsername());
         enterprise.setTransactorName(param.getTransactorName());
@@ -129,11 +130,13 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void submitApply(String enterpriseId) {
-        EnterpriseDO enterprise = enterpriseMapper.selectById(enterpriseId);
+    public void submitApply(EnterpriseApplyParam param) {
+        EnterpriseDO enterprise = enterpriseMapper.selectById(param.getEnterpriseId());
         if (null == enterprise) {
             throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_EXISTS);
         }
+        enterprise.setScaleType(param.getScaleType());
+        enterprise.setEmployeeNum(param.getEmployeeNum());
         enterprise.setApplyTime(LocalDateTime.now());
         enterprise.setReviewStatus(ReviewStatusEnum.IN_REVIEW.getCode());
         enterpriseMapper.updateById(enterprise);
@@ -161,14 +164,10 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                     EnterpriseExcelDTO dto = new EnterpriseExcelDTO();
                     dto.setName(it.getName());
                     dto.setType(EnterpriseTypeEnum.getDesc(it.getType()));
-                    dto.setUniqueCode(it.getUnifiedSocialCreditCode());
                     dto.setStreet(StreetTypeEnum.getDesc(it.getStreet()));
-                    dto.setTransactorName(it.getTransactorName());
-                    dto.setPhone(it.getPhone());
-                    dto.setApplyTime(it.getApplyTime().format(DateTimeFormatter.ofPattern(STANDARD_DATETIME_FORMAT)));
-                    dto.setReviewStatus(ReviewStatusEnum.getDesc(it.getReviewStatus()));
+                    dto.setIndustryType(IndustryTypeEnum.getDesc(it.getIndustryType()));
                     dto.setReviewTime(it.getReviewTime().format(DateTimeFormatter.ofPattern(STANDARD_DATETIME_FORMAT)));
-                    dto.setReviewResult(it.getReviewResult());
+                    dto.setEmployeeNum(it.getEmployeeNum());
                     return dto;
                 })
                 .collect(Collectors.toList());

@@ -27,9 +27,6 @@ public class EnterpriseDO {
     @TableField("type")
     private Integer type;
 
-    @TableField("scale_type")
-    private Integer scaleType;
-
     @TableField("unified_social_credit_code")
     private String unifiedSocialCreditCode;
 
@@ -44,6 +41,15 @@ public class EnterpriseDO {
 
     @TableField("username")
     private String username;
+
+    @TableField("scale_type")
+    private Integer scaleType;
+
+    @TableField("industry_type")
+    private Integer industryType;
+
+    @TableField("employee_num")
+    private Integer employeeNum;
 
     @TableField("apply_time")
     private LocalDateTime applyTime;

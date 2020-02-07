@@ -15,8 +15,6 @@ import javax.validation.constraints.NotNull;
 public class EnterpriseParam {
     @NotNull(message = "企业类型不能为空")
     private Integer type;
-    @NotNull(message = "企业规模不能为空")
-    private Integer scaleType;
     @NotBlank(message = "企业名称不能为空")
     private String name;
     @NotBlank(message = "统一社会信用代码不能为空")

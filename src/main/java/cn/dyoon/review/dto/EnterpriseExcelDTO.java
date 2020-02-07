@@ -14,26 +14,17 @@ import lombok.Data;
 @ExcelFileDesc
 public class EnterpriseExcelDTO {
 
-    @ExcelColumnDesc(column = "企业名称", order = 1)
+    @ExcelColumnDesc(column = "复工企业名称", order = 1)
     private String name;
-    @ExcelColumnDesc(column = "企业类型", order = 2)
+    @ExcelColumnDesc(column = "企业类别", order = 2)
     private String type;
-    @ExcelColumnDesc(column = "统一社会信用代码", order = 3)
-    private String uniqueCode;
-    @ExcelColumnDesc(column = "所属街道", order = 4)
+    @ExcelColumnDesc(column = "行业类别", order = 3)
+    private String industryType;
+    @ExcelColumnDesc(column = "所在镇/街道/园区", order = 4)
     private String street;
-    @ExcelColumnDesc(column = "申请人姓名", order = 5)
-    private String transactorName;
-    @ExcelColumnDesc(column = "联系电话", order = 6)
-    private String phone;
-
-    @ExcelColumnDesc(column = "申请时间", order = 7)
-    private String applyTime;
-    @ExcelColumnDesc(column = "审核状态", order = 8)
-    private String reviewStatus;
-    @ExcelColumnDesc(column = "审核时间", order = 9)
+    @ExcelColumnDesc(column = "复工时间", order = 5)
     private String reviewTime;
-    @ExcelColumnDesc(column = "审核结果", order = 10)
-    private String reviewResult;
+    @ExcelColumnDesc(column = "复工员工数", order = 6)
+    private Integer employeeNum;
 
 }

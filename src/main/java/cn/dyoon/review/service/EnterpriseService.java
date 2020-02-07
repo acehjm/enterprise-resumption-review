@@ -1,5 +1,6 @@
 package cn.dyoon.review.service;
 
+import cn.dyoon.review.controller.param.EnterpriseApplyParam;
 import cn.dyoon.review.controller.param.EnterpriseExportParam;
 import cn.dyoon.review.controller.param.EnterpriseParam;
 import cn.dyoon.review.controller.param.EnterpriseReviewParam;
@@ -79,9 +80,9 @@ public interface EnterpriseService {
     /**
      * 提交申请
      *
-     * @param enterpriseId
+     * @param param
      */
-    void submitApply(String enterpriseId);
+    void submitApply(EnterpriseApplyParam param);
 
     /**
      * 审核
