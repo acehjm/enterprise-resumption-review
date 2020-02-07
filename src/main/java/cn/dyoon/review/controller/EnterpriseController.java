@@ -3,6 +3,7 @@ package cn.dyoon.review.controller;
 import cn.dyoon.review.common.enums.EnterpriseTypeEnum;
 import cn.dyoon.review.common.enums.StreetTypeEnum;
 import cn.dyoon.review.common.response.Result;
+import cn.dyoon.review.controller.param.EnterpriseExportParam;
 import cn.dyoon.review.controller.param.EnterpriseParam;
 import cn.dyoon.review.controller.param.EnterpriseReviewParam;
 import cn.dyoon.review.controller.param.EnterpriseSearchParam;
@@ -107,6 +108,12 @@ public class EnterpriseController {
 
     @PostMapping("/review")
     public Result<Void> review(@RequestBody EnterpriseReviewParam param) {
+
+        return new Result<>();
+    }
+
+    @PostMapping("/export")
+    public Result<Void> export(@RequestBody EnterpriseExportParam param) {
 
         return new Result<>();
     }
