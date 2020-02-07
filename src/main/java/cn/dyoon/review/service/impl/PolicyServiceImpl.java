@@ -1,5 +1,6 @@
 package cn.dyoon.review.service.impl;
 
+import cn.dyoon.review.common.enums.PublishStatusEnum;
 import cn.dyoon.review.common.exception.BusinessException;
 import cn.dyoon.review.controller.param.PolicyPublishParam;
 import cn.dyoon.review.controller.vo.PolicyInfoVO;
@@ -13,8 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,8 @@ public class PolicyServiceImpl implements PolicyService {
     private PolicyInfoMapper policyInfoMapper;
     @Autowired
     private PolicyDocumentMapper policyDocumentMapper;
+    @Autowired
+    private HttpServletResponse response;
 
     @Override
     public PolicyInfoVO create(String title, String desc, String uploadUserName, List<MultipartFile> files) {
@@ -34,11 +38,16 @@ public class PolicyServiceImpl implements PolicyService {
         policyInfoDO.setTitle(title);
         policyInfoDO.setDesc(desc);
         policyInfoDO.setCreateTime(LocalDateTime.now());
-        policyInfoDO.setStatus(0);
+        policyInfoDO.setStatus(PublishStatusEnum.UNPUBLISHED.getCode());
         policyInfoMapper.insert(policyInfoDO);
 
         //保存文件
-        String filePath = "D:\\";
+        String filePath = "D:\\" + title + "\\";
+        File dir = new File(filePath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
         for (int i = 0; i < files.size(); i++) {
             MultipartFile file = files.get(i);
             if (file.isEmpty()) {
@@ -59,57 +68,18 @@ public class PolicyServiceImpl implements PolicyService {
 
                 file.transferTo(dest);
             } catch (IOException e) {
+                e.printStackTrace();
                 throw new BusinessException("500", "上传文件失败");
             }
         }
 
-        PolicyInfoVO policyInfoVO = new PolicyInfoVO();
-        policyInfoVO.setId(policyInfoDO.getId());
-        policyInfoVO.setTitle(policyInfoDO.getTitle());
-        policyInfoVO.setDesc(policyInfoDO.getDesc());
-        policyInfoVO.setCreateDate(policyInfoDO.getCreateTime());
-        policyInfoVO.setReleaseDate(policyInfoVO.getReleaseDate());
-        policyInfoVO.setStatus(policyInfoDO.getStatus());
-        List<PolicyInfoVO.File> policyDocuments = new ArrayList<>();
-        List<PolicyDocumentDO> policyDocumentDOS = policyDocumentMapper.selectByPolicyId(policyInfoDO.getId());
-        for (PolicyDocumentDO policyDocumentDO : policyDocumentDOS) {
-            PolicyInfoVO.File file = new PolicyInfoVO.File();
-            file.setFileId(policyDocumentDO.getId());
-            file.setFileName(policyDocumentDO.getFileName());
-            file.setFileSize(policyDocumentDO.getFileSize());
-            file.setUploadTime(policyDocumentDO.getCreateTime());
-            file.setUploadUser(policyDocumentDO.getUploadUserName());
-            policyDocuments.add(file);
-        }
-        policyInfoVO.setFiles(policyDocuments);
-        return policyInfoVO;
+        return getPolicyInfoVO(policyInfoDO, policyInfoDO.getId());
     }
 
     @Override
     public PolicyInfoVO findById(String policyId) {
         PolicyInfoDO policyInfoDO = policyInfoMapper.selectById(policyId);
-        PolicyInfoVO policyInfoVO = new PolicyInfoVO();
-        policyInfoVO.setId(policyInfoDO.getId());
-        policyInfoVO.setTitle(policyInfoDO.getTitle());
-        policyInfoVO.setDesc(policyInfoDO.getDesc());
-        policyInfoVO.setCreateDate(policyInfoDO.getCreateTime());
-        policyInfoVO.setReleaseDate(policyInfoVO.getReleaseDate());
-        policyInfoVO.setStatus(policyInfoDO.getStatus());
-
-        List<PolicyInfoVO.File> policyDocuments = new ArrayList<>();
-        List<PolicyDocumentDO> policyDocumentDOS = policyDocumentMapper.selectByPolicyId(policyId);
-        for (PolicyDocumentDO policyDocumentDO : policyDocumentDOS) {
-            PolicyInfoVO.File file = new PolicyInfoVO.File();
-            file.setFileId(policyDocumentDO.getId());
-            file.setFileName(policyDocumentDO.getFileName());
-            file.setFileSize(policyDocumentDO.getFileSize());
-            file.setUploadTime(policyDocumentDO.getCreateTime());
-            file.setUploadUser(policyDocumentDO.getUploadUserName());
-            policyDocuments.add(file);
-        }
-        policyInfoVO.setFiles(policyDocuments);
-
-        return policyInfoVO;
+        return getPolicyInfoVO(policyInfoDO, policyId);
     }
 
     @Override
@@ -118,7 +88,80 @@ public class PolicyServiceImpl implements PolicyService {
     }
 
     @Override
-    public void publish(PolicyPublishParam param) {
+    public PolicyInfoVO publish(PolicyPublishParam param) {
+        PolicyInfoDO policyInfoDO = new PolicyInfoDO();
+        policyInfoDO.setStatus(param.getStatus());
+        policyInfoMapper.publish(policyInfoDO, param.getPolicyId());
+        policyInfoDO = policyInfoMapper.selectById(param.getPolicyId());
+        return getPolicyInfoVO(policyInfoDO, param.getPolicyId());
+    }
 
+    private PolicyInfoVO getPolicyInfoVO(PolicyInfoDO policyInfoDO, String id) {
+        PolicyInfoVO policyInfoVO = new PolicyInfoVO();
+        policyInfoVO.setId(policyInfoDO.getId());
+        policyInfoVO.setTitle(policyInfoDO.getTitle());
+        policyInfoVO.setDesc(policyInfoDO.getDesc());
+        policyInfoVO.setCreateDate(policyInfoDO.getCreateTime());
+        policyInfoVO.setReleaseDate(policyInfoVO.getReleaseDate());
+        policyInfoVO.setStatus(policyInfoDO.getStatus());
+        List<PolicyInfoVO.File> policyDocuments = new ArrayList<>();
+        List<PolicyDocumentDO> policyDocumentDOS = policyDocumentMapper.selectByPolicyId(id);
+        for (PolicyDocumentDO policyDocumentDO : policyDocumentDOS) {
+            PolicyInfoVO.File file = new PolicyInfoVO.File();
+            file.setFileId(policyDocumentDO.getId());
+            file.setFileName(policyDocumentDO.getFileName());
+            file.setFileSize(policyDocumentDO.getFileSize());
+            file.setUploadTime(policyDocumentDO.getCreateTime());
+            file.setUploadUser(policyDocumentDO.getUploadUserName());
+            policyDocuments.add(file);
+        }
+        policyInfoVO.setFiles(policyDocuments);
+        return policyInfoVO;
+    }
+
+    @Override
+    public void download(String fileId) {
+        PolicyDocumentDO policyDocumentDO = policyDocumentMapper.selectById(fileId);
+        String fileName = policyDocumentDO.getFileName();
+        String path = policyDocumentDO.getPath();
+        File file = new File(path, fileName);
+        if (!file.exists())
+            throw new BusinessException("500", "文件不存在!");
+        byte[] buffer = new byte[1024];
+        FileInputStream fis = null;
+        BufferedInputStream bis = null;
+        try {
+            response.setContentType("application/force-download");// 设置强制下载不打开
+            response.addHeader("Content-Disposition",
+                    "attachment;fileName=" +  fileName + ";filename*=utf-8''"+ URLEncoder.encode(fileName,"UTF-8"));// 设置文件名
+            fis = new FileInputStream(file);
+            bis = new BufferedInputStream(fis);
+            OutputStream os = response.getOutputStream();
+            int i = bis.read(buffer);
+            while (i != -1) {
+                os.write(buffer, 0, i);
+                i = bis.read(buffer);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException("500", "下载文件失败");
+        } finally {
+            if (bis != null) {
+                try {
+                    bis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new BusinessException("500", "下载文件失败");
+                }
+            }
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new BusinessException("500", "下载文件失败");
+                }
+            }
+        }
     }
 }

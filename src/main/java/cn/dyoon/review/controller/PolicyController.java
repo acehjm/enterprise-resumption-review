@@ -62,14 +62,13 @@ public class PolicyController {
 
     @GetMapping(value = "/download", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public Result<ByteArray> download(@RequestParam String fileId) {
-
+        policyService.download(fileId);
         return new Result<>();
     }
 
     @PostMapping("/publish")
-    public Result<Void> review(@RequestBody PolicyPublishParam param) {
-        policyService.publish(param);
-        return new Result<>();
+    public Result<PolicyInfoVO> publish(@RequestBody PolicyPublishParam param) {
+        return new Result<>(policyService.publish(param));
     }
 
 }

@@ -13,5 +13,7 @@ public interface PolicyService {
 
     void deleteById(String policyId);
 
-    void publish(PolicyPublishParam param);
+    PolicyInfoVO publish(PolicyPublishParam param);
+
+    void download(String fileId);
 }

@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class PolicyPublishParam {
-    private String enterpriseId;
-    private Integer reviewStatus;
+    private String policyId;
+    private Integer status;
 }
