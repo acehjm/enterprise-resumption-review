@@ -39,6 +39,9 @@ public class EnterpriseDO {
     @TableField("phone")
     private String phone;
 
+    @TableField("username")
+    private String username;
+
     @TableField("apply_time")
     private LocalDateTime applyTime;
 

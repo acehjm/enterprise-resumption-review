@@ -45,6 +45,15 @@ public interface EnterpriseService {
     EnterpriseInfoVO getInfo(String enterpriseId);
 
     /**
+     * 获取企业详情
+     *
+     * @param username
+     * @param enterpriseId
+     * @return
+     */
+    EnterpriseInfoVO getInfo(String username, String enterpriseId);
+
+    /**
      * 删除企业
      *
      * @param enterpriseId
@@ -63,9 +72,10 @@ public interface EnterpriseService {
      * 下载文件
      *
      * @param fileId
+     * @param response
      * @return
      */
-    ByteArray download(String fileId);
+    ByteArray download(String fileId, HttpServletResponse response);
 
     /**
      * 提交申请

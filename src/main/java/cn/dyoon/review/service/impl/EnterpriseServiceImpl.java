@@ -3,6 +3,7 @@ package cn.dyoon.review.service.impl;
 import cn.dyoon.review.common.enums.EnterpriseTypeEnum;
 import cn.dyoon.review.common.enums.ReviewStatusEnum;
 import cn.dyoon.review.common.enums.StreetTypeEnum;
+import cn.dyoon.review.common.enums.UserTypeEnum;
 import cn.dyoon.review.common.exception.BaseExceptionEnum;
 import cn.dyoon.review.common.exception.BusinessException;
 import cn.dyoon.review.controller.param.EnterpriseExportParam;
@@ -17,6 +18,7 @@ import cn.dyoon.review.domain.entity.EnterpriseDO;
 import cn.dyoon.review.dto.EnterpriseExcelDTO;
 import cn.dyoon.review.manage.excel.service.impl.ExcelWriterImpl;
 import cn.dyoon.review.service.EnterpriseService;
+import cn.dyoon.review.service.UserService;
 import org.apache.ibatis.javassist.bytecode.ByteArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,10 +42,28 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
     @Autowired
     private EnterpriseMapper enterpriseMapper;
+    @Autowired
+    private UserService userService;
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void registered(EnterpriseParam param) {
+        boolean exists = enterpriseMapper.exists(param.getUsername());
+        if (exists) {
+            throw new BusinessException(BaseExceptionEnum.USER_NAME_HAS_EXISTS);
+        }
+        EnterpriseDO enterprise = new EnterpriseDO();
+        enterprise.setName(param.getName());
+        enterprise.setUnifiedSocialCreditCode(param.getUnifiedSocialCreditCode());
+        enterprise.setType(param.getType());
+        enterprise.setStreet(param.getStreet());
+        enterprise.setUsername(param.getUsername());
+        enterprise.setTransactorName(param.getTransactorName());
+        enterprise.setPhone(param.getPhone());
+        enterprise.setReviewStatus(ReviewStatusEnum.NOT_STARTED.getCode());
+        enterpriseMapper.insert(enterprise);
 
+        userService.add(param.getUsername(), param.getPassword(), UserTypeEnum.ENTERPRISE.getCode());
     }
 
     @Override
@@ -53,6 +73,11 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
     @Override
     public EnterpriseInfoVO getInfo(String enterpriseId) {
+        return null;
+    }
+
+    @Override
+    public EnterpriseInfoVO getInfo(String username, String enterpriseId) {
         return null;
     }
 
@@ -67,7 +92,8 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public ByteArray download(String fileId) {
+    public ByteArray download(String fileId, HttpServletResponse response) {
+
         return null;
     }
 

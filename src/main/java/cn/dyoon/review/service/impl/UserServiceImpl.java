@@ -14,6 +14,9 @@ import cn.dyoon.review.manage.auth.jwt.JwtUser;
 import cn.dyoon.review.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 /**
  * cn.dyoon.review.service.impl
@@ -50,6 +53,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public void signout(String username) {
         UserSessionHolder.userSessionThreadLocal.remove();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void add(String username, String password, Integer userType) {
+        UserDO userDO = new UserDO();
+        userDO.setUsername(username);
+        userDO.setPassword(password);
+        userDO.setUserType(userType);
+        userDO.setCreateTime(LocalDateTime.now());
+        userMapper.insert(userDO);
     }
 
     /**

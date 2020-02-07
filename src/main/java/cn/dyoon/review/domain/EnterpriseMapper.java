@@ -45,4 +45,14 @@ public interface EnterpriseMapper extends BaseMapper<EnterpriseDO> {
         return selectList(wrapper);
     }
 
+    /**
+     * 是否存在
+     *
+     * @param username
+     * @return
+     */
+    default boolean exists(String username) {
+        return selectCount(Wrappers.<EnterpriseDO>lambdaQuery().eq(EnterpriseDO::getUsername, username)) > 0;
+    }
+
 }

@@ -15,7 +15,6 @@ import cn.dyoon.review.controller.vo.PageVO;
 import cn.dyoon.review.manage.auth.constant.UserSession;
 import cn.dyoon.review.manage.auth.constant.UserSessionHolder;
 import cn.dyoon.review.service.EnterpriseService;
-import org.apache.ibatis.javassist.bytecode.ByteArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -104,7 +103,7 @@ public class EnterpriseController {
     }
 
     @GetMapping(value = "/download", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
-    public Result<ByteArray> download(@RequestParam String fileId) {
+    public Result<Void> download(@RequestParam String fileId, HttpServletResponse response) {
 
         return new Result<>();
     }

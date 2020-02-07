@@ -25,4 +25,13 @@ public interface UserService {
      * @param username
      */
     void signout(String username);
+
+    /**
+     * 新增用户
+     *
+     * @param username
+     * @param password
+     * @param userType
+     */
+    void add(String username, String password, Integer userType);
 }
