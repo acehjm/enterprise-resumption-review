@@ -14,6 +14,7 @@ import cn.dyoon.review.controller.vo.EnterpriseTypeVO;
 import cn.dyoon.review.controller.vo.PageVO;
 import org.apache.ibatis.javassist.bytecode.ByteArray;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,7 +40,7 @@ import java.util.stream.Collectors;
 public class EnterpriseController {
 
     @PostMapping("/registered")
-    public Result<Void> registered(@RequestBody EnterpriseParam param) {
+    public Result<Void> registered(@Validated @RequestBody EnterpriseParam param) {
 
         return new Result<>();
     }
@@ -71,7 +72,7 @@ public class EnterpriseController {
     }
 
     @PostMapping
-    public Result<PageVO<EnterpriseListVO>> getPage(@RequestBody EnterpriseSearchParam param) {
+    public Result<PageVO<EnterpriseListVO>> getPage(@Validated @RequestBody EnterpriseSearchParam param) {
 
         return new Result<>();
     }
