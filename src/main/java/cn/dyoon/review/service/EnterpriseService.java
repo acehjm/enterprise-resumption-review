@@ -48,10 +48,9 @@ public interface EnterpriseService {
      * 获取企业详情
      *
      * @param username
-     * @param enterpriseId
      * @return
      */
-    EnterpriseInfoVO getInfo(String username, String enterpriseId);
+    EnterpriseInfoVO getInfoByUsername(String username);
 
     /**
      * 删除企业

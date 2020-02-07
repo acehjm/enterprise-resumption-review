@@ -1,11 +1,14 @@
 package cn.dyoon.review.domain;
 
 import cn.dyoon.review.controller.param.EnterpriseExportParam;
+import cn.dyoon.review.controller.param.EnterpriseSearchParam;
 import cn.dyoon.review.domain.entity.EnterpriseDO;
 import cn.dyoon.review.util.verify.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -27,7 +30,7 @@ public interface EnterpriseMapper extends BaseMapper<EnterpriseDO> {
      * @param param
      * @return
      */
-    default List<EnterpriseDO> getExportListByCondition(EnterpriseExportParam param) {
+    default List<EnterpriseDO> findExportListByCondition(EnterpriseExportParam param) {
         LambdaQueryWrapper<EnterpriseDO> wrapper = Wrappers.lambdaQuery();
         if (ObjectUtil.isNotEmpty(param.getType())) {
             wrapper.eq(EnterpriseDO::getType, param.getType());
@@ -43,6 +46,40 @@ public interface EnterpriseMapper extends BaseMapper<EnterpriseDO> {
         }
         wrapper.isNotNull(EnterpriseDO::getId);
         return selectList(wrapper);
+    }
+
+    /**
+     * 获取分页数据列表
+     *
+     * @param param
+     * @return
+     */
+    default IPage<EnterpriseDO> findPageByCondition(EnterpriseSearchParam param) {
+        LambdaQueryWrapper<EnterpriseDO> wrapper = Wrappers.lambdaQuery();
+        wrapper.isNotNull(EnterpriseDO::getId);
+        if (ObjectUtil.isNotEmpty(param.getStreet())) {
+            wrapper.eq(EnterpriseDO::getStreet, param.getStreet());
+        }
+        if (ObjectUtil.isNotEmpty(param.getType())) {
+            wrapper.eq(EnterpriseDO::getType, param.getType());
+        }
+        if (ObjectUtil.isNotEmpty(param.getReviewStatus())) {
+            wrapper.eq(EnterpriseDO::getReviewStatus, param.getReviewStatus());
+        }
+        if (ObjectUtil.isNotEmpty(param.getName())) {
+            wrapper.likeLeft(EnterpriseDO::getName, param.getName());
+        }
+        return selectPage(new Page<>(param.getPageNo(), param.getPageSize()), wrapper);
+    }
+
+    /**
+     * 根据用户名获取企业信息
+     *
+     * @param username
+     * @return
+     */
+    default EnterpriseDO findInfoByUsername(String username) {
+        return selectOne(Wrappers.<EnterpriseDO>lambdaQuery().eq(EnterpriseDO::getUsername, username));
     }
 
     /**

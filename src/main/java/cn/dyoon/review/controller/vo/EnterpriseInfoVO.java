@@ -1,9 +1,13 @@
 package cn.dyoon.review.controller.vo;
 
+import cn.dyoon.review.domain.entity.EnterpriseDO;
+import cn.dyoon.review.domain.entity.ReworkDocumentDO;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 企业信息
@@ -18,9 +22,38 @@ public class EnterpriseInfoVO {
     private String transactorName;
     private String phone;
     private Review review;
-    private List<File> files;
+    private List<ReworkDocument> files;
+
+    public EnterpriseInfoVO() {
+    }
+
+    public EnterpriseInfoVO(EnterpriseDO enterpriseDO, List<ReworkDocumentDO> files) {
+        this.id = enterpriseDO.getId();
+        this.name = enterpriseDO.getName();
+        this.unifiedSocialCreditCode = enterpriseDO.getUnifiedSocialCreditCode();
+        this.type = enterpriseDO.getType();
+        this.street = enterpriseDO.getStreet();
+        this.transactorName = enterpriseDO.getTransactorName();
+        this.phone = enterpriseDO.getPhone();
+        this.review = Review.builder()
+                .reviewStatus(enterpriseDO.getReviewStatus())
+                .reviewUser(enterpriseDO.getReviewUser())
+                .reviewTime(enterpriseDO.getReviewTime())
+                .reviewResult(enterpriseDO.getReviewResult())
+                .build();
+        this.files = files.stream()
+                .map(it -> ReworkDocument.builder()
+                        .fileId(it.getId())
+                        .fileName(it.getFileName())
+                        .fileSize(it.getFileSize())
+                        .uploadUser(it.getUploadUserName())
+                        .uploadTime(it.getCreateTime())
+                        .build())
+                .collect(Collectors.toList());
+    }
 
     @Data
+    @Builder
     public static class Review {
         private Integer reviewStatus;
         private String reviewUser;
@@ -29,12 +62,12 @@ public class EnterpriseInfoVO {
     }
 
     @Data
-    public static class File {
+    @Builder
+    public static class ReworkDocument {
         private String fileId;
         private String fileName;
-        private Integer fileSize;
+        private Double fileSize;
         private String uploadUser;
         private LocalDateTime uploadTime;
     }
-
 }

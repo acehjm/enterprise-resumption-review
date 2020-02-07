@@ -26,4 +26,13 @@ public interface UserMapper extends BaseMapper<UserDO> {
         return selectOne(Wrappers.<UserDO>lambdaQuery().eq(UserDO::getUsername, username));
     }
 
+    /**
+     * 根据用户名删除
+     *
+     * @param username
+     */
+    default void deleteByUsername(String username) {
+        delete(Wrappers.<UserDO>lambdaQuery().eq(UserDO::getUsername, username));
+    }
+
 }

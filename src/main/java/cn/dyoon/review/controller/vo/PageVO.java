@@ -14,6 +14,16 @@ import java.util.List;
 public class PageVO<T> {
     private Integer pageNo;
     private Integer pageSize;
-    private Integer total;
+    private Long total;
     private List<T> records;
+
+    public PageVO() {
+    }
+
+    public PageVO(Integer pageNo, Integer pageSize, Long total, List<T> records) {
+        this.pageNo = pageNo;
+        this.pageSize = pageSize;
+        this.total = total;
+        this.records = records;
+    }
 }

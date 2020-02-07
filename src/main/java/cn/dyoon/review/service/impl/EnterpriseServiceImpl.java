@@ -14,11 +14,14 @@ import cn.dyoon.review.controller.vo.EnterpriseInfoVO;
 import cn.dyoon.review.controller.vo.EnterpriseListVO;
 import cn.dyoon.review.controller.vo.PageVO;
 import cn.dyoon.review.domain.EnterpriseMapper;
+import cn.dyoon.review.domain.ReworkDocumentMapper;
 import cn.dyoon.review.domain.entity.EnterpriseDO;
+import cn.dyoon.review.domain.entity.ReworkDocumentDO;
 import cn.dyoon.review.dto.EnterpriseExcelDTO;
 import cn.dyoon.review.manage.excel.service.impl.ExcelWriterImpl;
 import cn.dyoon.review.service.EnterpriseService;
 import cn.dyoon.review.service.UserService;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.ibatis.javassist.bytecode.ByteArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +45,8 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
     @Autowired
     private EnterpriseMapper enterpriseMapper;
+    @Autowired
+    private ReworkDocumentMapper reworkDocumentMapper;
     @Autowired
     private UserService userService;
 
@@ -68,27 +73,49 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
     @Override
     public PageVO<EnterpriseListVO> getPage(EnterpriseSearchParam param) {
-        return null;
+        IPage<EnterpriseDO> page = enterpriseMapper.findPageByCondition(param);
+        List<EnterpriseListVO> collect = page.getRecords().stream()
+                .map(EnterpriseListVO::new)
+                .collect(Collectors.toList());
+        return new PageVO<>(param.getPageNo(), param.getPageSize(), page.getTotal(), collect);
     }
 
     @Override
     public EnterpriseInfoVO getInfo(String enterpriseId) {
-        return null;
+        EnterpriseDO enterprise = enterpriseMapper.selectById(enterpriseId);
+        if (null == enterprise) {
+            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_EXISTS);
+        }
+        List<ReworkDocumentDO> files = reworkDocumentMapper.findByEnterpriseId(enterpriseId);
+        return new EnterpriseInfoVO(enterprise, files);
     }
 
     @Override
-    public EnterpriseInfoVO getInfo(String username, String enterpriseId) {
-        return null;
+    public EnterpriseInfoVO getInfoByUsername(String username) {
+        EnterpriseDO enterprise = enterpriseMapper.findInfoByUsername(username);
+        if (null == enterprise) {
+            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_EXISTS);
+        }
+        List<ReworkDocumentDO> files = reworkDocumentMapper.findByEnterpriseId(enterprise.getId());
+        return new EnterpriseInfoVO(enterprise, files);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void delete(String enterpriseId) {
+        EnterpriseDO enterprise = enterpriseMapper.selectById(enterpriseId);
+        if (null == enterprise) {
+            return;
+        }
+        enterpriseMapper.deleteById(enterpriseId);
+        reworkDocumentMapper.deleteByEnterpriseId(enterpriseId);
 
+        userService.deleteByUsername(enterprise.getUsername());
     }
 
     @Override
     public void upload(String enterpriseId, List<MultipartFile> files) {
-
+        // TODO 清除旧文件
     }
 
     @Override
@@ -125,7 +152,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
     @Override
     public void export(EnterpriseExportParam param, HttpServletResponse response) {
-        List<EnterpriseDO> list = enterpriseMapper.getExportListByCondition(param);
+        List<EnterpriseDO> list = enterpriseMapper.findExportListByCondition(param);
         List<EnterpriseExcelDTO> collect = list.stream()
                 .map(it -> {
                     EnterpriseExcelDTO dto = new EnterpriseExcelDTO();

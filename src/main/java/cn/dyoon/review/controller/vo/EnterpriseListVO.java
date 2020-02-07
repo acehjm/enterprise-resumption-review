@@ -1,5 +1,6 @@
 package cn.dyoon.review.controller.vo;
 
+import cn.dyoon.review.domain.entity.EnterpriseDO;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -21,4 +22,19 @@ public class EnterpriseListVO {
     private String phone;
     private Integer reviewStatus;
     private LocalDateTime reviewTime;
+
+    public EnterpriseListVO() {
+    }
+
+    public EnterpriseListVO(EnterpriseDO enterpriseDO) {
+        this.id = enterpriseDO.getId();
+        this.name = enterpriseDO.getName();
+        this.unifiedSocialCreditCode = enterpriseDO.getUnifiedSocialCreditCode();
+        this.type = enterpriseDO.getType();
+        this.street = enterpriseDO.getStreet();
+        this.transactorName = enterpriseDO.getTransactorName();
+        this.phone = enterpriseDO.getPhone();
+        this.reviewStatus = enterpriseDO.getReviewStatus();
+        this.reviewTime = enterpriseDO.getReviewTime();
+    }
 }

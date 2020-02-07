@@ -34,4 +34,12 @@ public interface UserService {
      * @param userType
      */
     void add(String username, String password, Integer userType);
+
+    /**
+     * 删除用户
+     * - 用在超级管理员删除企业时
+     *
+     * @param username
+     */
+    void deleteByUsername(String username);
 }

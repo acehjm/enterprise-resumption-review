@@ -66,6 +66,12 @@ public class UserServiceImpl implements UserService {
         userMapper.insert(userDO);
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void deleteByUsername(String username) {
+        userMapper.deleteByUsername(username);
+    }
+
     /**
      * 生产token
      *
