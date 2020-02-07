@@ -1,5 +1,6 @@
 package cn.dyoon.review.service.impl;
 
+import cn.dyoon.review.common.constant.ResumptionReviewConstant;
 import cn.dyoon.review.common.enums.EnterpriseTypeEnum;
 import cn.dyoon.review.common.enums.IndustryTypeEnum;
 import cn.dyoon.review.common.enums.ReviewStatusEnum;
@@ -23,6 +24,7 @@ import cn.dyoon.review.dto.EnterpriseExcelDTO;
 import cn.dyoon.review.manage.excel.service.impl.ExcelWriterImpl;
 import cn.dyoon.review.service.EnterpriseService;
 import cn.dyoon.review.service.UserService;
+import cn.dyoon.review.util.base.FileUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.ibatis.javassist.bytecode.ByteArray;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -118,14 +122,22 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public void upload(String enterpriseId, List<MultipartFile> files) {
+    public void upload(String enterpriseId, String uploadUserName, List<MultipartFile> files) {
         // TODO 清除旧文件
+        EnterpriseDO enterprise = enterpriseMapper.selectById(enterpriseId);
+        if (null == enterprise) {
+            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_EXISTS);
+        }
+
+        String filePath = ResumptionReviewConstant.ENTERPRISE_RESUMPTION_PATH + enterprise.getName() + "\\";
+        uploadFiles(uploadUserName, files, enterprise, filePath);
+
     }
 
     @Override
-    public ByteArray download(String fileId, HttpServletResponse response) {
-
-        return null;
+    public void download(String fileId, HttpServletResponse response) {
+        ReworkDocumentDO reworkDocument = reworkDocumentMapper.selectById(fileId);
+        FileUtil.downloadFile(response, reworkDocument.getFileName(), reworkDocument.getPath());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -177,5 +189,36 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         new ExcelWriterImpl().writeExcelRsp(collect, EnterpriseExcelDTO.class, true, fileName, response);
     }
 
+    private void uploadFiles(String uploadUserName, List<MultipartFile> files, EnterpriseDO enterpriseInfo, String filePath) {
+        File dir = new File(filePath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        for (int i = 0; i < files.size(); i++) {
+            MultipartFile file = files.get(i);
+            if (file.isEmpty()) {
+                throw new BusinessException("500", "文件为空");
+            }
+            String fileName = file.getOriginalFilename();
+
+            File dest = new File(filePath + fileName);
+            try {
+                ReworkDocumentDO reworkDocument = new ReworkDocumentDO();
+                reworkDocument.setCreateTime(LocalDateTime.now());
+                reworkDocument.setFileName(fileName);
+                reworkDocument.setFileSize((double) file.getSize()/1024);
+                reworkDocument.setEnterpriseId(enterpriseInfo.getId());
+                reworkDocument.setPath(filePath);
+                reworkDocument.setUploadUserName(uploadUserName);
+                reworkDocumentMapper.insert(reworkDocument);
+
+                file.transferTo(dest);
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new BusinessException("500", "上传文件失败");
+            }
+        }
+    }
 
 }

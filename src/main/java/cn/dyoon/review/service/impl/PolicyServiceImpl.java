@@ -1,5 +1,6 @@
 package cn.dyoon.review.service.impl;
 
+import cn.dyoon.review.common.constant.ResumptionReviewConstant;
 import cn.dyoon.review.common.enums.PublishStatusEnum;
 import cn.dyoon.review.common.exception.BaseExceptionEnum;
 import cn.dyoon.review.common.exception.BusinessException;
@@ -16,6 +17,7 @@ import cn.dyoon.review.service.PolicyService;
 import cn.dyoon.review.util.base.FileUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,7 +56,7 @@ public class PolicyServiceImpl implements PolicyService {
         policyInfoMapper.insert(policyInfoDO);
 
         //保存文件
-        String filePath = "D:\\" + title + "\\";
+        String filePath = ResumptionReviewConstant.POLICY_PATH + title + "\\";
         uploadFiles(uploadUserName, files, policyInfoDO, filePath);
 
         List<PolicyDocumentDO> policyFiles = policyDocumentMapper.selectByPolicyId(policyInfoDO.getId());
@@ -100,47 +102,7 @@ public class PolicyServiceImpl implements PolicyService {
     @Override
     public void download(String fileId) {
         PolicyDocumentDO policyDocumentDO = policyDocumentMapper.selectById(fileId);
-        String fileName = policyDocumentDO.getFileName();
-        String path = policyDocumentDO.getPath();
-        File file = new File(path, fileName);
-        if (!file.exists())
-            throw new BusinessException("500", "文件不存在!");
-        byte[] buffer = new byte[1024];
-        FileInputStream fis = null;
-        BufferedInputStream bis = null;
-        try {
-            response.setContentType("application/force-download");// 设置强制下载不打开
-            response.addHeader("Content-Disposition",
-                    "attachment;fileName=" +  fileName + ";filename*=utf-8''"+ URLEncoder.encode(fileName,"UTF-8"));// 设置文件名
-            fis = new FileInputStream(file);
-            bis = new BufferedInputStream(fis);
-            OutputStream os = response.getOutputStream();
-            int i = bis.read(buffer);
-            while (i != -1) {
-                os.write(buffer, 0, i);
-                i = bis.read(buffer);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new BusinessException("500", "下载文件失败");
-        } finally {
-            if (bis != null) {
-                try {
-                    bis.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    throw new BusinessException("500", "下载文件失败");
-                }
-            }
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    throw new BusinessException("500", "下载文件失败");
-                }
-            }
-        }
+        FileUtil.downloadFile(response, policyDocumentDO.getFileName(), policyDocumentDO.getPath());
     }
 
     @Override
@@ -159,7 +121,7 @@ public class PolicyServiceImpl implements PolicyService {
             throw new BusinessException(BaseExceptionEnum.POLICY_NOT_EXISTS);
         }
 
-        String filePath = "D:\\" + policyInfo.getTitle() + "\\";
+        String filePath = ResumptionReviewConstant.POLICY_PATH + policyInfo.getTitle() + "\\";
         uploadFiles(uploadUserName, files, policyInfo, filePath);
     }
 

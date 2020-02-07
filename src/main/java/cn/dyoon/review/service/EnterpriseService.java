@@ -64,9 +64,10 @@ public interface EnterpriseService {
      * 上传文件
      *
      * @param enterpriseId
+     * @param uploadUserName
      * @param files
      */
-    void upload(String enterpriseId, List<MultipartFile> files);
+    void upload(String enterpriseId, String uploadUserName, List<MultipartFile> files);
 
     /**
      * 下载文件
@@ -75,7 +76,7 @@ public interface EnterpriseService {
      * @param response
      * @return
      */
-    ByteArray download(String fileId, HttpServletResponse response);
+    void download(String fileId, HttpServletResponse response);
 
     /**
      * 提交申请

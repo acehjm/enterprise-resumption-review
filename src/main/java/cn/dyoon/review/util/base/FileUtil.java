@@ -1,9 +1,12 @@
 package cn.dyoon.review.util.base;
 
+import cn.dyoon.review.common.exception.BusinessException;
+import cn.dyoon.review.domain.entity.ReworkDocumentDO;
 import org.springframework.util.Assert;
 
-import java.io.File;
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLEncoder;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -90,6 +93,46 @@ public class FileUtil {
         }
     }
 
-
+    public static void downloadFile(HttpServletResponse response, String fileName, String path) {
+        File file = new File(path, fileName);
+        if (!file.exists())
+            throw new BusinessException("500", "文件不存在!");
+        byte[] buffer = new byte[1024];
+        FileInputStream fis = null;
+        BufferedInputStream bis = null;
+        try {
+            response.setContentType("application/force-download");// 设置强制下载不打开
+            response.addHeader("Content-Disposition",
+                    "attachment;fileName=" +  fileName + ";filename*=utf-8''"+ URLEncoder.encode(fileName,"UTF-8"));// 设置文件名
+            fis = new FileInputStream(file);
+            bis = new BufferedInputStream(fis);
+            OutputStream os = response.getOutputStream();
+            int i = bis.read(buffer);
+            while (i != -1) {
+                os.write(buffer, 0, i);
+                i = bis.read(buffer);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException("500", "下载文件失败");
+        } finally {
+            if (bis != null) {
+                try {
+                    bis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new BusinessException("500", "下载文件失败");
+                }
+            }
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new BusinessException("500", "下载文件失败");
+                }
+            }
+        }
+    }
 
 }

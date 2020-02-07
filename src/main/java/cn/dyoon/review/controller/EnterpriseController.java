@@ -70,14 +70,14 @@ public class EnterpriseController {
     }
 
     @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public Result<Void> upload(@RequestParam String enterpriseId, @RequestParam List<MultipartFile> files) {
-
+    public Result<Void> upload(@RequestParam String enterpriseId, @RequestParam String uploadUserName, @RequestParam List<MultipartFile> files) {
+        enterpriseService.upload(enterpriseId, uploadUserName, files);
         return new Result<>();
     }
 
     @GetMapping(value = "/download", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public Result<Void> download(@RequestParam String fileId, HttpServletResponse response) {
-
+        enterpriseService.download(fileId, response);
         return new Result<>();
     }
 
