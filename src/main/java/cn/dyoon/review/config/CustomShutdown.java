@@ -40,6 +40,9 @@ public class CustomShutdown implements TomcatConnectorCustomizer, ApplicationLis
 
     @Override
     public void onApplicationEvent(ContextClosedEvent event) {
+        if (null == connector) {
+            return;
+        }
         this.connector.pause();
         Executor executor = this.connector.getProtocolHandler().getExecutor();
         if (executor instanceof ThreadPoolExecutor) {

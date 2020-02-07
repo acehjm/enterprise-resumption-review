@@ -32,10 +32,11 @@ public interface EnterpriseService {
     /**
      * 分页获取企业列表
      *
+     * @param userSession
      * @param param
      * @return
      */
-    PageVO<EnterpriseListVO> getPage(EnterpriseSearchParam param);
+    PageVO<EnterpriseListVO> getPage(UserSession userSession, EnterpriseSearchParam param);
 
     /**
      * 获取企业详情

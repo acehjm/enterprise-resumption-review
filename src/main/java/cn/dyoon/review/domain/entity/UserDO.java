@@ -33,6 +33,9 @@ public class UserDO {
     @TableField("user_type")
     private Integer userType;
 
+    @TableField("user_subtype")
+    private Integer userSubtype;
+
     @TableField("role")
     private Integer role;
 

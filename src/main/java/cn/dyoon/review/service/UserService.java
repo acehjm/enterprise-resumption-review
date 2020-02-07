@@ -2,6 +2,7 @@ package cn.dyoon.review.service;
 
 import cn.dyoon.review.controller.param.UserLoginParam;
 import cn.dyoon.review.controller.vo.UserVO;
+import cn.dyoon.review.domain.entity.UserDO;
 
 /**
  * cn.dyoon.review.service
@@ -41,4 +42,12 @@ public interface UserService {
      * @param username
      */
     void deleteByUsername(String username);
+
+    /**
+     * 根据用户名获取用户
+     *
+     * @param username
+     * @return
+     */
+    UserDO findByUsername(String username);
 }

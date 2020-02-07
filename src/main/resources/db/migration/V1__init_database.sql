@@ -82,6 +82,7 @@ CREATE TABLE `user`  (
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建日期',
   `user_type` tinyint(1) NULL DEFAULT NULL COMMENT '用户类型',
+  `user_subtype` tinyint(1) NULL DEFAULT NULL COMMENT '用户子类型',
   `role` tinyint(1) NULL DEFAULT NULL COMMENT '用户角色',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;

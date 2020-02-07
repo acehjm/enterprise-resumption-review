@@ -40,6 +40,16 @@ test {
 //    useJUnitPlatform()
 }
 
+jar {
+    manifest {
+        attributes 'Main-Class': 'cn.dyoon.review.EnterpriseResumptionReviewApplication'
+    }
+    from {
+        // 添加依懒到打包文件
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
 
 dependencyManagement {
     imports {

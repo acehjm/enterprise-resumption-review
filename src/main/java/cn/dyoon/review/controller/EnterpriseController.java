@@ -50,7 +50,8 @@ public class EnterpriseController {
 
     @PostMapping
     public Result<PageVO<EnterpriseListVO>> getPage(@Validated @RequestBody EnterpriseSearchParam param) {
-        return new Result<>(enterpriseService.getPage(param));
+        UserSession userSession = UserSessionHolder.userSessionThreadLocal.get();
+        return new Result<>(enterpriseService.getPage(userSession, param));
     }
 
     @GetMapping("/{enterpriseId}")

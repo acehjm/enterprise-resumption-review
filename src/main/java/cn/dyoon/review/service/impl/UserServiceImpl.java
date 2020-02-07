@@ -75,6 +75,11 @@ public class UserServiceImpl implements UserService {
         userMapper.deleteByUsername(username);
     }
 
+    @Override
+    public UserDO findByUsername(String username) {
+        return userMapper.selectByUsername(username);
+    }
+
     /**
      * 生产token
      *

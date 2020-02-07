@@ -4,6 +4,7 @@ import cn.dyoon.review.common.constant.ResumptionReviewConstant;
 import cn.dyoon.review.common.enums.EnterpriseScaleEnum;
 import cn.dyoon.review.common.enums.EnterpriseTypeEnum;
 import cn.dyoon.review.common.enums.IndustryTypeEnum;
+import cn.dyoon.review.common.enums.ResumptionTypeEnum;
 import cn.dyoon.review.common.enums.ReviewStatusEnum;
 import cn.dyoon.review.common.enums.StreetTypeEnum;
 import cn.dyoon.review.common.enums.UserRoleEnum;
@@ -22,6 +23,7 @@ import cn.dyoon.review.domain.EnterpriseMapper;
 import cn.dyoon.review.domain.ReworkDocumentMapper;
 import cn.dyoon.review.domain.entity.EnterpriseDO;
 import cn.dyoon.review.domain.entity.ReworkDocumentDO;
+import cn.dyoon.review.domain.entity.UserDO;
 import cn.dyoon.review.dto.EnterpriseExcelDTO;
 import cn.dyoon.review.manage.auth.constant.UserSession;
 import cn.dyoon.review.manage.excel.service.impl.ExcelWriterImpl;
@@ -87,7 +89,21 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public PageVO<EnterpriseListVO> getPage(EnterpriseSearchParam param) {
+    public PageVO<EnterpriseListVO> getPage(UserSession userSession, EnterpriseSearchParam param) {
+        // 仅加载工业企业
+        if (UserTypeEnum.ZF_JINGXIN.getName().equals(userSession.getUserType())) {
+            param.setType(EnterpriseTypeEnum.INDUSTRIAL.getCode());
+        }
+        // 仅加载商贸业企业
+        if (UserTypeEnum.ZF_SHANGWU.getName().equals(userSession.getUserType())) {
+            param.setType(EnterpriseTypeEnum.BUSINESS.getCode());
+        }
+        // 仅加载所在街道的企业
+        if (UserTypeEnum.ZF_STREET.getName().equals(userSession.getUserType())) {
+            UserDO user = userService.findByUsername(userSession.getUsername());
+            param.setStreet(user.getUserSubtype());
+        }
+
         IPage<EnterpriseDO> page = enterpriseMapper.findPageByCondition(param);
         List<EnterpriseListVO> collect = page.getRecords().stream()
                 .map(EnterpriseListVO::new)
@@ -255,6 +271,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                     dto.setName(it.getName());
                     dto.setType(EnterpriseTypeEnum.getDesc(it.getType()));
                     dto.setStreet(StreetTypeEnum.getDesc(it.getStreet()));
+                    dto.setResumptionType(ResumptionTypeEnum.getDesc(it.getResumptionType()));
                     dto.setIndustryType(IndustryTypeEnum.getDesc(it.getIndustryType()));
                     dto.setReviewTime(it.getReviewTime().format(DateTimeFormatter.ofPattern(STANDARD_DATETIME_FORMAT)));
                     dto.setEmployeeNum(it.getEmployeeNum());
