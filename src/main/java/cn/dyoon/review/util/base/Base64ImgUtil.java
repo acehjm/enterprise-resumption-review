@@ -1,6 +1,5 @@
 package cn.dyoon.review.util.base;
 
-import cn.dyoon.review.util.verify.ObjectUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.imageio.ImageIO;

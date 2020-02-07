@@ -1,4 +1,4 @@
-package cn.dyoon.review.util.verify;
+package cn.dyoon.review.util.base;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
