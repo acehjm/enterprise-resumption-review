@@ -2,6 +2,8 @@ package cn.dyoon.review.common.enums;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+
 /**
  * cn.dyoon.review.common.enums
  *
@@ -26,4 +28,7 @@ public enum EnterpriseScaleEnum {
         this.desc = desc;
     }
 
+    public static boolean isValidType(Integer code) {
+        return Arrays.stream(EnterpriseScaleEnum.values()).anyMatch(it -> it.getCode().equals(code));
+    }
 }

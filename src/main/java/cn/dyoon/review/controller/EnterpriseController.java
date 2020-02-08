@@ -130,7 +130,7 @@ public class EnterpriseController {
 
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     @PostMapping("/export")
-    public Result<Void> export(@RequestBody EnterpriseExportParam param, HttpServletResponse response) {
+    public Result<Void> export(@Validated @RequestBody EnterpriseExportParam param, HttpServletResponse response) {
         enterpriseService.export(param, response);
         return new Result<>();
     }

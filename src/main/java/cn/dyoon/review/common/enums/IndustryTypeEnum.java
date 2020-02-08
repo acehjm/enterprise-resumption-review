@@ -37,4 +37,8 @@ public enum IndustryTypeEnum {
                 .orElse("NOT_EXISTS");
     }
 
+    public static boolean isValidType(Integer code) {
+        return Arrays.stream(IndustryTypeEnum.values()).anyMatch(it -> it.getCode().equals(code));
+    }
+
 }

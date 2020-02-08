@@ -33,4 +33,8 @@ public enum ResumptionTypeEnum {
                 .orElse("NOT_EXISTS");
     }
 
+    public static boolean isValidType(Integer code) {
+        return Arrays.stream(ResumptionTypeEnum.values()).anyMatch(it -> it.getCode().equals(code));
+    }
+
 }

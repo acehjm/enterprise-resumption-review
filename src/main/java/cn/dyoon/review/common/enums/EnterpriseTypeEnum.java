@@ -24,4 +24,8 @@ public enum EnterpriseTypeEnum {
                 .findFirst()
                 .orElse("NOT_EXISTS");
     }
+
+    public static boolean isValidType(Integer code) {
+        return Arrays.stream(EnterpriseTypeEnum.values()).anyMatch(it -> it.getCode().equals(code));
+    }
 }
