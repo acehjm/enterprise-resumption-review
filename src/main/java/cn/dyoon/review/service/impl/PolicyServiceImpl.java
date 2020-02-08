@@ -5,6 +5,7 @@ import cn.dyoon.review.common.enums.PublishStatusEnum;
 import cn.dyoon.review.common.exception.BaseExceptionEnum;
 import cn.dyoon.review.common.exception.BusinessException;
 import cn.dyoon.review.controller.param.PolicyListParam;
+import cn.dyoon.review.controller.param.PolicyParam;
 import cn.dyoon.review.controller.param.PolicyPublishParam;
 import cn.dyoon.review.controller.vo.PageVO;
 import cn.dyoon.review.controller.vo.PolicyInfoVO;
@@ -149,6 +150,22 @@ public class PolicyServiceImpl implements PolicyService {
             throw new BusinessException(BaseExceptionEnum.DOWNLOAD_FILES_NOT_EXISTS);
         }
         this.deleteFiles(Collections.singletonList(policyDocument));
+    }
+
+    @Override
+    public void update(String policyId, PolicyParam param) {
+        PolicyInfoDO policyInfo = policyInfoMapper.selectById(policyId);
+        if (null == policyInfo) {
+            throw new BusinessException(BaseExceptionEnum.POLICY_NOT_EXISTS);
+        }
+
+        if (PublishStatusEnum.PUBLISH.getCode() == policyInfo.getStatus()) {
+            throw new BusinessException(BaseExceptionEnum.POLICY_HAS_PUBLISHED);
+        }
+
+        policyInfo.setTitle(param.getTitle());
+        policyInfo.setDesc(param.getDesc());
+        policyInfoMapper.updateById(policyInfo);
     }
 
     private void uploadFiles(String username, List<MultipartFile> files, String policyInfoId) {

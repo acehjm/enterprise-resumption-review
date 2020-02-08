@@ -77,4 +77,10 @@ public class PolicyController {
         return new Result<>();
     }
 
+    @PutMapping("/{policyId}")
+    public Result<Void> update(@PathVariable String policyId, @RequestBody PolicyParam param) {
+        policyService.update(policyId, param);
+        return new Result<>();
+    }
+
 }

@@ -36,6 +36,8 @@ public enum BaseExceptionEnum implements BaseError {
 
     DELETE_FILES_FAILURE("0x0a00014", "删除文件失败"),
 
+    POLICY_HAS_PUBLISHED("0x0a00015", "政策已发布, 不允许修改")
+
     ;
 
     private String code;

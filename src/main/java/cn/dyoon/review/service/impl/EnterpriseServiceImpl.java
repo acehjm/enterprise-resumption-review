@@ -163,7 +163,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         enterprise.setStreet(param.getStreet());
         enterprise.setTransactorName(param.getTransactorName());
         enterprise.setPhone(param.getPhone());
-        enterpriseMapper.insert(enterprise);
+        enterpriseMapper.updateById(enterprise);
     }
 
     @Transactional(rollbackFor = Exception.class)

@@ -1,6 +1,7 @@
 package cn.dyoon.review.service;
 
 import cn.dyoon.review.controller.param.PolicyListParam;
+import cn.dyoon.review.controller.param.PolicyParam;
 import cn.dyoon.review.controller.param.PolicyPublishParam;
 import cn.dyoon.review.controller.vo.PageVO;
 import cn.dyoon.review.controller.vo.PolicyInfoVO;
@@ -25,4 +26,6 @@ public interface PolicyService {
     void upload(String policyId, String uploadUserName, List<MultipartFile> files);
 
     void deleteFile(String fileId);
+
+    void update(String policyId, PolicyParam param);
 }
