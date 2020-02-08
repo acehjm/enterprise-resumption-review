@@ -27,6 +27,8 @@ public class EnterpriseRegisteredParam {
     @NotBlank(message = "企业名称不能为空")
     private String name;
     @NotBlank(message = "统一社会信用代码不能为空")
+    @Pattern(regexp = "[^_IOZSVa-z\\W]{2}\\d{6}[^_IOZSVa-z\\W]{10}",
+            message = "不合法的统一社会信用代码")
     private String unifiedSocialCreditCode;
     @NotBlank(message = "用户名不能为空")
     private String username;
