@@ -16,18 +16,26 @@ import cn.dyoon.review.domain.entity.PolicyInfoDO;
 import cn.dyoon.review.service.PolicyService;
 import cn.dyoon.review.util.FileUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Transactional
 @Service
 public class PolicyServiceImpl implements PolicyService {
@@ -54,8 +62,7 @@ public class PolicyServiceImpl implements PolicyService {
         policyInfoMapper.insert(policyInfoDO);
 
         //保存文件
-        String filePath = ResumptionReviewConstant.POLICY_PATH + title + "\\";
-        uploadFiles(uploadUserName, files, policyInfoDO, filePath);
+        uploadFiles(uploadUserName, files, policyInfoDO.getId());
 
         List<PolicyDocumentDO> policyFiles = policyDocumentMapper.selectByPolicyId(policyInfoDO.getId());
 
@@ -99,8 +106,25 @@ public class PolicyServiceImpl implements PolicyService {
 
     @Override
     public void download(String fileId) {
-        PolicyDocumentDO policyDocumentDO = policyDocumentMapper.selectById(fileId);
-        FileUtil.downloadFile(response, policyDocumentDO.getFileDiskName(), policyDocumentDO.getPath());
+        PolicyDocumentDO policyDocument = policyDocumentMapper.selectById(fileId);
+        Path path = Paths.get(policyDocument.getPath(), policyDocument.getVirtualName());
+        boolean exists = Files.exists(path);
+        if (!exists) {
+            throw new BusinessException(BaseExceptionEnum.DOWNLOAD_FILES_NOT_EXISTS);
+        }
+        try (OutputStream os = response.getOutputStream()) {
+            byte[] bytes = Files.readAllBytes(path);
+
+            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+            response.setHeader("Content-Disposition", "attachment;filename="
+                    + URLEncoder.encode(policyDocument.getFileName(), "utf-8"));
+
+            os.write(bytes);
+            os.flush();
+        } catch (IOException e) {
+            log.error("[下载文件] - 失败", e);
+            throw new BusinessException(BaseExceptionEnum.DOWNLOAD_FILES_FAILURE);
+        }
     }
 
     @Override
@@ -118,42 +142,51 @@ public class PolicyServiceImpl implements PolicyService {
         if (null == policyInfo) {
             throw new BusinessException(BaseExceptionEnum.POLICY_NOT_EXISTS);
         }
-
-        String filePath = ResumptionReviewConstant.POLICY_PATH + policyInfo.getTitle() + "\\";
-        uploadFiles(uploadUserName, files, policyInfo, filePath);
+        uploadFiles(uploadUserName, files, policyInfo.getId());
     }
 
-    private void uploadFiles(String uploadUserName, List<MultipartFile> files, PolicyInfoDO policyInfo, String filePath) {
-        File dir = new File(filePath);
-        if (!dir.exists()) {
-            dir.mkdirs();
+    private void uploadFiles(String username, List<MultipartFile> files, String policyInfoId) {
+        if (files.isEmpty()) {
+            throw new BusinessException(BaseExceptionEnum.UPLOAD_FILES_IS_EMPTY);
         }
-
-        for (int i = 0; i < files.size(); i++) {
-            MultipartFile file = files.get(i);
-            if (file.isEmpty()) {
-                throw new BusinessException("500", "文件为空");
+        String filePath = ResumptionReviewConstant.POLICY_PATH;
+        try {
+            Path path = Paths.get(filePath);
+            if (!Files.exists(path)) {
+                Files.createDirectory(path);
             }
-            String fileName = file.getOriginalFilename();
-            String fileDiskName = FileUtil.getUUIDFileName(fileName);
+            files.forEach(file -> {
+                if (file.isEmpty()) {
+                    // 处理下一个文件
+                    return;
+                }
+                try {
+                    String actualName = file.getOriginalFilename();
+                    String virtualName = IdWorker.get32UUID();
+                    saveMetadata(username, policyInfoId, file.getSize(), actualName, filePath, virtualName);
 
-            File dest = new File(filePath + fileDiskName);
-            try {
-                PolicyDocumentDO policyDocumentDO = new PolicyDocumentDO();
-                policyDocumentDO.setCreateTime(LocalDateTime.now());
-                policyDocumentDO.setFileName(fileName);
-                policyDocumentDO.setFileSize((double) file.getSize()/1024);
-                policyDocumentDO.setPolicyId(policyInfo.getId());
-                policyDocumentDO.setPath(filePath);
-                policyDocumentDO.setUploadUserName(uploadUserName);
-                policyDocumentDO.setFileDiskName(fileDiskName);
-                policyDocumentMapper.insert(policyDocumentDO);
-
-                file.transferTo(dest);
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new BusinessException("500", "上传文件失败");
-            }
+                    Files.write(Paths.get(filePath, virtualName), file.getBytes());
+                } catch (IOException e) {
+                    log.error("[上传文件] - 失败", e);
+                    throw new BusinessException(BaseExceptionEnum.UPLOAD_FILES_FAILURE);
+                }
+            });
+        } catch (Exception e) {
+            log.error("[上传文件] - 失败", e);
+            throw new BusinessException(BaseExceptionEnum.UPLOAD_FILES_FAILURE);
         }
+    }
+
+    private void saveMetadata(String username, String policyId, long fileSize, String fileName,
+                              String filePath, String virtualName) {
+        PolicyDocumentDO policyDocument = new PolicyDocumentDO();
+        policyDocument.setCreateTime(LocalDateTime.now());
+        policyDocument.setFileName(fileName);
+        policyDocument.setVirtualName(virtualName);
+        policyDocument.setFileSize((double) fileSize / 1024);
+        policyDocument.setPolicyId(policyId);
+        policyDocument.setPath(filePath);
+        policyDocument.setUploadUserName(username);
+        policyDocumentMapper.insert(policyDocument);
     }
 }

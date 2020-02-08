@@ -1,2 +1,0 @@
-ALTER TABLE enterprise_resumption_review.`rework_document` ADD `file_disk_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件别名';
-ALTER TABLE enterprise_resumption_review.`policy_document` ADD `file_disk_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件别名';

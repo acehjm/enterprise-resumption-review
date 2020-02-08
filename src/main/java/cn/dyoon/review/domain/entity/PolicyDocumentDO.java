@@ -18,6 +18,9 @@ public class PolicyDocumentDO {
     @TableField("file_name")
     private String fileName;
 
+    @TableField("virtual_name")
+    private String virtualName;
+
     @TableField("file_size")
     private Double fileSize;
 
@@ -35,7 +38,4 @@ public class PolicyDocumentDO {
 
     @TableField("policy_id")
     private String policyId;
-
-    @TableField("file_disk_name")
-    private String fileDiskName;
 }
