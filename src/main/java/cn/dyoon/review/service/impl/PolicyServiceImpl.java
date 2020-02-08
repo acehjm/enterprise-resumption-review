@@ -15,7 +15,6 @@ import cn.dyoon.review.domain.PolicyInfoMapper;
 import cn.dyoon.review.domain.entity.PolicyDocumentDO;
 import cn.dyoon.review.domain.entity.PolicyInfoDO;
 import cn.dyoon.review.service.PolicyService;
-import cn.dyoon.review.util.FileUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,7 +34,6 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -176,6 +175,7 @@ public class PolicyServiceImpl implements PolicyService {
         try {
             Path path = Paths.get(filePath);
             if (!Files.exists(path)) {
+                Files.createDirectory(Paths.get(ResumptionReviewConstant.BASE_PATH));
                 Files.createDirectory(path);
             }
             files.forEach(file -> {
