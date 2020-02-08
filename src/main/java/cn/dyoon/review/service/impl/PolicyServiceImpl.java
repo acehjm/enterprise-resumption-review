@@ -100,7 +100,7 @@ public class PolicyServiceImpl implements PolicyService {
     @Override
     public void download(String fileId) {
         PolicyDocumentDO policyDocumentDO = policyDocumentMapper.selectById(fileId);
-        FileUtil.downloadFile(response, policyDocumentDO.getFileName(), policyDocumentDO.getPath());
+        FileUtil.downloadFile(response, policyDocumentDO.getFileDiskName(), policyDocumentDO.getPath());
     }
 
     @Override
@@ -135,8 +135,9 @@ public class PolicyServiceImpl implements PolicyService {
                 throw new BusinessException("500", "文件为空");
             }
             String fileName = file.getOriginalFilename();
+            String fileDiskName = FileUtil.getUUIDFileName(fileName);
 
-            File dest = new File(filePath + fileName);
+            File dest = new File(filePath + fileDiskName);
             try {
                 PolicyDocumentDO policyDocumentDO = new PolicyDocumentDO();
                 policyDocumentDO.setCreateTime(LocalDateTime.now());
@@ -145,6 +146,7 @@ public class PolicyServiceImpl implements PolicyService {
                 policyDocumentDO.setPolicyId(policyInfo.getId());
                 policyDocumentDO.setPath(filePath);
                 policyDocumentDO.setUploadUserName(uploadUserName);
+                policyDocumentDO.setFileDiskName(fileDiskName);
                 policyDocumentMapper.insert(policyDocumentDO);
 
                 file.transferTo(dest);

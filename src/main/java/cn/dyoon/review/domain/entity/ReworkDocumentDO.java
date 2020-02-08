@@ -45,4 +45,7 @@ public class ReworkDocumentDO {
     @TableField("enterprise_id")
     private String enterpriseId;
 
+    @TableField("file_disk_name")
+    private String fileDiskName;
+
 }

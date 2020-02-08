@@ -11,6 +11,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.MessageFormat;
+import java.util.UUID;
 
 /**
  * 文件操作工具类
@@ -133,6 +134,16 @@ public class FileUtil {
                 }
             }
         }
+    }
+
+    /**
+     * 生成唯一的文件名
+     */
+    public static String getUUIDFileName(String fileName){
+        int idx = fileName.lastIndexOf(".");
+        String extention = fileName.substring(idx);
+        String uuidFileName = UUID.randomUUID().toString().replace("-", "") + extention;
+        return uuidFileName;
     }
 
 }
