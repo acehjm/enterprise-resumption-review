@@ -359,6 +359,12 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                 try {
                     String actualName = file.getOriginalFilename();
                     String virtualName = IdWorker.get32UUID();
+                    //如果上传了同名文件则删除之前的文件
+                    ReworkDocumentDO preFile = reworkDocumentMapper.findSameFile(enterpriseId, actualName);
+                    if (preFile != null) {
+                        this.deleteFiles(Collections.singletonList(preFile));
+                    }
+
                     saveMetadata(username, enterpriseId, file.getSize(), actualName, filePath, virtualName);
 
                     Files.write(Paths.get(filePath, virtualName), file.getBytes());

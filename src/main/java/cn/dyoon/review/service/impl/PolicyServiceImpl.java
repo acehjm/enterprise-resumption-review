@@ -168,7 +168,7 @@ public class PolicyServiceImpl implements PolicyService {
         policyInfoMapper.updateById(policyInfo);
     }
 
-    private void uploadFiles(String username, List<MultipartFile> files, String policyInfoId) {
+    private void uploadFiles(String username, List<MultipartFile> files, String policyId) {
         if (files.isEmpty()) {
             throw new BusinessException(BaseExceptionEnum.UPLOAD_FILES_IS_EMPTY);
         }
@@ -186,7 +186,13 @@ public class PolicyServiceImpl implements PolicyService {
                 try {
                     String actualName = file.getOriginalFilename();
                     String virtualName = IdWorker.get32UUID();
-                    saveMetadata(username, policyInfoId, file.getSize(), actualName, filePath, virtualName);
+                    //如果上传了同名文件则删除之前的文件
+                    PolicyDocumentDO preFile = policyDocumentMapper.findSameFile(policyId, actualName);
+                    if (preFile != null) {
+                        this.deleteFiles(Collections.singletonList(preFile));
+                    }
+
+                    saveMetadata(username, policyId, file.getSize(), actualName, filePath, virtualName);
 
                     Files.write(Paths.get(filePath, virtualName), file.getBytes());
                 } catch (IOException e) {

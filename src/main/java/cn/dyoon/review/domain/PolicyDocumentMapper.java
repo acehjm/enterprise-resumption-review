@@ -30,4 +30,16 @@ public interface PolicyDocumentMapper extends BaseMapper<PolicyDocumentDO> {
     default int deleteByPolicyId(String policyId) {
         return delete(Wrappers.<PolicyDocumentDO>lambdaQuery().eq(PolicyDocumentDO::getPolicyId, policyId));
     }
+
+    /**
+     * 查找重名文件
+     * @param policyId
+     * @param fileName
+     * @return
+     */
+    default PolicyDocumentDO findSameFile(String policyId, String fileName) {
+        return selectOne(Wrappers.<PolicyDocumentDO>lambdaQuery().
+                eq(PolicyDocumentDO::getPolicyId, policyId).
+                eq(PolicyDocumentDO::getFileName, fileName));
+    }
 }

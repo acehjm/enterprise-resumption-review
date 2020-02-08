@@ -3,6 +3,8 @@ package cn.dyoon.review.controller;
 import cn.dyoon.review.common.response.Result;
 import cn.dyoon.review.controller.param.*;
 import cn.dyoon.review.controller.vo.*;
+import cn.dyoon.review.manage.auth.constant.UserSession;
+import cn.dyoon.review.manage.auth.constant.UserSessionHolder;
 import cn.dyoon.review.service.PolicyService;
 import org.apache.ibatis.javassist.bytecode.ByteArray;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,8 +57,9 @@ public class PolicyController {
     }
 
     @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public Result<Void> upload(@RequestParam String policyId, @RequestParam String uploadUserName, @RequestParam List<MultipartFile> files) {
-        policyService.upload(policyId, uploadUserName, files);
+    public Result<Void> upload(@RequestParam String policyId, @RequestParam List<MultipartFile> files) {
+        UserSession userSession = UserSessionHolder.userSessionThreadLocal.get();
+        policyService.upload(policyId, userSession.getUsername(), files);
         return new Result<>();
     }
 
