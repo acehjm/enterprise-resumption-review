@@ -24,6 +24,11 @@ public class ResumptionReviewConstant {
     public static final String POLICY_PATH = BASE_PATH + "/policy";
 
     /**
+     * 复工审核资料模板路径
+     */
+    public static final String REVIEW_TEMPLATE_DOCUMENT_PATH = BASE_PATH + "/reviewtemplate";
+
+    /**
      * 标准时间格式
      */
     public static final String STANDARD_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";

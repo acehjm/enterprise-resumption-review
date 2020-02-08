@@ -156,7 +156,7 @@ public class PolicyServiceImpl implements PolicyService {
         try {
             Path path = Paths.get(filePath);
             if (!Files.exists(path)) {
-                Files.createDirectory(Paths.get(ResumptionReviewConstant.BASE_PATH));
+//                Files.createDirectory(Paths.get(ResumptionReviewConstant.BASE_PATH));
                 Files.createDirectory(path);
             }
             files.forEach(file -> {

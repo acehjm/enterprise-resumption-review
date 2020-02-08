@@ -11,7 +11,8 @@ public enum UserTypeEnum {
     SUPER_ADMIN(0, "SUPER_ADMIN", "超级管理员") {
         @Override
         public List<String> authorities() {
-            return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.POLICY_MANAGE.getName());
+            return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.POLICY_MANAGE.getName(),
+                    MenusEnum.REVIEW_TEMPLATE_MANAGER.getName());
         }
     },
 
@@ -19,7 +20,7 @@ public enum UserTypeEnum {
         @Override
         public List<String> authorities() {
             return Arrays.asList(MenusEnum.ENTERPRISE_BASE_INFO.getName(), MenusEnum.POLICY_FILE_DOWNLOAD.getName(),
-                    MenusEnum.CONTACT_DETAILS.getName());
+                    MenusEnum.REVIEW_TEMPLATE_DOWNLOAD.getName(), MenusEnum.CONTACT_DETAILS.getName());
         }
     },
 
@@ -27,7 +28,7 @@ public enum UserTypeEnum {
         @Override
         public List<String> authorities() {
             return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.POLICY_FILE_DOWNLOAD.getName(),
-                    MenusEnum.CONTACT_DETAILS.getName());
+                    MenusEnum.REVIEW_TEMPLATE_DOWNLOAD.getName(), MenusEnum.CONTACT_DETAILS.getName());
         }
     },
 
@@ -35,7 +36,7 @@ public enum UserTypeEnum {
         @Override
         public List<String> authorities() {
             return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.POLICY_FILE_DOWNLOAD.getName(),
-                    MenusEnum.CONTACT_DETAILS.getName());
+                    MenusEnum.REVIEW_TEMPLATE_DOWNLOAD.getName(), MenusEnum.CONTACT_DETAILS.getName());
         }
     },
 
@@ -43,7 +44,7 @@ public enum UserTypeEnum {
         @Override
         public List<String> authorities() {
             return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.POLICY_FILE_DOWNLOAD.getName(),
-                    MenusEnum.CONTACT_DETAILS.getName());
+                    MenusEnum.REVIEW_TEMPLATE_DOWNLOAD.getName(), MenusEnum.CONTACT_DETAILS.getName());
         }
     },
 
@@ -51,7 +52,7 @@ public enum UserTypeEnum {
         @Override
         public List<String> authorities() {
             return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.POLICY_FILE_DOWNLOAD.getName(),
-                    MenusEnum.CONTACT_DETAILS.getName());
+                    MenusEnum.REVIEW_TEMPLATE_DOWNLOAD.getName(), MenusEnum.CONTACT_DETAILS.getName());
         }
     },
 
