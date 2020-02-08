@@ -11,48 +11,48 @@ public enum UserTypeEnum {
     SUPER_ADMIN(0, "SUPER_ADMIN", "超级管理员") {
         @Override
         public List<String> authorities() {
-            return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.POLICY_MANAGE.getName(),
-                    MenusEnum.REVIEW_TEMPLATE_MANAGER.getName());
+            return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.REVIEW_TEMPLATE_MANAGER.getName(),
+                    MenusEnum.POLICY_MANAGE.getName());
         }
     },
 
     ENTERPRISE(1, "ENTERPRISE_USER", "企业用户") {
         @Override
         public List<String> authorities() {
-            return Arrays.asList(MenusEnum.ENTERPRISE_BASE_INFO.getName(), MenusEnum.POLICY_FILE_DOWNLOAD.getName(),
-                    MenusEnum.REVIEW_TEMPLATE_DOWNLOAD.getName(), MenusEnum.CONTACT_DETAILS.getName());
+            return Arrays.asList(MenusEnum.ENTERPRISE_BASE_INFO.getName(), MenusEnum.REVIEW_TEMPLATE_DOWNLOAD.getName(),
+                    MenusEnum.POLICY_FILE_DOWNLOAD.getName(), MenusEnum.CONTACT_DETAILS.getName());
         }
     },
 
     ZF_JINGXIN(2, "JINGXINJU_USER", "经信局用户") {
         @Override
         public List<String> authorities() {
-            return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.POLICY_FILE_DOWNLOAD.getName(),
-                    MenusEnum.REVIEW_TEMPLATE_DOWNLOAD.getName(), MenusEnum.CONTACT_DETAILS.getName());
+            return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.REVIEW_TEMPLATE_DOWNLOAD.getName(),
+                    MenusEnum.POLICY_FILE_DOWNLOAD.getName(), MenusEnum.CONTACT_DETAILS.getName());
         }
     },
 
     ZF_SHANGWU(3, "SHANGWUJU_USER", "商务局用户") {
         @Override
         public List<String> authorities() {
-            return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.POLICY_FILE_DOWNLOAD.getName(),
-                    MenusEnum.REVIEW_TEMPLATE_DOWNLOAD.getName(), MenusEnum.CONTACT_DETAILS.getName());
+            return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.REVIEW_TEMPLATE_DOWNLOAD.getName(),
+                    MenusEnum.POLICY_FILE_DOWNLOAD.getName(), MenusEnum.CONTACT_DETAILS.getName());
         }
     },
 
     ZF_STREET(4, "STREET_USER", "镇（街道）/园区用户") {
         @Override
         public List<String> authorities() {
-            return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.POLICY_FILE_DOWNLOAD.getName(),
-                    MenusEnum.REVIEW_TEMPLATE_DOWNLOAD.getName(), MenusEnum.CONTACT_DETAILS.getName());
+            return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.REVIEW_TEMPLATE_DOWNLOAD.getName(),
+                    MenusEnum.POLICY_FILE_DOWNLOAD.getName(), MenusEnum.CONTACT_DETAILS.getName());
         }
     },
 
     ZF_PREVENTION(5, "PREVENTION_USER", "防控领导小组用户") {
         @Override
         public List<String> authorities() {
-            return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.POLICY_FILE_DOWNLOAD.getName(),
-                    MenusEnum.REVIEW_TEMPLATE_DOWNLOAD.getName(), MenusEnum.CONTACT_DETAILS.getName());
+            return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.REVIEW_TEMPLATE_DOWNLOAD.getName(),
+                    MenusEnum.POLICY_FILE_DOWNLOAD.getName(), MenusEnum.CONTACT_DETAILS.getName());
         }
     },
 
