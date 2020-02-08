@@ -2,6 +2,7 @@ plugins {
 //	id 'org.springframework.boot' version '2.2.4.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'java'
+    id 'org.springframework.boot' version '2.2.4.RELEASE'
 }
 
 group = 'cn.dyoon'
@@ -55,4 +56,8 @@ dependencyManagement {
     imports {
         mavenBom "org.springframework.boot:spring-boot-dependencies:2.2.4.RELEASE"
     }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
 }
