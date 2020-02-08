@@ -23,4 +23,6 @@ public interface PolicyService {
     PageVO<PolicyListVO> getPage(PolicyListParam param);
 
     void upload(String policyId, String uploadUserName, List<MultipartFile> files);
+
+    void deleteFile(String fileId);
 }

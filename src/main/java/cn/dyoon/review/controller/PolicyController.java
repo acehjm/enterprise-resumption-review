@@ -7,6 +7,7 @@ import cn.dyoon.review.service.PolicyService;
 import org.apache.ibatis.javassist.bytecode.ByteArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,7 +39,7 @@ public class PolicyController {
     }
 
     @PostMapping
-    public Result<PageVO<PolicyListVO>> getPage(@RequestBody PolicyListParam param) {
+    public Result<PageVO<PolicyListVO>> getPage(@Validated @RequestBody PolicyListParam param) {
         return new Result<>(policyService.getPage(param));
     }
 
@@ -66,8 +67,14 @@ public class PolicyController {
     }
 
     @PostMapping("/publish")
-    public Result<PolicyInfoVO> publish(@RequestBody PolicyPublishParam param) {
+    public Result<PolicyInfoVO> publish(@Validated @RequestBody PolicyPublishParam param) {
         return new Result<>(policyService.publish(param));
+    }
+
+    @DeleteMapping(value = "/actions/deleteFile")
+    public Result<Void> deleteFile(@RequestParam String fileId) {
+        policyService.deleteFile(fileId);
+        return new Result<>();
     }
 
 }

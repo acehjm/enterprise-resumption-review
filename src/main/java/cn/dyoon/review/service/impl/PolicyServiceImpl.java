@@ -31,6 +31,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -85,12 +86,8 @@ public class PolicyServiceImpl implements PolicyService {
         if (null == policyInfo) {
             return;
         }
-        List<PolicyDocumentDO> policyDocumentDOS = policyDocumentMapper.selectByPolicyId(policyId);
-        Optional<PolicyDocumentDO> policyDocumentDO = policyDocumentDOS.stream().findAny();
-        String dictoryPath = policyDocumentDO.get().getPath();
-        FileUtil.DeleteFolder(dictoryPath);
         policyInfoMapper.deleteById(policyId);
-        policyDocumentMapper.deleteByPolicyId(policyId);
+        this.deleteFiles(policyDocumentMapper.selectByPolicyId(policyId));
     }
 
     @Override
@@ -145,6 +142,15 @@ public class PolicyServiceImpl implements PolicyService {
         uploadFiles(uploadUserName, files, policyInfo.getId());
     }
 
+    @Override
+    public void deleteFile(String fileId) {
+        PolicyDocumentDO policyDocument = policyDocumentMapper.selectById(fileId);
+        if (null == policyDocument) {
+            throw new BusinessException(BaseExceptionEnum.DOWNLOAD_FILES_NOT_EXISTS);
+        }
+        this.deleteFiles(Collections.singletonList(policyDocument));
+    }
+
     private void uploadFiles(String username, List<MultipartFile> files, String policyInfoId) {
         if (files.isEmpty()) {
             throw new BusinessException(BaseExceptionEnum.UPLOAD_FILES_IS_EMPTY);
@@ -188,5 +194,24 @@ public class PolicyServiceImpl implements PolicyService {
         policyDocument.setPath(filePath);
         policyDocument.setUploadUserName(username);
         policyDocumentMapper.insert(policyDocument);
+    }
+
+    /**
+     * 批量删除复工文件
+     *
+     * @param documents
+     */
+    private void deleteFiles(List<PolicyDocumentDO> documents) {
+        documents.forEach(document -> {
+            try {
+                boolean delete = Files.deleteIfExists(Paths.get(document.getPath(), document.getVirtualName()));
+                if (delete) {
+                    policyDocumentMapper.deleteById(document.getId());
+                }
+            } catch (IOException e) {
+                log.error("[删除文件] - 失败", e);
+                throw new BusinessException(BaseExceptionEnum.DELETE_FILES_FAILURE);
+            }
+        });
     }
 }
