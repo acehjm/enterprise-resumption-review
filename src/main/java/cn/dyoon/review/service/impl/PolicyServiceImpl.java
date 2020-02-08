@@ -15,19 +15,17 @@ import cn.dyoon.review.domain.PolicyInfoMapper;
 import cn.dyoon.review.domain.entity.PolicyDocumentDO;
 import cn.dyoon.review.domain.entity.PolicyInfoDO;
 import cn.dyoon.review.service.PolicyService;
+import cn.dyoon.review.util.FileUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -103,25 +101,8 @@ public class PolicyServiceImpl implements PolicyService {
 
     @Override
     public void download(String fileId) {
-        PolicyDocumentDO policyDocument = policyDocumentMapper.selectById(fileId);
-        Path path = Paths.get(policyDocument.getPath(), policyDocument.getVirtualName());
-        boolean exists = Files.exists(path);
-        if (!exists) {
-            throw new BusinessException(BaseExceptionEnum.DOWNLOAD_FILES_NOT_EXISTS);
-        }
-        try (OutputStream os = response.getOutputStream()) {
-            byte[] bytes = Files.readAllBytes(path);
-
-            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-            response.setHeader("Content-Disposition", "attachment;filename="
-                    + URLEncoder.encode(policyDocument.getFileName(), "utf-8"));
-
-            os.write(bytes);
-            os.flush();
-        } catch (IOException e) {
-            log.error("[下载文件] - 失败", e);
-            throw new BusinessException(BaseExceptionEnum.DOWNLOAD_FILES_FAILURE);
-        }
+        PolicyDocumentDO document = policyDocumentMapper.selectById(fileId);
+        FileUtil.readThenWriteResponse(document.getPath(), document.getVirtualName(), document.getFileName(), response);
     }
 
     @Override

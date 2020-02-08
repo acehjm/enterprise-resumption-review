@@ -29,19 +29,17 @@ import cn.dyoon.review.manage.auth.constant.UserSession;
 import cn.dyoon.review.manage.excel.service.impl.ExcelWriterImpl;
 import cn.dyoon.review.service.EnterpriseService;
 import cn.dyoon.review.service.UserService;
+import cn.dyoon.review.util.FileUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -142,16 +140,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void update(String enterpriseId, EnterpriseUpdateParam param) {
-        EnterpriseDO enterprise = enterpriseMapper.selectById(enterpriseId);
-        if (null == enterprise) {
-            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_EXISTS);
-        }
-        // 不允许修改审批中的企业信息
-        Integer[] status = {ReviewStatusEnum.NOT_STARTED.getCode(), ReviewStatusEnum.PASS.getCode(),
-                ReviewStatusEnum.NOT_PASS.getCode()};
-        if (!Arrays.asList(status).contains(enterprise.getReviewStatus())) {
-            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_IN_PROCESSING);
-        }
+        EnterpriseDO enterprise = getIfCheckedPass(enterpriseId);
 
         enterprise.setUnifiedSocialCreditCode(param.getUnifiedSocialCreditCode());
         enterprise.setName(param.getName());
@@ -180,40 +169,14 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
     @Override
     public void upload(String enterpriseId, String uploadUserName, List<MultipartFile> files) {
-        EnterpriseDO enterprise = enterpriseMapper.selectById(enterpriseId);
-        if (null == enterprise) {
-            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_EXISTS);
-        }
-
-        if (!enterprise.getReviewStatus().equals(ReviewStatusEnum.NOT_STARTED.getCode()) &&
-                !enterprise.getReviewStatus().equals(ReviewStatusEnum.NOT_PASS.getCode()))
-            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_IN_PROCESSING);
-
+        EnterpriseDO enterprise = getIfCheckedPass(enterpriseId);
         this.uploadFiles(uploadUserName, enterprise.getId(), files);
     }
 
     @Override
     public void download(String fileId, HttpServletResponse response) {
-        ReworkDocumentDO reworkDocument = reworkDocumentMapper.selectById(fileId);
-
-        Path path = Paths.get(reworkDocument.getPath(), reworkDocument.getVirtualName());
-        boolean exists = Files.exists(path);
-        if (!exists) {
-            throw new BusinessException(BaseExceptionEnum.DOWNLOAD_FILES_NOT_EXISTS);
-        }
-        try (OutputStream os = response.getOutputStream()) {
-            byte[] bytes = Files.readAllBytes(path);
-
-            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-            response.setHeader("Content-Disposition", "attachment;filename="
-                    + URLEncoder.encode(reworkDocument.getFileName(), "utf-8"));
-
-            os.write(bytes);
-            os.flush();
-        } catch (IOException e) {
-            log.error("[下载文件] - 失败", e);
-            throw new BusinessException(BaseExceptionEnum.DOWNLOAD_FILES_FAILURE);
-        }
+        ReworkDocumentDO document = reworkDocumentMapper.selectById(fileId);
+        FileUtil.readThenWriteResponse(document.getPath(), document.getVirtualName(), document.getFileName(), response);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -223,16 +186,18 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         if (null == document) {
             throw new BusinessException(BaseExceptionEnum.DOWNLOAD_FILES_NOT_EXISTS);
         }
+        EnterpriseDO enterprise = enterpriseMapper.selectById(document.getEnterpriseId());
+        Integer[] invalid = {ReviewStatusEnum.NOT_STARTED.getCode(), ReviewStatusEnum.NOT_PASS.getCode()};
+        if (!Arrays.asList(invalid).contains(enterprise.getReviewStatus())) {
+            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_IN_PROCESSING);
+        }
         this.deleteFiles(Collections.singletonList(document));
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void submitApply(String enterpriseId) {
-        EnterpriseDO enterprise = enterpriseMapper.selectById(enterpriseId);
-        if (null == enterprise) {
-            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_EXISTS);
-        }
+        EnterpriseDO enterprise = getIfCheckedPass(enterpriseId);
         enterprise.setApplyTime(LocalDateTime.now());
         enterprise.setReviewStatus(ReviewStatusEnum.ACCEPTED.getCode());
         // 清空审核意见
@@ -318,6 +283,24 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                 .format(DateTimeFormatter.ofPattern(STANDARD_DATETIME_FORMAT))
                 .replaceAll("[[\\s-:punct:]]", "");
         new ExcelWriterImpl().writeExcelRsp(collect, EnterpriseExcelDTO.class, true, fileName, response);
+    }
+
+    /**
+     * 校验企业审核状态并返回
+     *
+     * @param enterpriseId
+     * @return
+     */
+    private EnterpriseDO getIfCheckedPass(String enterpriseId) {
+        EnterpriseDO enterprise = enterpriseMapper.selectById(enterpriseId);
+        if (null == enterprise) {
+            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_EXISTS);
+        }
+        Integer[] invalid = {ReviewStatusEnum.NOT_STARTED.getCode(), ReviewStatusEnum.NOT_PASS.getCode()};
+        if (!Arrays.asList(invalid).contains(enterprise.getReviewStatus())) {
+            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_IN_PROCESSING);
+        }
+        return enterprise;
     }
 
     /**
