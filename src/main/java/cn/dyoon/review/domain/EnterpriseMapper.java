@@ -4,6 +4,7 @@ import cn.dyoon.review.controller.param.EnterpriseExportParam;
 import cn.dyoon.review.controller.param.EnterpriseSearchParam;
 import cn.dyoon.review.domain.entity.EnterpriseDO;
 import cn.dyoon.review.util.ObjectUtil;
+import cn.dyoon.review.util.SQLUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -48,7 +49,7 @@ public interface EnterpriseMapper extends BaseMapper<EnterpriseDO> {
             wrapper.eq(EnterpriseDO::getReviewStatus, param.getReviewStatus());
         }
         if (ObjectUtil.isNotEmpty(param.getName())) {
-            wrapper.likeLeft(EnterpriseDO::getName, param.getName());
+            wrapper.likeLeft(EnterpriseDO::getName, SQLUtil.mysqlEscape(param.getName()));
         }
         wrapper.isNotNull(EnterpriseDO::getId);
         return selectList(wrapper);
@@ -82,7 +83,7 @@ public interface EnterpriseMapper extends BaseMapper<EnterpriseDO> {
             wrapper.eq(EnterpriseDO::getReviewStatus, param.getReviewStatus());
         }
         if (ObjectUtil.isNotEmpty(param.getName())) {
-            wrapper.likeLeft(EnterpriseDO::getName, param.getName());
+            wrapper.likeLeft(EnterpriseDO::getName, SQLUtil.mysqlEscape(param.getName()));
         }
         return selectPage(new Page<>(param.getPageNo(), param.getPageSize()), wrapper);
     }
