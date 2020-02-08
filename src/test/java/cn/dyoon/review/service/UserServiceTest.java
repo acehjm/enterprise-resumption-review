@@ -50,20 +50,36 @@ public class UserServiceTest {
         userMapper.insert(user1);
 
         UserDO user2 = new UserDO();
-        user2.setUsername("jingxinju");
-        user2.setPassword(SHAUtil.Digest.SHA256.digest("jingxinju@123&"));
+        user2.setUsername("jingxinju1");
+        user2.setPassword(SHAUtil.Digest.SHA256.digest("jingxinju1@123&"));
         user2.setUserType(UserTypeEnum.ZF_JINGXIN.getCode());
         user2.setRole(UserRoleEnum.REVIEW_USER.getCode());
         user2.setCreateTime(LocalDateTime.now());
         userMapper.insert(user2);
 
         UserDO user3 = new UserDO();
-        user3.setUsername("shangwuju");
-        user3.setPassword(SHAUtil.Digest.SHA256.digest("shangwuju@123&"));
-        user3.setUserType(UserTypeEnum.ZF_SHANGWU.getCode());
-        user3.setRole(UserRoleEnum.REVIEW_USER.getCode());
+        user3.setUsername("jingxinju2");
+        user3.setPassword(SHAUtil.Digest.SHA256.digest("jingxinju2@123&"));
+        user3.setUserType(UserTypeEnum.ZF_JINGXIN.getCode());
+        user3.setRole(UserRoleEnum.SUPER_ADMIN.getCode());
         user3.setCreateTime(LocalDateTime.now());
         userMapper.insert(user3);
+
+        UserDO user4 = new UserDO();
+        user4.setUsername("shangwuju1");
+        user4.setPassword(SHAUtil.Digest.SHA256.digest("shangwuju1@123&"));
+        user4.setUserType(UserTypeEnum.ZF_SHANGWU.getCode());
+        user4.setRole(UserRoleEnum.REVIEW_USER.getCode());
+        user4.setCreateTime(LocalDateTime.now());
+        userMapper.insert(user4);
+
+        UserDO user5 = new UserDO();
+        user5.setUsername("shangwuju2");
+        user5.setPassword(SHAUtil.Digest.SHA256.digest("shangwuju2@123&"));
+        user5.setUserType(UserTypeEnum.ZF_SHANGWU.getCode());
+        user5.setRole(UserRoleEnum.REVIEW_USER.getCode());
+        user5.setCreateTime(LocalDateTime.now());
+        userMapper.insert(user5);
 
         UserDO fk1 = new UserDO();
         fk1.setUsername("fangkong1");
@@ -82,77 +98,77 @@ public class UserServiceTest {
         userMapper.insert(fk2);
 
         //------------------------------street
-        UserDO user4 = new UserDO();
-        user4.setUsername("zhaobaoshan1");
-        user4.setPassword(SHAUtil.Digest.SHA256.digest("zhaobaoshan1@123&"));
-        user4.setUserType(UserTypeEnum.ZF_STREET.getCode());
-        user4.setRole(UserRoleEnum.ASSIGNEE_USER.getCode());
-        user4.setUserSubtype(StreetTypeEnum.ZH_ZBS.getCode());
-        user4.setCreateTime(LocalDateTime.now());
-        userMapper.insert(user4);
-
-        UserDO user5 = new UserDO();
-        user5.setUsername("zhaobaoshan2");
-        user5.setPassword(SHAUtil.Digest.SHA256.digest("zhaobaoshan2@123&"));
-        user5.setUserType(UserTypeEnum.ZF_STREET.getCode());
-        user5.setRole(UserRoleEnum.REVIEW_USER.getCode());
-        user5.setUserSubtype(StreetTypeEnum.ZH_ZBS.getCode());
-        user5.setCreateTime(LocalDateTime.now());
-        userMapper.insert(user5);
-
         UserDO user6 = new UserDO();
-        user6.setUsername("jiaochuan1");
-        user6.setPassword(SHAUtil.Digest.SHA256.digest("jiaochuan1@123&"));
+        user6.setUsername("zhaobaoshan1");
+        user6.setPassword(SHAUtil.Digest.SHA256.digest("zhaobaoshan1@123&"));
         user6.setUserType(UserTypeEnum.ZF_STREET.getCode());
         user6.setRole(UserRoleEnum.ASSIGNEE_USER.getCode());
-        user6.setUserSubtype(StreetTypeEnum.ZH_JCJD.getCode());
+        user6.setUserSubtype(StreetTypeEnum.ZH_ZBS.getCode());
         user6.setCreateTime(LocalDateTime.now());
         userMapper.insert(user6);
 
         UserDO user7 = new UserDO();
-        user7.setUsername("jiaochuan2");
-        user7.setPassword(SHAUtil.Digest.SHA256.digest("jiaochuan2@123&"));
+        user7.setUsername("zhaobaoshan2");
+        user7.setPassword(SHAUtil.Digest.SHA256.digest("zhaobaoshan2@123&"));
         user7.setUserType(UserTypeEnum.ZF_STREET.getCode());
         user7.setRole(UserRoleEnum.REVIEW_USER.getCode());
-        user7.setUserSubtype(StreetTypeEnum.ZH_JCJD.getCode());
+        user7.setUserSubtype(StreetTypeEnum.ZH_ZBS.getCode());
         user7.setCreateTime(LocalDateTime.now());
         userMapper.insert(user7);
 
         UserDO user8 = new UserDO();
-        user8.setUsername("luotuo1");
-        user8.setPassword(SHAUtil.Digest.SHA256.digest("luotuo1@123&"));
+        user8.setUsername("jiaochuan1");
+        user8.setPassword(SHAUtil.Digest.SHA256.digest("jiaochuan1@123&"));
         user8.setUserType(UserTypeEnum.ZF_STREET.getCode());
         user8.setRole(UserRoleEnum.ASSIGNEE_USER.getCode());
-        user8.setUserSubtype(StreetTypeEnum.ZH_LTJD.getCode());
+        user8.setUserSubtype(StreetTypeEnum.ZH_JCJD.getCode());
         user8.setCreateTime(LocalDateTime.now());
         userMapper.insert(user8);
 
         UserDO user9 = new UserDO();
-        user9.setUsername("luotuo2");
-        user9.setPassword(SHAUtil.Digest.SHA256.digest("luotuo2@123&"));
+        user9.setUsername("jiaochuan2");
+        user9.setPassword(SHAUtil.Digest.SHA256.digest("jiaochuan2@123&"));
         user9.setUserType(UserTypeEnum.ZF_STREET.getCode());
         user9.setRole(UserRoleEnum.REVIEW_USER.getCode());
-        user9.setUserSubtype(StreetTypeEnum.ZH_LTJD.getCode());
+        user9.setUserSubtype(StreetTypeEnum.ZH_JCJD.getCode());
         user9.setCreateTime(LocalDateTime.now());
         userMapper.insert(user9);
 
         UserDO user10 = new UserDO();
-        user10.setUsername("zhuangshi1");
-        user10.setPassword(SHAUtil.Digest.SHA256.digest("zhuangshi1@123&"));
+        user10.setUsername("luotuo1");
+        user10.setPassword(SHAUtil.Digest.SHA256.digest("luotuo1@123&"));
         user10.setUserType(UserTypeEnum.ZF_STREET.getCode());
         user10.setRole(UserRoleEnum.ASSIGNEE_USER.getCode());
-        user10.setUserSubtype(StreetTypeEnum.ZH_ZSJD.getCode());
+        user10.setUserSubtype(StreetTypeEnum.ZH_LTJD.getCode());
         user10.setCreateTime(LocalDateTime.now());
         userMapper.insert(user10);
 
         UserDO user11 = new UserDO();
-        user11.setUsername("zhuangshi2");
-        user11.setPassword(SHAUtil.Digest.SHA256.digest("zhuangshi2@123&"));
+        user11.setUsername("luotuo2");
+        user11.setPassword(SHAUtil.Digest.SHA256.digest("luotuo2@123&"));
         user11.setUserType(UserTypeEnum.ZF_STREET.getCode());
         user11.setRole(UserRoleEnum.REVIEW_USER.getCode());
-        user11.setUserSubtype(StreetTypeEnum.ZH_ZSJD.getCode());
+        user11.setUserSubtype(StreetTypeEnum.ZH_LTJD.getCode());
         user11.setCreateTime(LocalDateTime.now());
         userMapper.insert(user11);
+
+        UserDO user12 = new UserDO();
+        user12.setUsername("zhuangshi1");
+        user12.setPassword(SHAUtil.Digest.SHA256.digest("zhuangshi1@123&"));
+        user12.setUserType(UserTypeEnum.ZF_STREET.getCode());
+        user12.setRole(UserRoleEnum.ASSIGNEE_USER.getCode());
+        user12.setUserSubtype(StreetTypeEnum.ZH_ZSJD.getCode());
+        user12.setCreateTime(LocalDateTime.now());
+        userMapper.insert(user12);
+
+        UserDO user13 = new UserDO();
+        user13.setUsername("zhuangshi2");
+        user13.setPassword(SHAUtil.Digest.SHA256.digest("zhuangshi2@123&"));
+        user13.setUserType(UserTypeEnum.ZF_STREET.getCode());
+        user13.setRole(UserRoleEnum.REVIEW_USER.getCode());
+        user13.setUserSubtype(StreetTypeEnum.ZH_ZSJD.getCode());
+        user13.setCreateTime(LocalDateTime.now());
+        userMapper.insert(user13);
 
         UserDO user14 = new UserDO();
         user14.setUsername("xiepu1");

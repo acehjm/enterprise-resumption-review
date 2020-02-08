@@ -256,7 +256,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         if (null == enterprise) {
             throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_EXISTS);
         }
-        enterprise.setReviewStatus(ReviewStatusEnum.NOT_PASS.getCode());
+        enterprise.setReviewStatus(ReviewStatusEnum.NOT_STARTED.getCode());
         enterprise.setReviewResult(param.getReviewResult());
         enterprise.setReviewUser(userSession.getUsername());
         enterprise.setReviewTime(LocalDateTime.now());
