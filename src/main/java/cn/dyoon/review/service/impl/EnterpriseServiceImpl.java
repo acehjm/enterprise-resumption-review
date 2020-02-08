@@ -184,6 +184,11 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         if (null == enterprise) {
             throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_EXISTS);
         }
+
+        if (!enterprise.getReviewStatus().equals(ReviewStatusEnum.NOT_STARTED.getCode()) &&
+                !enterprise.getReviewStatus().equals(ReviewStatusEnum.NOT_PASS.getCode()))
+            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_IN_PROCESSING);
+
         this.uploadFiles(uploadUserName, enterprise.getId(), files);
     }
 
