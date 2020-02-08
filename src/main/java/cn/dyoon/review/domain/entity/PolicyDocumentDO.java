@@ -35,4 +35,7 @@ public class PolicyDocumentDO {
 
     @TableField("policy_id")
     private String policyId;
+
+    @TableField("file_disk_name")
+    private String fileDiskName;
 }

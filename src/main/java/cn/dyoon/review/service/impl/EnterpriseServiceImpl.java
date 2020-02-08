@@ -157,10 +157,14 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
     @Override
     public void upload(String enterpriseId, String uploadUserName, List<MultipartFile> files) {
-        // TODO 清除旧文件
         EnterpriseDO enterprise = enterpriseMapper.selectById(enterpriseId);
         if (null == enterprise) {
             throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_EXISTS);
+        }
+
+        // TODO 审核不通过退回上传时 清除旧文件
+        if (ReviewStatusEnum.NOT_PASS.getCode() == enterprise.getReviewStatus()) {
+
         }
 
         String filePath = ResumptionReviewConstant.ENTERPRISE_RESUMPTION_PATH + enterprise.getName() + "\\";
@@ -171,7 +175,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     @Override
     public void download(String fileId, HttpServletResponse response) {
         ReworkDocumentDO reworkDocument = reworkDocumentMapper.selectById(fileId);
-        FileUtil.downloadFile(response, reworkDocument.getFileName(), reworkDocument.getPath());
+        FileUtil.downloadFile(response, reworkDocument.getFileDiskName(), reworkDocument.getPath());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -279,8 +283,9 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                 throw new BusinessException("500", "文件为空");
             }
             String fileName = file.getOriginalFilename();
+            String fileDiskName = FileUtil.getUUIDFileName(fileName);
 
-            File dest = new File(filePath + fileName);
+            File dest = new File(filePath + fileDiskName);
             try {
                 ReworkDocumentDO reworkDocument = new ReworkDocumentDO();
                 reworkDocument.setCreateTime(LocalDateTime.now());
@@ -289,6 +294,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                 reworkDocument.setEnterpriseId(enterpriseInfo.getId());
                 reworkDocument.setPath(filePath);
                 reworkDocument.setUploadUserName(uploadUserName);
+                reworkDocument.setFileDiskName(fileDiskName);
                 reworkDocumentMapper.insert(reworkDocument);
 
                 file.transferTo(dest);
