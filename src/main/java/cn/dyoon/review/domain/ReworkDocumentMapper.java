@@ -39,12 +39,13 @@ public interface ReworkDocumentMapper extends BaseMapper<ReworkDocumentDO> {
 
     /**
      * 查找企业同名文件
+     *
      * @param enterpriseId
      * @param fileName
      * @return
      */
-    default ReworkDocumentDO findSameFile(String enterpriseId, String fileName) {
-        return selectOne(Wrappers.<ReworkDocumentDO>lambdaQuery()
+    default List<ReworkDocumentDO> findSameFile(String enterpriseId, String fileName) {
+        return selectList(Wrappers.<ReworkDocumentDO>lambdaQuery()
                 .eq(ReworkDocumentDO::getEnterpriseId, enterpriseId)
                 .eq(ReworkDocumentDO::getFileName, fileName));
     }

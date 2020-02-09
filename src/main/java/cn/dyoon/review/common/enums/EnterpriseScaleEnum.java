@@ -28,6 +28,14 @@ public enum EnterpriseScaleEnum {
         this.desc = desc;
     }
 
+    public static String getDesc(Integer code) {
+        return Arrays.stream(EnterpriseScaleEnum.values())
+                .filter(it -> it.getCode().equals(code))
+                .map(EnterpriseScaleEnum::getDesc)
+                .findFirst()
+                .orElse("");
+    }
+
     public static boolean isValidType(Integer code) {
         return Arrays.stream(EnterpriseScaleEnum.values()).anyMatch(it -> it.getCode().equals(code));
     }

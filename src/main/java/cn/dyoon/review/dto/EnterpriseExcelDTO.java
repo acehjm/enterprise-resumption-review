@@ -16,17 +16,19 @@ public class EnterpriseExcelDTO {
 
     @ExcelColumnDesc(column = "复工企业名称", order = 1)
     private String name;
-    @ExcelColumnDesc(column = "企业类别", order = 2)
-    private String type;
-    @ExcelColumnDesc(column = "复工类别", order = 3)
-    private String resumptionType;
-    @ExcelColumnDesc(column = "行业类别", order = 4)
-    private String industryType;
-    @ExcelColumnDesc(column = "所在镇(街道)/园区", order = 5)
+    @ExcelColumnDesc(column = "所在镇(街道)/园区", order = 2)
     private String street;
-    @ExcelColumnDesc(column = "复工时间", order = 6)
+    @ExcelColumnDesc(column = "企业类别", order = 3)
+    private String type;
+    @ExcelColumnDesc(column = "企业规模", order = 4)
+    private String scaleType;
+    @ExcelColumnDesc(column = "复工类别", order = 5)
+    private String resumptionType;
+    @ExcelColumnDesc(column = "行业类别", order = 6)
+    private String industryType;
+    @ExcelColumnDesc(column = "复工时间", order = 7)
     private String reviewTime;
-    @ExcelColumnDesc(column = "复工员工数", order = 7)
+    @ExcelColumnDesc(column = "复工员工数", order = 8)
     private Integer employeeNum;
 
 }

@@ -27,7 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -154,11 +153,7 @@ public class PolicyServiceImpl implements PolicyService {
         }
         String filePath = ResumptionReviewConstant.POLICY_PATH;
         try {
-            Path path = Paths.get(filePath);
-            if (!Files.exists(path)) {
-//                Files.createDirectory(Paths.get(ResumptionReviewConstant.BASE_PATH));
-                Files.createDirectory(path);
-            }
+            FileUtil.createDirectory(filePath);
             files.forEach(file -> {
                 if (file.isEmpty()) {
                     // 处理下一个文件
@@ -168,10 +163,7 @@ public class PolicyServiceImpl implements PolicyService {
                     String actualName = file.getOriginalFilename();
                     String virtualName = IdWorker.get32UUID();
                     //如果上传了同名文件则删除之前的文件
-                    PolicyDocumentDO preFile = policyDocumentMapper.findSameFile(policyId, actualName);
-                    if (preFile != null) {
-                        this.deleteFiles(Collections.singletonList(preFile));
-                    }
+                    this.deleteFiles(policyDocumentMapper.findSameFile(policyId, actualName));
 
                     saveMetadata(username, policyId, file.getSize(), actualName, filePath, virtualName);
 

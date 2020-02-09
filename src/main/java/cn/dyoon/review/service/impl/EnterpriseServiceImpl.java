@@ -42,7 +42,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -302,8 +301,9 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                 .map(it -> {
                     EnterpriseExcelDTO dto = new EnterpriseExcelDTO();
                     dto.setName(it.getName());
-                    dto.setType(EnterpriseTypeEnum.getDesc(it.getType()));
                     dto.setStreet(StreetTypeEnum.getDesc(it.getStreet()));
+                    dto.setType(EnterpriseTypeEnum.getDesc(it.getType()));
+                    dto.setScaleType(EnterpriseScaleEnum.getDesc(it.getScaleType()));
                     dto.setResumptionType(ResumptionTypeEnum.getDesc(it.getResumptionType()));
                     dto.setIndustryType(IndustryTypeEnum.getDesc(it.getIndustryType()));
                     if (ObjectUtil.isNotEmpty(it.getReviewTime())) {
@@ -390,11 +390,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         }
         String filePath = ResumptionReviewConstant.ENTERPRISE_RESUMPTION_PATH;
         try {
-            Path path = Paths.get(filePath);
-            if (!Files.exists(path)) {
-//                Files.createDirectory(Paths.get(ResumptionReviewConstant.BASE_PATH));
-                Files.createDirectory(path);
-            }
+            FileUtil.createDirectory(filePath);
             files.forEach(file -> {
                 if (file.isEmpty()) {
                     // 处理下一个文件
@@ -404,10 +400,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                     String actualName = file.getOriginalFilename();
                     String virtualName = IdWorker.get32UUID();
                     //如果上传了同名文件则删除之前的文件
-                    ReworkDocumentDO preFile = reworkDocumentMapper.findSameFile(enterpriseId, actualName);
-                    if (preFile != null) {
-                        this.deleteFiles(Collections.singletonList(preFile));
-                    }
+                    this.deleteFiles(reworkDocumentMapper.findSameFile(enterpriseId, actualName));
 
                     saveMetadata(username, enterpriseId, file.getSize(), actualName, filePath, virtualName);
 

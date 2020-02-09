@@ -15,6 +15,7 @@ public interface PolicyDocumentMapper extends BaseMapper<PolicyDocumentDO> {
 
     /**
      * 获取政策附件
+     *
      * @param policyId 政策信息ID
      * @return
      */
@@ -24,6 +25,7 @@ public interface PolicyDocumentMapper extends BaseMapper<PolicyDocumentDO> {
 
     /**
      * 删除政策附件
+     *
      * @param policyId 政策信息ID
      * @return
      */
@@ -33,12 +35,13 @@ public interface PolicyDocumentMapper extends BaseMapper<PolicyDocumentDO> {
 
     /**
      * 查找重名文件
+     *
      * @param policyId
      * @param fileName
      * @return
      */
-    default PolicyDocumentDO findSameFile(String policyId, String fileName) {
-        return selectOne(Wrappers.<PolicyDocumentDO>lambdaQuery().
+    default List<PolicyDocumentDO> findSameFile(String policyId, String fileName) {
+        return selectList(Wrappers.<PolicyDocumentDO>lambdaQuery().
                 eq(PolicyDocumentDO::getPolicyId, policyId).
                 eq(PolicyDocumentDO::getFileName, fileName));
     }

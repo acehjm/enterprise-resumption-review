@@ -1,5 +1,6 @@
 package cn.dyoon.review.util;
 
+import cn.dyoon.review.common.constant.ResumptionReviewConstant;
 import cn.dyoon.review.common.exception.BaseExceptionEnum;
 import cn.dyoon.review.common.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +48,22 @@ public class FileUtil {
         } catch (IOException e) {
             log.error("[下载文件] - 失败", e);
             throw new BusinessException(BaseExceptionEnum.DOWNLOAD_FILES_FAILURE);
+        }
+    }
+
+    /**
+     * 是否创建目录
+     *
+     * @param filePath
+     */
+    public static void createDirectory(String filePath) throws IOException {
+        Path path = Paths.get(filePath);
+        if (!Files.exists(path)) {
+            Path basePath = Paths.get(ResumptionReviewConstant.BASE_PATH);
+            if (!Files.exists(basePath)) {
+                Files.createDirectory(basePath);
+            }
+            Files.createDirectory(path);
         }
     }
 }
