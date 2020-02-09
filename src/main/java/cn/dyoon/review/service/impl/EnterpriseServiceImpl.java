@@ -284,26 +284,6 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         enterpriseMapper.updateById(enterprise);
     }
 
-    private void checkUserReview(UserSession userSession, EnterpriseDO enterprise) {
-        boolean dr = ReviewStatusEnum.DEPARTMENT_REVIEW.getCode().equals(enterprise.getReviewStatus());
-        boolean dru = UserTypeEnum.ZF_SHANGWU.getName().equals(userSession.getUserType())
-                || UserTypeEnum.ZF_JINGXIN.getName().equals(userSession.getUserType());
-        if (!(dr && dru)) {
-            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_WORKFLOW_NOT_ALLOW);
-        }
-        boolean sr = ReviewStatusEnum.STREET_REVIEW.getCode().equals(enterprise.getReviewStatus());
-        boolean sru = UserRoleEnum.REVIEW_USER.getName().equals(userSession.getRole());
-        if (!(sr && sru)) {
-            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_WORKFLOW_NOT_ALLOW);
-        }
-        boolean ad = ReviewStatusEnum.ACCEPTED.getCode().equals(enterprise.getReviewStatus());
-        boolean adu = UserRoleEnum.ASSIGNEE_USER.getName().equals(userSession.getRole());
-        if (!(ad && adu)) {
-            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_WORKFLOW_NOT_ALLOW);
-        }
-
-    }
-
     @Override
     public void reviewReturn(UserSession userSession, EnterpriseReviewParam param) {
         EnterpriseDO enterprise = getIfCheckedNoPass(param.getEnterpriseId());
