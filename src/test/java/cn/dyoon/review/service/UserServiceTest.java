@@ -50,36 +50,20 @@ public class UserServiceTest {
         userMapper.insert(user1);
 
         UserDO user2 = new UserDO();
-        user2.setUsername("jingxinju1");
-        user2.setPassword(SHAUtil.Digest.SHA256.digest("jingxinju1@123&"));
+        user2.setUsername("jingxinju");
+        user2.setPassword(SHAUtil.Digest.SHA256.digest("jingxinju@123&"));
         user2.setUserType(UserTypeEnum.ZF_JINGXIN.getCode());
         user2.setRole(UserRoleEnum.REVIEW_USER.getCode());
         user2.setCreateTime(LocalDateTime.now());
         userMapper.insert(user2);
 
-        UserDO user3 = new UserDO();
-        user3.setUsername("jingxinju2");
-        user3.setPassword(SHAUtil.Digest.SHA256.digest("jingxinju2@123&"));
-        user3.setUserType(UserTypeEnum.ZF_JINGXIN.getCode());
-        user3.setRole(UserRoleEnum.SUPER_ADMIN.getCode());
-        user3.setCreateTime(LocalDateTime.now());
-        userMapper.insert(user3);
-
         UserDO user4 = new UserDO();
-        user4.setUsername("shangwuju1");
-        user4.setPassword(SHAUtil.Digest.SHA256.digest("shangwuju1@123&"));
+        user4.setUsername("shangwuju");
+        user4.setPassword(SHAUtil.Digest.SHA256.digest("shangwuju@123&"));
         user4.setUserType(UserTypeEnum.ZF_SHANGWU.getCode());
         user4.setRole(UserRoleEnum.REVIEW_USER.getCode());
         user4.setCreateTime(LocalDateTime.now());
         userMapper.insert(user4);
-
-        UserDO user5 = new UserDO();
-        user5.setUsername("shangwuju2");
-        user5.setPassword(SHAUtil.Digest.SHA256.digest("shangwuju2@123&"));
-        user5.setUserType(UserTypeEnum.ZF_SHANGWU.getCode());
-        user5.setRole(UserRoleEnum.REVIEW_USER.getCode());
-        user5.setCreateTime(LocalDateTime.now());
-        userMapper.insert(user5);
 
         UserDO fk1 = new UserDO();
         fk1.setUsername("fangkong1");
