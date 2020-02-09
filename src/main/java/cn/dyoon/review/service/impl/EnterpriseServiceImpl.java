@@ -216,14 +216,23 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     public void reviewPass(UserSession userSession, EnterpriseReviewParam param) {
         EnterpriseDO enterprise = getIfCheckedNoPass(param.getEnterpriseId());
 
+        this.checkUserReview(userSession, enterprise);
+
         // 审核--受理人
         if (UserRoleEnum.ASSIGNEE_USER.getName().equals(userSession.getRole())) {
+            if (!ReviewStatusEnum.ACCEPTED.getCode().equals(enterprise.getReviewStatus())) {
+                throw new BusinessException(BaseExceptionEnum.ENTERPRISE_WORKFLOW_NOT_ALLOW);
+            }
             enterprise.setReviewStatus(ReviewStatusEnum.STREET_REVIEW.getCode());
         }
         // 审核--审核人
         if (UserRoleEnum.REVIEW_USER.getName().equals(userSession.getRole())) {
             // 街道审核人
             if (UserTypeEnum.ZF_STREET.getName().equals(userSession.getUserType())) {
+                if (!ReviewStatusEnum.STREET_REVIEW.getCode().equals(enterprise.getReviewStatus())) {
+                    throw new BusinessException(BaseExceptionEnum.ENTERPRISE_WORKFLOW_NOT_ALLOW);
+                }
+
                 // 规（限）上企业
                 if (EnterpriseScaleEnum.ENTERPRISE_ABOVE_SCALE.getCode().equals(enterprise.getScaleType())) {
                     enterprise.setReviewStatus(ReviewStatusEnum.DEPARTMENT_REVIEW.getCode());
@@ -235,6 +244,10 @@ public class EnterpriseServiceImpl implements EnterpriseService {
             }
             // 商务局审核人
             if (UserTypeEnum.ZF_SHANGWU.getName().equals(userSession.getUserType())) {
+                if (!ReviewStatusEnum.DEPARTMENT_REVIEW.getCode().equals(enterprise.getReviewStatus())) {
+                    throw new BusinessException(BaseExceptionEnum.ENTERPRISE_WORKFLOW_NOT_ALLOW);
+                }
+
                 if (EnterpriseTypeEnum.INDUSTRIAL.getCode().equals(enterprise.getType())) {
                     throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_MATCH);
                 }
@@ -242,6 +255,10 @@ public class EnterpriseServiceImpl implements EnterpriseService {
             }
             // 经信局审核人
             if (UserTypeEnum.ZF_JINGXIN.getName().equals(userSession.getUserType())) {
+                if (!ReviewStatusEnum.DEPARTMENT_REVIEW.getCode().equals(enterprise.getReviewStatus())) {
+                    throw new BusinessException(BaseExceptionEnum.ENTERPRISE_WORKFLOW_NOT_ALLOW);
+                }
+
                 if (EnterpriseTypeEnum.BUSINESS.getCode().equals(enterprise.getType())) {
                     throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_MATCH);
                 }
@@ -252,6 +269,25 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         enterprise.setReviewUser(userSession.getUsername());
         enterprise.setReviewTime(LocalDateTime.now());
         enterpriseMapper.updateById(enterprise);
+    }
+
+    private void checkUserReview(UserSession userSession, EnterpriseDO enterprise) {
+        boolean dr = ReviewStatusEnum.DEPARTMENT_REVIEW.getCode().equals(enterprise.getReviewStatus());
+        boolean dru = UserTypeEnum.ZF_SHANGWU.getName().equals(userSession.getUserType())
+                || UserTypeEnum.ZF_JINGXIN.getName().equals(userSession.getUserType());
+        if (!(dr && dru)) {
+            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_WORKFLOW_NOT_ALLOW);
+        }
+        boolean sr = ReviewStatusEnum.STREET_REVIEW.getCode().equals(enterprise.getReviewStatus());
+        boolean sru = UserRoleEnum.REVIEW_USER.getName().equals(userSession.getRole());
+        if (!(sr && sru)) {
+            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_WORKFLOW_NOT_ALLOW);
+        }
+        boolean ad = ReviewStatusEnum.ACCEPTED.getCode().equals(enterprise.getReviewStatus());
+        boolean adu = UserRoleEnum.ASSIGNEE_USER.getName().equals(userSession.getRole());
+        if (!(ad && adu)) {
+            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_WORKFLOW_NOT_ALLOW);
+        }
     }
 
     @Override
