@@ -36,7 +36,19 @@ public enum BaseExceptionEnum implements BaseError {
 
     DELETE_FILES_FAILURE("0x0a00014", "删除文件失败"),
 
-    POLICY_HAS_PUBLISHED("0x0a00015", "政策已发布, 不允许修改")
+    POLICY_HAS_PUBLISHED("0x0a00015", "政策已发布, 不允许修改"),
+
+    FILE_TYPE_NOT_SUPPORT("0x0a00016", "不支持的文件类型"),
+
+    ENTERPRISE_EMPLOYEE_ERROR("0x0a00017", "20人以下的微型工业（商贸企业）人数不能超过20人"),
+
+    UNIFIED_SOCIAL_CREDIT_CODE_EXISTS("0x0a00018", "统一社会信用代码已存在，请重新输入"),
+
+    ENTERPRISE_NOT_IN_PROCESSING("0x0a00019", "企业复工申请状态为通过或待申请，不允许操作"),
+
+    TELEPHONE_LANDLINE_ERROR("0x0a00020", "移动手机或固定电话号码错误，请重新输入"),
+
+    FILE_SIZE_LIMIT_UPLOAD("0x0a00021", "文件大小超过限制，请重新上传"),
 
     ;
 

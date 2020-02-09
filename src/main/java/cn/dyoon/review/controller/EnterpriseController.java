@@ -1,5 +1,8 @@
 package cn.dyoon.review.controller;
 
+import cn.dyoon.review.common.enums.EnterpriseScaleEnum;
+import cn.dyoon.review.common.exception.BaseExceptionEnum;
+import cn.dyoon.review.common.exception.BusinessException;
 import cn.dyoon.review.common.response.Result;
 import cn.dyoon.review.controller.param.EnterpriseExportParam;
 import cn.dyoon.review.controller.param.EnterpriseRegisteredParam;
@@ -12,6 +15,7 @@ import cn.dyoon.review.controller.vo.PageVO;
 import cn.dyoon.review.manage.auth.constant.UserSession;
 import cn.dyoon.review.manage.auth.constant.UserSessionHolder;
 import cn.dyoon.review.service.EnterpriseService;
+import cn.dyoon.review.util.PatternUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,6 +49,13 @@ public class EnterpriseController {
 
     @PostMapping("/registered")
     public Result<Void> registered(@Validated @RequestBody EnterpriseRegisteredParam param) {
+        if (EnterpriseScaleEnum.ENTERPRISE_MICRO_SCALE.getCode().equals(param.getScaleType())
+                && param.getEmployeeNum() > 20) {
+            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_EMPLOYEE_ERROR);
+        }
+        if (!PatternUtil.checkTelephone(param.getPhone()) && !PatternUtil.checkLandline(param.getPhone())) {
+            throw new BusinessException(BaseExceptionEnum.TELEPHONE_LANDLINE_ERROR);
+        }
         enterpriseService.registered(param);
         return new Result<>();
     }
@@ -86,6 +97,11 @@ public class EnterpriseController {
     @PreAuthorize("permitAll()")
     @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public Result<Void> upload(@RequestParam String enterpriseId, @RequestParam List<MultipartFile> files) {
+        for (MultipartFile file : files) {
+            if (!PatternUtil.checkFileType(file.getOriginalFilename())) {
+                throw new BusinessException(BaseExceptionEnum.FILE_TYPE_NOT_SUPPORT);
+            }
+        }
         UserSession userSession = UserSessionHolder.userSessionThreadLocal.get();
         enterpriseService.upload(enterpriseId, userSession.getUsername(), files);
         return new Result<>();

@@ -11,10 +11,9 @@ import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import java.util.stream.Collectors;
 
 /**
  * me.solby.xboot.config.exception
@@ -57,7 +56,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.OK).body(Result.failure("400",
                 ex.getBindingResult().getFieldErrors().stream()
                         .map(it -> it.getField() + ": " + it.getDefaultMessage())
-                        .collect(Collectors.joining()))
+                        .findFirst()
+                        .orElse("参数错误"))
         );
     }
 
@@ -67,4 +67,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   WebRequest request) {
         return super.handleHttpMessageNotReadable(ex, headers, status, request);
     }
+
+    /**
+     * 自定义文件大小超过限制异常处理
+     *
+     * @param e
+     * @return
+     */
+    @ExceptionHandler({MaxUploadSizeExceededException.class})
+    public ResponseEntity<Result> MaxUploadSizeExceededExceptionHandler(MaxUploadSizeExceededException e) {
+        return ResponseEntity.status(HttpStatus.OK).body(Result.failure("500", "文件大小超过限制，请重新上传"));
+    }
+
 }

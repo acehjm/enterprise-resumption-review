@@ -1,16 +1,32 @@
 package cn.dyoon.review.controller;
 
+import cn.dyoon.review.common.exception.BaseExceptionEnum;
+import cn.dyoon.review.common.exception.BusinessException;
 import cn.dyoon.review.common.response.Result;
-import cn.dyoon.review.controller.param.*;
-import cn.dyoon.review.controller.vo.*;
+import cn.dyoon.review.controller.param.PolicyListParam;
+import cn.dyoon.review.controller.param.PolicyParam;
+import cn.dyoon.review.controller.param.PolicyPublishParam;
+import cn.dyoon.review.controller.vo.PageVO;
+import cn.dyoon.review.controller.vo.PolicyInfoVO;
+import cn.dyoon.review.controller.vo.PolicyListVO;
 import cn.dyoon.review.manage.auth.constant.UserSession;
 import cn.dyoon.review.manage.auth.constant.UserSessionHolder;
 import cn.dyoon.review.service.PolicyService;
+import cn.dyoon.review.util.FileUtil;
+import cn.dyoon.review.util.PatternUtil;
 import org.apache.ibatis.javassist.bytecode.ByteArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -30,8 +46,9 @@ public class PolicyController {
 
     /**
      * 新建政策信息
+     *
      * @param title 标题
-     * @param desc 描述
+     * @param desc  描述
      * @param files 附件
      * @return 政策信息
      */
@@ -58,6 +75,11 @@ public class PolicyController {
 
     @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public Result<Void> upload(@RequestParam String policyId, @RequestParam List<MultipartFile> files) {
+        for (MultipartFile file : files) {
+            if (!PatternUtil.checkFileType(file.getOriginalFilename())) {
+                throw new BusinessException(BaseExceptionEnum.FILE_TYPE_NOT_SUPPORT);
+            }
+        }
         UserSession userSession = UserSessionHolder.userSessionThreadLocal.get();
         policyService.upload(policyId, userSession.getUsername(), files);
         return new Result<>();

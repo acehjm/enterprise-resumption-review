@@ -108,4 +108,14 @@ public interface EnterpriseMapper extends BaseMapper<EnterpriseDO> {
         return selectCount(Wrappers.<EnterpriseDO>lambdaQuery().eq(EnterpriseDO::getUsername, username)) > 0;
     }
 
+    /**
+     * 是否存在
+     *
+     * @param uniqueCode
+     * @return
+     */
+    default boolean existsByUniqueCode(String uniqueCode) {
+        return selectCount(Wrappers.<EnterpriseDO>lambdaQuery().eq(EnterpriseDO::getUnifiedSocialCreditCode, uniqueCode)) > 0;
+    }
+
 }

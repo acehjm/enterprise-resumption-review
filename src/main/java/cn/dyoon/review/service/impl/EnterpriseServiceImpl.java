@@ -30,6 +30,7 @@ import cn.dyoon.review.manage.excel.service.impl.ExcelWriterImpl;
 import cn.dyoon.review.service.EnterpriseService;
 import cn.dyoon.review.service.UserService;
 import cn.dyoon.review.util.FileUtil;
+import cn.dyoon.review.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import lombok.extern.slf4j.Slf4j;
@@ -72,10 +73,15 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void registered(EnterpriseRegisteredParam param) {
-        boolean exists = enterpriseMapper.exists(param.getUsername());
-        if (exists) {
+        boolean usernameExists = enterpriseMapper.exists(param.getUsername());
+        if (usernameExists) {
             throw new BusinessException(BaseExceptionEnum.USER_NAME_HAS_EXISTS);
         }
+        boolean uniqueCodeExists = enterpriseMapper.existsByUniqueCode(param.getUnifiedSocialCreditCode());
+        if (uniqueCodeExists) {
+            throw new BusinessException(BaseExceptionEnum.UNIFIED_SOCIAL_CREDIT_CODE_EXISTS);
+        }
+
         EnterpriseDO enterprise = new EnterpriseDO();
         enterprise.setName(param.getName());
         enterprise.setUnifiedSocialCreditCode(param.getUnifiedSocialCreditCode());
@@ -208,10 +214,8 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void reviewPass(UserSession userSession, EnterpriseReviewParam param) {
-        EnterpriseDO enterprise = enterpriseMapper.selectById(param.getEnterpriseId());
-        if (null == enterprise) {
-            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_EXISTS);
-        }
+        EnterpriseDO enterprise = getIfCheckedNoPass(param.getEnterpriseId());
+
         // 审核--受理人
         if (UserRoleEnum.ASSIGNEE_USER.getName().equals(userSession.getRole())) {
             enterprise.setReviewStatus(ReviewStatusEnum.STREET_REVIEW.getCode());
@@ -252,10 +256,8 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
     @Override
     public void reviewReturn(UserSession userSession, EnterpriseReviewParam param) {
-        EnterpriseDO enterprise = enterpriseMapper.selectById(param.getEnterpriseId());
-        if (null == enterprise) {
-            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_EXISTS);
-        }
+        EnterpriseDO enterprise = getIfCheckedNoPass(param.getEnterpriseId());
+
         enterprise.setReviewStatus(ReviewStatusEnum.NOT_STARTED.getCode());
         enterprise.setReviewResult(param.getReviewResult());
         enterprise.setReviewUser(userSession.getUsername());
@@ -274,7 +276,9 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                     dto.setStreet(StreetTypeEnum.getDesc(it.getStreet()));
                     dto.setResumptionType(ResumptionTypeEnum.getDesc(it.getResumptionType()));
                     dto.setIndustryType(IndustryTypeEnum.getDesc(it.getIndustryType()));
-                    dto.setReviewTime(it.getReviewTime().format(DateTimeFormatter.ofPattern(STANDARD_DATETIME_FORMAT)));
+                    if (ObjectUtil.isNotEmpty(it.getReviewTime())) {
+                        dto.setReviewTime(it.getReviewTime().format(DateTimeFormatter.ofPattern(STANDARD_DATETIME_FORMAT)));
+                    }
                     dto.setEmployeeNum(it.getEmployeeNum());
                     return dto;
                 })
@@ -296,9 +300,29 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         if (null == enterprise) {
             throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_EXISTS);
         }
-        Integer[] invalid = {ReviewStatusEnum.NOT_STARTED.getCode(), ReviewStatusEnum.NOT_PASS.getCode()};
+        Integer[] invalid = {ReviewStatusEnum.NOT_STARTED.getCode(), ReviewStatusEnum.NOT_PASS.getCode(),
+                ReviewStatusEnum.PASS.getCode()};
         if (!Arrays.asList(invalid).contains(enterprise.getReviewStatus())) {
             throw new BusinessException(BaseExceptionEnum.ENTERPRISE_IN_PROCESSING);
+        }
+        return enterprise;
+    }
+
+    /**
+     * 校验企业审核状态并返回
+     *
+     * @param enterpriseId
+     * @return
+     */
+    private EnterpriseDO getIfCheckedNoPass(String enterpriseId) {
+        EnterpriseDO enterprise = enterpriseMapper.selectById(enterpriseId);
+        if (null == enterprise) {
+            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_EXISTS);
+        }
+        Integer[] invalid = {ReviewStatusEnum.NOT_STARTED.getCode(), ReviewStatusEnum.NOT_PASS.getCode(),
+                ReviewStatusEnum.PASS.getCode()};
+        if (Arrays.asList(invalid).contains(enterprise.getReviewStatus())) {
+            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_IN_PROCESSING);
         }
         return enterprise;
     }

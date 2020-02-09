@@ -40,13 +40,14 @@ public class EnterpriseRegisteredParam {
             message = "不合法的统一社会信用代码")
     private String unifiedSocialCreditCode;
     @NotBlank(message = "用户名不能为空")
+//    @Pattern(regexp = "[\u4e00-\u9fa5]", message = "用户名不允许包含中文")
     private String username;
     @NotBlank(message = "密码不能为空")
     private String password;
     @NotBlank(message = "填报人姓名不能为空")
     private String transactorName;
     @NotBlank(message = "联系电话不能为空")
-    @Pattern(regexp = "^(1[3-9]([0-9]{9}))$", message = "联系电话格式不正确")
+//    @Pattern(regexp = "^(1[3-9]([0-9]{9}))$", message = "联系电话格式不正确")
     private String phone;
     @NotNull(message = "所属街道不能为空")
     private Integer street;

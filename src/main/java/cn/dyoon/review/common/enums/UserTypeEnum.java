@@ -20,7 +20,7 @@ public enum UserTypeEnum {
         @Override
         public List<String> authorities() {
             return Arrays.asList(MenusEnum.ENTERPRISE_BASE_INFO.getName(), MenusEnum.REVIEW_TEMPLATE_DOWNLOAD.getName(),
-                    MenusEnum.POLICY_FILE_DOWNLOAD.getName(), MenusEnum.CONTACT_DETAILS.getName());
+                    MenusEnum.EPIDEMIC_PREVENTION_CONTROL.getName(), MenusEnum.CONTACT_DETAILS.getName());
         }
     },
 
@@ -28,7 +28,7 @@ public enum UserTypeEnum {
         @Override
         public List<String> authorities() {
             return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.REVIEW_TEMPLATE_DOWNLOAD.getName(),
-                    MenusEnum.POLICY_FILE_DOWNLOAD.getName(), MenusEnum.CONTACT_DETAILS.getName());
+                    MenusEnum.EPIDEMIC_PREVENTION_CONTROL.getName(), MenusEnum.CONTACT_DETAILS.getName());
         }
     },
 
@@ -36,7 +36,7 @@ public enum UserTypeEnum {
         @Override
         public List<String> authorities() {
             return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.REVIEW_TEMPLATE_DOWNLOAD.getName(),
-                    MenusEnum.POLICY_FILE_DOWNLOAD.getName(), MenusEnum.CONTACT_DETAILS.getName());
+                    MenusEnum.EPIDEMIC_PREVENTION_CONTROL.getName(), MenusEnum.CONTACT_DETAILS.getName());
         }
     },
 
@@ -44,7 +44,7 @@ public enum UserTypeEnum {
         @Override
         public List<String> authorities() {
             return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.REVIEW_TEMPLATE_DOWNLOAD.getName(),
-                    MenusEnum.POLICY_FILE_DOWNLOAD.getName(), MenusEnum.CONTACT_DETAILS.getName());
+                    MenusEnum.EPIDEMIC_PREVENTION_CONTROL.getName(), MenusEnum.CONTACT_DETAILS.getName());
         }
     },
 
@@ -52,7 +52,7 @@ public enum UserTypeEnum {
         @Override
         public List<String> authorities() {
             return Arrays.asList(MenusEnum.ENTERPRISE_MANAGE.getName(), MenusEnum.REVIEW_TEMPLATE_DOWNLOAD.getName(),
-                    MenusEnum.POLICY_FILE_DOWNLOAD.getName(), MenusEnum.CONTACT_DETAILS.getName());
+                    MenusEnum.EPIDEMIC_PREVENTION_CONTROL.getName(), MenusEnum.CONTACT_DETAILS.getName());
         }
     },
 
