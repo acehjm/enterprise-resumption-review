@@ -55,10 +55,6 @@ public class EnterpriseController {
                 && param.getEmployeeNum() > 20) {
             throw new BusinessException(BaseExceptionEnum.ENTERPRISE_EMPLOYEE_ERROR);
         }
-        if (!EnterpriseScaleEnum.ENTERPRISE_MICRO_SCALE.getCode().equals(param.getScaleType())
-                && param.getEmployeeNum() <= 20) {
-            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_EMPLOYEE_UPPER_ERROR);
-        }
 
         if (!ResumptionTypeEnum.ENTERPRISE_STEADY_RESUMPTION.getCode().equals(param.getResumptionType())) {
             if (!IndustryTypeEnum.isValidType(param.getIndustryType())) {

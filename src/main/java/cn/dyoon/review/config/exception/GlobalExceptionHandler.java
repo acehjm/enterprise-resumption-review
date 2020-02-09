@@ -2,6 +2,7 @@ package cn.dyoon.review.config.exception;
 
 import cn.dyoon.review.common.exception.BusinessException;
 import cn.dyoon.review.common.response.Result;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,7 +56,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   WebRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(Result.failure("400",
                 ex.getBindingResult().getFieldErrors().stream()
-                        .map(it -> it.getField() + ": " + it.getDefaultMessage())
+                        .map(DefaultMessageSourceResolvable::getDefaultMessage)
                         .findFirst()
                         .orElse("参数错误"))
         );
