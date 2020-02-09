@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static cn.dyoon.review.common.constant.ResumptionReviewConstant.STANDARD_DATETIME_FORMAT;
+import static cn.dyoon.review.common.constant.ResumptionReviewConstant.STANDARD_DATE_FORMAT;
 
 /**
  * cn.dyoon.review.service.impl
@@ -94,6 +95,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         enterprise.setTransactorName(param.getTransactorName());
         enterprise.setPhone(param.getPhone());
         enterprise.setReviewStatus(ReviewStatusEnum.NOT_STARTED.getCode());
+        enterprise.setResumptionDate(param.getResumptionDate());
         enterpriseMapper.insert(enterprise);
 
         userService.addEnterpriseUser(param.getUsername(), param.getPassword());
@@ -157,6 +159,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         enterprise.setStreet(param.getStreet());
         enterprise.setTransactorName(param.getTransactorName());
         enterprise.setPhone(param.getPhone());
+        enterprise.setResumptionDate(param.getResumptionDate());
         enterpriseMapper.updateById(enterprise);
     }
 
@@ -307,9 +310,9 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                     dto.setResumptionType(ResumptionTypeEnum.getDesc(it.getResumptionType()));
                     dto.setIndustryType(IndustryTypeEnum.getDesc(it.getIndustryType()));
                     if (ObjectUtil.isNotEmpty(it.getReviewTime())) {
-                        dto.setReviewTime(it.getReviewTime().format(DateTimeFormatter.ofPattern(STANDARD_DATETIME_FORMAT)));
+                        dto.setResumptionDate(it.getResumptionDate().format(DateTimeFormatter.ofPattern(STANDARD_DATE_FORMAT)));
                     } else {
-                        dto.setReviewTime("");
+                        dto.setResumptionDate("");
                     }
                     dto.setEmployeeNum(it.getEmployeeNum());
                     return dto;

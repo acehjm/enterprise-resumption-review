@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -71,4 +72,7 @@ public class EnterpriseDO {
 
     @TableField("review_result")
     private String reviewResult;
+
+    @TableField("resumption_date")
+    private LocalDate resumptionDate;
 }

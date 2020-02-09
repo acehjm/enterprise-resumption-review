@@ -33,6 +33,11 @@ public class ResumptionReviewConstant {
      */
     public static final String STANDARD_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
+    /**
+     * 标准日前格式
+     */
+    public static final String STANDARD_DATE_FORMAT = "yyyy-MM-dd";
+
 
 
 }

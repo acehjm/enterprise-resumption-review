@@ -9,6 +9,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 /**
  * cn.dyoon.review.controller.param
@@ -42,5 +43,7 @@ public class EnterpriseUpdateParam {
     private String phone;
     @NotNull(message = "所属街道不能为空")
     private Integer street;
+    @NotNull(message = "企业复工日期不能为空")
+    private LocalDate resumptionDate;
 
 }

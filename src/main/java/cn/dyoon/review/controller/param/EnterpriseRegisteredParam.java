@@ -11,6 +11,7 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.time.LocalDate;
 
 /**
  * cn.dyoon.review.controller.param
@@ -52,5 +53,7 @@ public class EnterpriseRegisteredParam {
     @NotNull(message = "所属街道不能为空")
     @EnumCheck(enumClass = StreetTypeEnum.class, enumMethod = "isValidType", message = "无效的街道信息")
     private Integer street;
+    @NotNull(message = "企业复工日期不能为空")
+    private LocalDate resumptionDate;
 
 }
