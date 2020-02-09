@@ -309,7 +309,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                     dto.setScaleType(EnterpriseScaleEnum.getDesc(it.getScaleType()));
                     dto.setResumptionType(ResumptionTypeEnum.getDesc(it.getResumptionType()));
                     dto.setIndustryType(IndustryTypeEnum.getDesc(it.getIndustryType()));
-                    if (ObjectUtil.isNotEmpty(it.getReviewTime())) {
+                    if (ObjectUtil.isNotEmpty(it.getResumptionDate())) {
                         dto.setResumptionDate(it.getResumptionDate().format(DateTimeFormatter.ofPattern(STANDARD_DATE_FORMAT)));
                     } else {
                         dto.setResumptionDate("");

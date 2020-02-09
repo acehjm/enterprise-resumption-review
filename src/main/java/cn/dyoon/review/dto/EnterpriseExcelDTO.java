@@ -26,7 +26,7 @@ public class EnterpriseExcelDTO {
     private String resumptionType;
     @ExcelColumnDesc(column = "行业类别", order = 6)
     private String industryType;
-    @ExcelColumnDesc(column = "复工时间", order = 7)
+    @ExcelColumnDesc(column = "复工日期", order = 7)
     private String resumptionDate;
     @ExcelColumnDesc(column = "复工员工数", order = 8)
     private Integer employeeNum;
