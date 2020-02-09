@@ -146,7 +146,8 @@ public class EnterpriseController {
     @PreAuthorize("!hasAuthority('ENTERPRISE_USER')")
     @PostMapping("/export")
     public Result<Void> export(@Validated @RequestBody EnterpriseExportParam param, HttpServletResponse response) {
-        enterpriseService.export(param, response);
+        UserSession userSession = UserSessionHolder.userSessionThreadLocal.get();
+        enterpriseService.export(userSession, param, response);
         return new Result<>();
     }
 

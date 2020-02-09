@@ -48,6 +48,9 @@ public interface EnterpriseMapper extends BaseMapper<EnterpriseDO> {
         if (ObjectUtil.isNotEmpty(param.getReviewStatus())) {
             wrapper.eq(EnterpriseDO::getReviewStatus, param.getReviewStatus());
         }
+        if (ObjectUtil.isNotEmpty(param.getScaleType())) {
+            wrapper.eq(EnterpriseDO::getScaleType, param.getScaleType());
+        }
         if (ObjectUtil.isNotEmpty(param.getName())) {
             wrapper.likeLeft(EnterpriseDO::getName, SQLUtil.mysqlEscape(param.getName()));
         }

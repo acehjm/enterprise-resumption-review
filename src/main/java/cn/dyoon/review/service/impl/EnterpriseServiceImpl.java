@@ -298,7 +298,26 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public void export(EnterpriseExportParam param, HttpServletResponse response) {
+    public void export(UserSession userSession, EnterpriseExportParam param, HttpServletResponse response) {
+        // 仅加载工业企业
+        if (UserTypeEnum.ZF_JINGXIN.getName().equals(userSession.getUserType())) {
+            param.setType(EnterpriseTypeEnum.INDUSTRIAL.getCode());
+        }
+        // 仅加载商贸业企业
+        if (UserTypeEnum.ZF_SHANGWU.getName().equals(userSession.getUserType())) {
+            param.setType(EnterpriseTypeEnum.BUSINESS.getCode());
+        }
+        // 仅加载所在街道的企业
+        if (UserTypeEnum.ZF_STREET.getName().equals(userSession.getUserType())) {
+            UserDO user = userService.findByUsername(userSession.getUsername());
+            param.setStreet(user.getUserSubtype());
+        }
+        // 暂时不需要
+        // 防控小组
+//        if (UserTypeEnum.ZF_PREVENTION.getName().equals(userSession.getUserType())) {
+//            param.setScaleType(EnterpriseScaleEnum.ENTERPRISE_ABOVE_SCALE.getCode());
+//        }
+
         List<EnterpriseDO> list = enterpriseMapper.findExportListByCondition(param);
         List<EnterpriseExcelDTO> collect = list.stream()
                 .map(it -> {

@@ -120,8 +120,10 @@ public interface EnterpriseService {
     /**
      * 导出
      *
+     * @param userSession
      * @param param
+     * @param response
      */
-    void export(EnterpriseExportParam param, HttpServletResponse response);
+    void export(UserSession userSession, EnterpriseExportParam param, HttpServletResponse response);
 
 }
