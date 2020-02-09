@@ -175,7 +175,15 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
     @Override
     public void upload(String enterpriseId, String uploadUserName, List<MultipartFile> files) {
-        EnterpriseDO enterprise = getIfCheckedPass(enterpriseId);
+        EnterpriseDO enterprise = enterpriseMapper.selectById(enterpriseId);
+        if (null == enterprise) {
+            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_EXISTS);
+        }
+        Integer[] invalid = {ReviewStatusEnum.NOT_STARTED.getCode(), ReviewStatusEnum.NOT_PASS.getCode(),
+                ReviewStatusEnum.ACCEPTED.getCode()};
+        if (!Arrays.asList(invalid).contains(enterprise.getReviewStatus())) {
+            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_IN_PROCESSING);
+        }
         this.uploadFiles(uploadUserName, enterprise.getId(), files);
     }
 
