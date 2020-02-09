@@ -26,9 +26,9 @@ public enum ResumptionTypeEnum {
     }
 
     public static String getDesc(Integer code) {
-        return Arrays.stream(EnterpriseTypeEnum.values())
+        return Arrays.stream(ResumptionTypeEnum.values())
                 .filter(it -> it.getCode().equals(code))
-                .map(EnterpriseTypeEnum::getDesc)
+                .map(ResumptionTypeEnum::getDesc)
                 .findFirst()
                 .orElse("");
     }

@@ -1,6 +1,5 @@
 package cn.dyoon.review.common.enums;
 
-import cn.dyoon.review.util.ObjectUtil;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -31,9 +30,9 @@ public enum IndustryTypeEnum {
     }
 
     public static String getDesc(Integer code) {
-        return Arrays.stream(EnterpriseTypeEnum.values())
+        return Arrays.stream(IndustryTypeEnum.values())
                 .filter(it -> it.getCode().equals(code))
-                .map(EnterpriseTypeEnum::getDesc)
+                .map(IndustryTypeEnum::getDesc)
                 .findFirst()
                 .orElse("");
     }
