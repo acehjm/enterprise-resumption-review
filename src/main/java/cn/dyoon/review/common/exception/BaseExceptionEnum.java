@@ -50,6 +50,10 @@ public enum BaseExceptionEnum implements BaseError {
 
     FILE_SIZE_LIMIT_UPLOAD("0x0a00021", "文件大小超过限制，请重新上传"),
 
+    ENTERPRISE_EMPLOYEE_UPPER_ERROR("0x0a00022", "非20人以下的微型工业（商贸企业）人数不能少于20人"),
+
+    ENTERPRISE_INDUSTRY_ERROR("0x0a00023", "无效的复工类型"),
+
     ;
 
     private String code;

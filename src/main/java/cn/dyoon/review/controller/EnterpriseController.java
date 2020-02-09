@@ -1,6 +1,8 @@
 package cn.dyoon.review.controller;
 
 import cn.dyoon.review.common.enums.EnterpriseScaleEnum;
+import cn.dyoon.review.common.enums.IndustryTypeEnum;
+import cn.dyoon.review.common.enums.ResumptionTypeEnum;
 import cn.dyoon.review.common.exception.BaseExceptionEnum;
 import cn.dyoon.review.common.exception.BusinessException;
 import cn.dyoon.review.common.response.Result;
@@ -53,6 +55,17 @@ public class EnterpriseController {
                 && param.getEmployeeNum() > 20) {
             throw new BusinessException(BaseExceptionEnum.ENTERPRISE_EMPLOYEE_ERROR);
         }
+        if (!EnterpriseScaleEnum.ENTERPRISE_MICRO_SCALE.getCode().equals(param.getScaleType())
+                && param.getEmployeeNum() <= 20) {
+            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_EMPLOYEE_UPPER_ERROR);
+        }
+
+        if (!ResumptionTypeEnum.ENTERPRISE_STEADY_RESUMPTION.getCode().equals(param.getResumptionType())) {
+            if (!IndustryTypeEnum.isValidType(param.getIndustryType())) {
+                throw new BusinessException(BaseExceptionEnum.ENTERPRISE_INDUSTRY_ERROR);
+            }
+        }
+
         if (!PatternUtil.checkTelephone(param.getPhone()) && !PatternUtil.checkLandline(param.getPhone())) {
             throw new BusinessException(BaseExceptionEnum.TELEPHONE_LANDLINE_ERROR);
         }

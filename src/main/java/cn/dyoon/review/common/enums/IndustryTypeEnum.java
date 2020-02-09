@@ -39,10 +39,6 @@ public enum IndustryTypeEnum {
     }
 
     public static boolean isValidType(Integer code) {
-        if (ObjectUtil.isEmpty(code)) {
-            // 解决复工状态为稳步复工企业问题
-            return true;
-        }
         return Arrays.stream(IndustryTypeEnum.values()).anyMatch(it -> it.getCode().equals(code));
     }
 
