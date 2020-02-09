@@ -52,9 +52,10 @@ public class PolicyController {
      * @param files 附件
      * @return 政策信息
      */
-    @PostMapping("/create")
+    @PostMapping(value = "/create", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public Result<PolicyInfoVO> create(@RequestParam String title, @RequestParam String desc, @RequestParam String uploadUserName, @RequestParam List<MultipartFile> files) {
-        return new Result<>(policyService.create(title, desc, uploadUserName, files));
+        UserSession userSession = UserSessionHolder.userSessionThreadLocal.get();
+        return new Result<>(policyService.create(title, desc, userSession.getUsername(), files));
     }
 
     @PostMapping
