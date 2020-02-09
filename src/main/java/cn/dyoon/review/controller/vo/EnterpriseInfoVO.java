@@ -5,6 +5,8 @@ import cn.dyoon.review.domain.entity.ReworkDocumentDO;
 import lombok.Builder;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +29,7 @@ public class EnterpriseInfoVO {
     private String phone;
     private LocalDateTime applyTime;
     private LocalDateTime updateTime;
+    private LocalDate resumptionDate;
 
     private Review review;
     private List<ReworkDocument> files;
@@ -48,6 +51,7 @@ public class EnterpriseInfoVO {
         this.phone = enterpriseDO.getPhone();
         this.applyTime = enterpriseDO.getApplyTime();
         this.updateTime = enterpriseDO.getUpdateTime();
+        this.resumptionDate = enterpriseDO.getResumptionDate();
         this.review = Review.builder()
                 .reviewStatus(enterpriseDO.getReviewStatus())
                 .reviewUser(enterpriseDO.getReviewUser())

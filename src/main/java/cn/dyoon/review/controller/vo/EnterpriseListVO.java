@@ -3,6 +3,8 @@ package cn.dyoon.review.controller.vo;
 import cn.dyoon.review.domain.entity.EnterpriseDO;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -23,6 +25,7 @@ public class EnterpriseListVO {
     private String phone;
     private Integer reviewStatus;
     private LocalDateTime reviewTime;
+    private LocalDate resumptionDate;
 
     public EnterpriseListVO() {
     }
@@ -38,5 +41,6 @@ public class EnterpriseListVO {
         this.phone = enterpriseDO.getPhone();
         this.reviewStatus = enterpriseDO.getReviewStatus();
         this.reviewTime = enterpriseDO.getReviewTime();
+        this.resumptionDate = enterpriseDO.getResumptionDate();
     }
 }
