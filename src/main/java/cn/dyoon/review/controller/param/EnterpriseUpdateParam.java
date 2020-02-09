@@ -2,6 +2,7 @@ package cn.dyoon.review.controller.param;
 
 import cn.dyoon.review.common.enums.EnterpriseScaleEnum;
 import cn.dyoon.review.common.enums.EnterpriseTypeEnum;
+import cn.dyoon.review.common.enums.IndustryTypeEnum;
 import cn.dyoon.review.common.enums.ResumptionTypeEnum;
 import cn.dyoon.review.common.validator.EnumCheck;
 import lombok.Data;
@@ -26,8 +27,8 @@ public class EnterpriseUpdateParam {
     @NotNull(message = "复工类型不能为空")
     @EnumCheck(enumClass = ResumptionTypeEnum.class, enumMethod = "isValidType", message = "无效的复工类型")
     private Integer resumptionType;
-    @NotNull(message = "行业类型不能为空")
-    @EnumCheck(enumClass = ResumptionTypeEnum.class, enumMethod = "isValidType", message = "无效的行业类型")
+//    @NotNull(message = "行业类型不能为空")
+//    @EnumCheck(enumClass = IndustryTypeEnum.class, enumMethod = "isValidType", message = "无效的行业类型")
     private Integer industryType;
     @NotNull(message = "复工人数不能为空")
     private Integer employeeNum;

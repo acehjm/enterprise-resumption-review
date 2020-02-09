@@ -51,20 +51,8 @@ public class EnterpriseController {
 
     @PostMapping("/registered")
     public Result<Void> registered(@Validated @RequestBody EnterpriseRegisteredParam param) {
-        if (EnterpriseScaleEnum.ENTERPRISE_MICRO_SCALE.getCode().equals(param.getScaleType())
-                && param.getEmployeeNum() > 20) {
-            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_EMPLOYEE_ERROR);
-        }
-
-        if (!ResumptionTypeEnum.ENTERPRISE_STEADY_RESUMPTION.getCode().equals(param.getResumptionType())) {
-            if (!IndustryTypeEnum.isValidType(param.getIndustryType())) {
-                throw new BusinessException(BaseExceptionEnum.ENTERPRISE_INDUSTRY_ERROR);
-            }
-        }
-
-        if (!PatternUtil.checkTelephone(param.getPhone()) && !PatternUtil.checkLandline(param.getPhone())) {
-            throw new BusinessException(BaseExceptionEnum.TELEPHONE_LANDLINE_ERROR);
-        }
+        this.checkParams(param.getScaleType(), param.getEmployeeNum(), param.getResumptionType(),
+                param.getIndustryType(), param.getPhone());
         enterpriseService.registered(param);
         return new Result<>();
     }
@@ -92,6 +80,8 @@ public class EnterpriseController {
     @PreAuthorize("hasAuthority('ENTERPRISE_USER')")
     @PutMapping("/{enterpriseId}")
     public Result<Void> update(@PathVariable String enterpriseId, @Validated @RequestBody EnterpriseUpdateParam param) {
+        this.checkParams(param.getScaleType(), param.getEmployeeNum(), param.getResumptionType(),
+                param.getIndustryType(), param.getPhone());
         enterpriseService.update(enterpriseId, param);
         return new Result<>();
     }
@@ -160,4 +150,21 @@ public class EnterpriseController {
         return new Result<>();
     }
 
+    private void checkParams(Integer scaleType, Integer employeeNum, Integer resumptionType,
+                             Integer industryType, String phone) {
+        if (EnterpriseScaleEnum.ENTERPRISE_MICRO_SCALE.getCode().equals(scaleType)
+                && employeeNum > 20) {
+            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_EMPLOYEE_ERROR);
+        }
+
+        if (!ResumptionTypeEnum.ENTERPRISE_STEADY_RESUMPTION.getCode().equals(resumptionType)) {
+            if (!IndustryTypeEnum.isValidType(industryType)) {
+                throw new BusinessException(BaseExceptionEnum.ENTERPRISE_INDUSTRY_ERROR);
+            }
+        }
+
+        if (!PatternUtil.checkTelephone(phone) && !PatternUtil.checkLandline(phone)) {
+            throw new BusinessException(BaseExceptionEnum.TELEPHONE_LANDLINE_ERROR);
+        }
+    }
 }
