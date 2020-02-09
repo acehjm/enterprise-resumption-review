@@ -224,8 +224,6 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     public void reviewPass(UserSession userSession, EnterpriseReviewParam param) {
         EnterpriseDO enterprise = getIfCheckedNoPass(param.getEnterpriseId());
 
-        this.checkUserReview(userSession, enterprise);
-
         // 审核--受理人
         if (UserRoleEnum.ASSIGNEE_USER.getName().equals(userSession.getRole())) {
             if (!ReviewStatusEnum.ACCEPTED.getCode().equals(enterprise.getReviewStatus())) {
@@ -259,7 +257,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                 if (EnterpriseTypeEnum.INDUSTRIAL.getCode().equals(enterprise.getType())) {
                     throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_MATCH);
                 }
-                enterprise.setReviewStatus(ReviewStatusEnum.PASS.getCode());
+                enterprise.setReviewStatus(ReviewStatusEnum.PREVENTION_REVIEW.getCode());
             }
             // 经信局审核人
             if (UserTypeEnum.ZF_JINGXIN.getName().equals(userSession.getUserType())) {
@@ -269,6 +267,13 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
                 if (EnterpriseTypeEnum.BUSINESS.getCode().equals(enterprise.getType())) {
                     throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_MATCH);
+                }
+                enterprise.setReviewStatus(ReviewStatusEnum.PREVENTION_REVIEW.getCode());
+            }
+            // 防控小组审核人
+            if (UserTypeEnum.ZF_PREVENTION.getName().equals(userSession.getUserType())) {
+                if (!ReviewStatusEnum.PREVENTION_REVIEW.getCode().equals(enterprise.getReviewStatus())) {
+                    throw new BusinessException(BaseExceptionEnum.ENTERPRISE_WORKFLOW_NOT_ALLOW);
                 }
                 enterprise.setReviewStatus(ReviewStatusEnum.PASS.getCode());
             }
@@ -296,6 +301,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         if (!(ad && adu)) {
             throw new BusinessException(BaseExceptionEnum.ENTERPRISE_WORKFLOW_NOT_ALLOW);
         }
+
     }
 
     @Override
