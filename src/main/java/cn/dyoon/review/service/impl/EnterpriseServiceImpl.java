@@ -300,8 +300,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         if (null == enterprise) {
             throw new BusinessException(BaseExceptionEnum.ENTERPRISE_NOT_EXISTS);
         }
-        Integer[] invalid = {ReviewStatusEnum.NOT_STARTED.getCode(), ReviewStatusEnum.NOT_PASS.getCode(),
-                ReviewStatusEnum.PASS.getCode()};
+        Integer[] invalid = {ReviewStatusEnum.NOT_STARTED.getCode(), ReviewStatusEnum.NOT_PASS.getCode()};
         if (!Arrays.asList(invalid).contains(enterprise.getReviewStatus())) {
             throw new BusinessException(BaseExceptionEnum.ENTERPRISE_IN_PROCESSING);
         }
