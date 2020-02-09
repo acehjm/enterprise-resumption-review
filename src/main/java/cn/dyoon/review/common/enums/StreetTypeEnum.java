@@ -32,4 +32,8 @@ public enum StreetTypeEnum {
                 .findFirst()
                 .orElse("NOT_EXIST");
     }
+
+    public static boolean isValidType(Integer code) {
+        return Arrays.stream(StreetTypeEnum.values()).anyMatch(it -> it.getCode().equals(code));
     }
+}

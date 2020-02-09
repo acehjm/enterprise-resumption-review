@@ -4,6 +4,7 @@ import cn.dyoon.review.common.enums.EnterpriseScaleEnum;
 import cn.dyoon.review.common.enums.EnterpriseTypeEnum;
 import cn.dyoon.review.common.enums.IndustryTypeEnum;
 import cn.dyoon.review.common.enums.ResumptionTypeEnum;
+import cn.dyoon.review.common.enums.StreetTypeEnum;
 import cn.dyoon.review.common.validator.EnumCheck;
 import lombok.Data;
 
@@ -50,6 +51,7 @@ public class EnterpriseRegisteredParam {
 //    @Pattern(regexp = "^(1[3-9]([0-9]{9}))$", message = "联系电话格式不正确")
     private String phone;
     @NotNull(message = "所属街道不能为空")
+    @EnumCheck(enumClass = StreetTypeEnum.class, enumMethod = "isValidType", message = "无效的街道信息")
     private Integer street;
 
 }
