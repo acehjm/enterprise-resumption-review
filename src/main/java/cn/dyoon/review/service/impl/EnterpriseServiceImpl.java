@@ -308,6 +308,8 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                     dto.setIndustryType(IndustryTypeEnum.getDesc(it.getIndustryType()));
                     if (ObjectUtil.isNotEmpty(it.getReviewTime())) {
                         dto.setReviewTime(it.getReviewTime().format(DateTimeFormatter.ofPattern(STANDARD_DATETIME_FORMAT)));
+                    } else {
+                        dto.setReviewTime("");
                     }
                     dto.setEmployeeNum(it.getEmployeeNum());
                     return dto;

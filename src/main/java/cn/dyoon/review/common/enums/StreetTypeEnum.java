@@ -30,7 +30,7 @@ public enum StreetTypeEnum {
                 .filter(it -> it.getCode().equals(code))
                 .map(StreetTypeEnum::getDesc)
                 .findFirst()
-                .orElse("NOT_EXIST");
+                .orElse("");
     }
 
     public static boolean isValidType(Integer code) {

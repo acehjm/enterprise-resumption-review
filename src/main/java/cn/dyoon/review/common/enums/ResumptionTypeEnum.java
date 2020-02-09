@@ -30,7 +30,7 @@ public enum ResumptionTypeEnum {
                 .filter(it -> it.getCode().equals(code))
                 .map(EnterpriseTypeEnum::getDesc)
                 .findFirst()
-                .orElse("NOT_EXISTS");
+                .orElse("");
     }
 
     public static boolean isValidType(Integer code) {
