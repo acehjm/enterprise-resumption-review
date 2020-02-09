@@ -22,7 +22,7 @@ public class EnterpriseExcelDTO {
     private String resumptionType;
     @ExcelColumnDesc(column = "行业类别", order = 4)
     private String industryType;
-    @ExcelColumnDesc(column = "所在镇/街道/园区", order = 5)
+    @ExcelColumnDesc(column = "所在镇(街道)/园区", order = 5)
     private String street;
     @ExcelColumnDesc(column = "复工时间", order = 6)
     private String reviewTime;
