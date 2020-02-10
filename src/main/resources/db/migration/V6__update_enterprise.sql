@@ -1,0 +1,1 @@
+ALTER TABLE enterprise_resumption_review.enterprise_info ADD `employee_total_num` int(11) NULL DEFAULT NULL COMMENT '企业总人数';

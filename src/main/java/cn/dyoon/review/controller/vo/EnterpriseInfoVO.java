@@ -24,6 +24,7 @@ public class EnterpriseInfoVO {
     private Integer resumptionType;
     private Integer industryType;
     private Integer employeeNum;
+    private Integer employeeTotalNum;
     private Integer street;
     private String transactorName;
     private String phone;
@@ -46,6 +47,7 @@ public class EnterpriseInfoVO {
         this.resumptionType = enterpriseDO.getResumptionType();
         this.industryType = enterpriseDO.getIndustryType();
         this.employeeNum = enterpriseDO.getEmployeeNum();
+        this.employeeTotalNum = enterpriseDO.getEmployeeTotalNum();
         this.street = enterpriseDO.getStreet();
         this.transactorName = enterpriseDO.getTransactorName();
         this.phone = enterpriseDO.getPhone();

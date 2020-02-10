@@ -90,6 +90,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         enterprise.setResumptionType(param.getResumptionType());
         enterprise.setIndustryType(param.getIndustryType());
         enterprise.setEmployeeNum(param.getEmployeeNum());
+        enterprise.setEmployeeTotalNum(param.getEmployeeTotalNum());
         enterprise.setStreet(param.getStreet());
         enterprise.setUsername(param.getUsername());
         enterprise.setTransactorName(param.getTransactorName());
@@ -223,6 +224,17 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
+    public void cancelApply(String enterpriseId) {
+        EnterpriseDO enterprise = getIfCheckedNoPass(enterpriseId);
+        enterprise.setApplyTime(null);
+        enterprise.setReviewStatus(ReviewStatusEnum.NOT_STARTED.getCode());
+        enterprise.setReviewResult(null);
+        enterprise.setReviewUser(null);
+        enterpriseMapper.updateById(enterprise);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
     public void reviewPass(UserSession userSession, EnterpriseReviewParam param) {
         EnterpriseDO enterprise = getIfCheckedNoPass(param.getEnterpriseId());
 
@@ -334,6 +346,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                         dto.setResumptionDate("");
                     }
                     dto.setEmployeeNum(it.getEmployeeNum());
+                    dto.setEmployeeTotalNum(it.getEmployeeTotalNum());
                     return dto;
                 })
                 .collect(Collectors.toList());

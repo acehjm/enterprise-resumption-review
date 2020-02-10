@@ -34,6 +34,8 @@ public class EnterpriseRegisteredParam {
     private Integer industryType;
     @NotNull(message = "复工人数不能为空")
     private Integer employeeNum;
+    @NotNull(message = "企业总人数不能为空")
+    private Integer employeeTotalNum;
     @NotBlank(message = "企业名称不能为空")
     private String name;
     @NotBlank(message = "统一社会信用代码不能为空")

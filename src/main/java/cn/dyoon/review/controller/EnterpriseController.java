@@ -127,6 +127,13 @@ public class EnterpriseController {
         return new Result<>();
     }
 
+    @PreAuthorize("hasAuthority('ENTERPRISE_USER')")
+    @GetMapping("/{enterpriseId}/actions/cancel")
+    public Result<Void> cancelApply(@PathVariable String enterpriseId) {
+        enterpriseService.cancelApply(enterpriseId);
+        return new Result<>();
+    }
+
     @PreAuthorize("hasAnyAuthority('JINGXINJU_USER','SHANGWUJU_USER','STREET_USER','PREVENTION_USER')")
     @PostMapping("/actions/reviewPass")
     public Result<Void> reviewPass(@Validated @RequestBody EnterpriseReviewParam param) {

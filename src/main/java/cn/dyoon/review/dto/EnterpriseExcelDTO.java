@@ -30,5 +30,7 @@ public class EnterpriseExcelDTO {
     private String resumptionDate;
     @ExcelColumnDesc(column = "复工员工数", order = 8)
     private Integer employeeNum;
+    @ExcelColumnDesc(column = "企业总人数", order = 9)
+    private Integer employeeTotalNum;
 
 }

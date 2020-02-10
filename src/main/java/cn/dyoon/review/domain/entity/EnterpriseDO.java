@@ -55,6 +55,9 @@ public class EnterpriseDO {
     @TableField("employee_num")
     private Integer employeeNum;
 
+    @TableField("employee_total_num")
+    private Integer employeeTotalNum;
+
     @TableField("apply_time")
     private LocalDateTime applyTime;
 

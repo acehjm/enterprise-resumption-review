@@ -102,6 +102,12 @@ public interface EnterpriseService {
     void submitApply(String enterpriseId);
 
     /**
+     * 撤销申请
+     * @param enterpriseId
+     */
+    void cancelApply(String enterpriseId);
+
+    /**
      * 审核通过
      *
      * @param userSession
