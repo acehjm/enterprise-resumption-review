@@ -23,6 +23,6 @@ public class EnterpriseSearchParam {
     private Integer resumptionType;
     private Integer industryType;
     private Integer street;
-    private String reviewStatus;
+    private Integer reviewStatus;
     private String name;
 }

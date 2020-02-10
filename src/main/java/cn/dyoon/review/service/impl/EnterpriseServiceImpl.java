@@ -118,6 +118,27 @@ public class EnterpriseServiceImpl implements EnterpriseService {
             param.setStreet(user.getUserSubtype());
         }
 
+        // 审核--受理人
+        if (UserRoleEnum.ASSIGNEE_USER.getName().equals(userSession.getRole())) {
+            param.setReviewStatus(ReviewStatusEnum.ACCEPTED.getCode());
+        }
+        // 审核--审核人
+        if (UserRoleEnum.REVIEW_USER.getName().equals(userSession.getRole())) {
+            // 街道审核人
+            if (UserTypeEnum.ZF_STREET.getName().equals(userSession.getUserType())) {
+                param.setReviewStatus(ReviewStatusEnum.STREET_REVIEW.getCode());
+            }
+            // 商务局审核人/经信局审核人
+            if (UserTypeEnum.ZF_SHANGWU.getName().equals(userSession.getUserType())
+                    || UserTypeEnum.ZF_JINGXIN.getName().equals(userSession.getUserType())) {
+                param.setReviewStatus(ReviewStatusEnum.DEPARTMENT_REVIEW.getCode());
+            }
+            // 防控小组审核人
+            if (UserTypeEnum.ZF_PREVENTION.getName().equals(userSession.getUserType())) {
+                param.setReviewStatus(ReviewStatusEnum.PREVENTION_REVIEW.getCode());
+            }
+        }
+
         IPage<EnterpriseDO> page = enterpriseMapper.findPageByCondition(param);
         List<EnterpriseListVO> collect = page.getRecords().stream()
                 .map(EnterpriseListVO::new)
