@@ -88,6 +88,7 @@ public interface EnterpriseMapper extends BaseMapper<EnterpriseDO> {
         if (ObjectUtil.isNotEmpty(param.getName())) {
             wrapper.likeLeft(EnterpriseDO::getName, SQLUtil.mysqlEscape(param.getName()));
         }
+        wrapper.orderByAsc(EnterpriseDO::getApplyTime);
         return selectPage(new Page<>(param.getPageNo(), param.getPageSize()), wrapper);
     }
 
