@@ -54,6 +54,8 @@ public enum BaseExceptionEnum implements BaseError {
 
     ENTERPRISE_INDUSTRY_ERROR("0x0a00023", "无效的复工类型"),
 
+    ENTERPRISE_EMPLOYEE_NUM_GT_TOTAL_NUM("0x0a00024", "企业复工人数不能大于企业总人数")
+
     ;
 
     private String code;

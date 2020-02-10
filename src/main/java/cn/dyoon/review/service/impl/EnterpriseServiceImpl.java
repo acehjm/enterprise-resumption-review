@@ -157,6 +157,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         enterprise.setResumptionType(param.getResumptionType());
         enterprise.setIndustryType(param.getIndustryType());
         enterprise.setEmployeeNum(param.getEmployeeNum());
+        enterprise.setEmployeeTotalNum(param.getEmployeeTotalNum());
         enterprise.setStreet(param.getStreet());
         enterprise.setTransactorName(param.getTransactorName());
         enterprise.setPhone(param.getPhone());

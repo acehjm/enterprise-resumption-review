@@ -51,7 +51,7 @@ public class EnterpriseController {
 
     @PostMapping("/registered")
     public Result<Void> registered(@Validated @RequestBody EnterpriseRegisteredParam param) {
-        this.checkParams(param.getScaleType(), param.getEmployeeNum(), param.getResumptionType(),
+        this.checkParams(param.getScaleType(), param.getEmployeeNum(), param.getEmployeeTotalNum(), param.getResumptionType(),
                 param.getIndustryType(), param.getPhone());
         enterpriseService.registered(param);
         return new Result<>();
@@ -80,7 +80,7 @@ public class EnterpriseController {
     @PreAuthorize("hasAuthority('ENTERPRISE_USER')")
     @PutMapping("/{enterpriseId}")
     public Result<Void> update(@PathVariable String enterpriseId, @Validated @RequestBody EnterpriseUpdateParam param) {
-        this.checkParams(param.getScaleType(), param.getEmployeeNum(), param.getResumptionType(),
+        this.checkParams(param.getScaleType(), param.getEmployeeNum(), param.getEmployeeTotalNum(), param.getResumptionType(),
                 param.getIndustryType(), param.getPhone());
         enterpriseService.update(enterpriseId, param);
         return new Result<>();
@@ -158,10 +158,15 @@ public class EnterpriseController {
         return new Result<>();
     }
 
-    private void checkParams(Integer scaleType, Integer employeeNum, Integer resumptionType,
+    private void checkParams(Integer scaleType, Integer employeeNum, Integer employeeTotalNum, Integer resumptionType,
                              Integer industryType, String phone) {
+
+        if (employeeNum > employeeTotalNum) {
+            throw new BusinessException(BaseExceptionEnum.ENTERPRISE_EMPLOYEE_NUM_GT_TOTAL_NUM);
+        }
+
         if (EnterpriseScaleEnum.ENTERPRISE_MICRO_SCALE.getCode().equals(scaleType)
-                && employeeNum > 20) {
+                && (employeeNum > 20 || employeeTotalNum > 20) ) {
             throw new BusinessException(BaseExceptionEnum.ENTERPRISE_EMPLOYEE_ERROR);
         }
 
