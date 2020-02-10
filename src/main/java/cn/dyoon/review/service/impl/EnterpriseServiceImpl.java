@@ -118,7 +118,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
             param.setStreet(user.getUserSubtype());
         }
 
-        // 审核--受理人
+        /*// 审核--受理人
         if (UserRoleEnum.ASSIGNEE_USER.getName().equals(userSession.getRole())) {
             param.setReviewStatus(ReviewStatusEnum.ACCEPTED.getCode());
         }
@@ -137,7 +137,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
             if (UserTypeEnum.ZF_PREVENTION.getName().equals(userSession.getUserType())) {
                 param.setReviewStatus(ReviewStatusEnum.PREVENTION_REVIEW.getCode());
             }
-        }
+        }*/
 
         IPage<EnterpriseDO> page = enterpriseMapper.findPageByCondition(param);
         List<EnterpriseListVO> collect = page.getRecords().stream()
