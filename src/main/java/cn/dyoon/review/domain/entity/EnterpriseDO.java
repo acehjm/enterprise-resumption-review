@@ -78,4 +78,7 @@ public class EnterpriseDO {
 
     @TableField("resumption_date")
     private LocalDate resumptionDate;
+
+    @TableField("address")
+    private String address;
 }

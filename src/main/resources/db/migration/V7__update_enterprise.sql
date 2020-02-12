@@ -1,0 +1,1 @@
+ALTER TABLE enterprise_resumption_review.enterprise_info ADD `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '企业详细地址';

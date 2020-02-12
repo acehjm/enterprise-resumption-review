@@ -31,6 +31,7 @@ public class EnterpriseInfoVO {
     private LocalDateTime applyTime;
     private LocalDateTime updateTime;
     private LocalDate resumptionDate;
+    private String address;
 
     private Review review;
     private List<ReworkDocument> files;
@@ -54,6 +55,7 @@ public class EnterpriseInfoVO {
         this.applyTime = enterpriseDO.getApplyTime();
         this.updateTime = enterpriseDO.getUpdateTime();
         this.resumptionDate = enterpriseDO.getResumptionDate();
+        this.address = enterpriseDO.getAddress();
         this.review = Review.builder()
                 .reviewStatus(enterpriseDO.getReviewStatus())
                 .reviewUser(enterpriseDO.getReviewUser())

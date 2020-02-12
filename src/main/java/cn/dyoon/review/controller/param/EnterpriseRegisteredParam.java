@@ -57,5 +57,7 @@ public class EnterpriseRegisteredParam {
     private Integer street;
     @NotNull(message = "企业复工日期不能为空")
     private LocalDate resumptionDate;
+    @NotNull(message = "企业详细地址不能为空")
+    private String address;
 
 }

@@ -97,6 +97,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         enterprise.setPhone(param.getPhone());
         enterprise.setReviewStatus(ReviewStatusEnum.NOT_STARTED.getCode());
         enterprise.setResumptionDate(param.getResumptionDate());
+        enterprise.setAddress(param.getAddress());
         enterpriseMapper.insert(enterprise);
 
         userService.addEnterpriseUser(param.getUsername(), param.getPassword());
@@ -183,6 +184,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         enterprise.setTransactorName(param.getTransactorName());
         enterprise.setPhone(param.getPhone());
         enterprise.setResumptionDate(param.getResumptionDate());
+        enterprise.setAddress(param.getAddress());
         enterpriseMapper.updateById(enterprise);
     }
 

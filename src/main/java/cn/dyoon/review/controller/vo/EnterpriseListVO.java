@@ -26,6 +26,7 @@ public class EnterpriseListVO {
     private Integer reviewStatus;
     private LocalDateTime reviewTime;
     private LocalDate resumptionDate;
+    private String address;
 
     public EnterpriseListVO() {
     }
@@ -42,5 +43,6 @@ public class EnterpriseListVO {
         this.reviewStatus = enterpriseDO.getReviewStatus();
         this.reviewTime = enterpriseDO.getReviewTime();
         this.resumptionDate = enterpriseDO.getResumptionDate();
+        this.address = enterpriseDO.getAddress();
     }
 }
