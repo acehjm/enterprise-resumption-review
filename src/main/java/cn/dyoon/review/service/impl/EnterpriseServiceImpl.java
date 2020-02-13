@@ -48,6 +48,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static cn.dyoon.review.common.constant.ResumptionReviewConstant.STANDARD_DATETIME_FORMAT;
@@ -355,10 +356,13 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 //        }
 
         List<EnterpriseDO> list = enterpriseMapper.findExportListByCondition(param);
+        AtomicInteger count = new AtomicInteger(1);
         List<EnterpriseExcelDTO> collect = list.stream()
                 .map(it -> {
                     EnterpriseExcelDTO dto = new EnterpriseExcelDTO();
+                    dto.setOrder(count.getAndIncrement());
                     dto.setName(it.getName());
+                    dto.setUnifiedSocialCreditCode(it.getUnifiedSocialCreditCode());
                     dto.setStreet(StreetTypeEnum.getDesc(it.getStreet()));
                     dto.setType(EnterpriseTypeEnum.getDesc(it.getType()));
                     dto.setScaleType(EnterpriseScaleEnum.getDesc(it.getScaleType()));
@@ -371,6 +375,10 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                     }
                     dto.setEmployeeNum(it.getEmployeeNum());
                     dto.setEmployeeTotalNum(it.getEmployeeTotalNum());
+                    dto.setTransactorName(it.getTransactorName());
+                    dto.setPhone(it.getPhone());
+                    dto.setAddress(it.getAddress());
+                    dto.setReviewStatus(ReviewStatusEnum.getDesc(it.getReviewStatus()));
                     return dto;
                 })
                 .collect(Collectors.toList());
