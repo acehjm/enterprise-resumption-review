@@ -53,7 +53,7 @@ public class PatternUtil {
      * @return
      */
     public static boolean checkFileType(String fileName) {
-        String[] types = {"doc", "docx", "xls", "xlsx", "pdf"};
+        String[] types = {"doc", "docx", "xls", "xlsx", "pdf", "jpg", "png", "bmp", "svg", "tiff"};
         String[] split = StringUtils.split(fileName, ".");
         return Arrays.asList(types).contains(Objects.requireNonNull(split)[split.length - 1]);
     }
