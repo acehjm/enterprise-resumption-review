@@ -11,16 +11,13 @@ import cn.dyoon.review.common.enums.UserRoleEnum;
 import cn.dyoon.review.common.enums.UserTypeEnum;
 import cn.dyoon.review.common.exception.BaseExceptionEnum;
 import cn.dyoon.review.common.exception.BusinessException;
-import cn.dyoon.review.controller.param.EnterpriseExportParam;
-import cn.dyoon.review.controller.param.EnterpriseRegisteredParam;
-import cn.dyoon.review.controller.param.EnterpriseReviewParam;
-import cn.dyoon.review.controller.param.EnterpriseSearchParam;
-import cn.dyoon.review.controller.param.EnterpriseUpdateParam;
+import cn.dyoon.review.controller.param.*;
 import cn.dyoon.review.controller.vo.EnterpriseInfoVO;
 import cn.dyoon.review.controller.vo.EnterpriseListVO;
 import cn.dyoon.review.controller.vo.PageVO;
 import cn.dyoon.review.domain.EnterpriseMapper;
 import cn.dyoon.review.domain.ReworkDocumentMapper;
+import cn.dyoon.review.domain.UserMapper;
 import cn.dyoon.review.domain.entity.EnterpriseDO;
 import cn.dyoon.review.domain.entity.ReworkDocumentDO;
 import cn.dyoon.review.domain.entity.UserDO;
@@ -70,11 +67,14 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     private ReworkDocumentMapper reworkDocumentMapper;
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserMapper userMapper;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void registered(EnterpriseRegisteredParam param) {
-        boolean usernameExists = enterpriseMapper.exists(param.getUsername());
+//        boolean usernameExists = enterpriseMapper.exists(param.getUsername());
+        boolean usernameExists = userMapper.exists(param.getUsername());
         if (usernameExists) {
             throw new BusinessException(BaseExceptionEnum.USER_NAME_HAS_EXISTS);
         }
@@ -506,4 +506,23 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         reworkDocumentMapper.insert(reworkDocument);
     }
 
+    @Override
+    public List<EnterpriseListVO> findAll(UserSession userSession, EnterpriseSelectListParam param) {
+        if (UserTypeEnum.ZF_JINGXIN.getName().equals(userSession.getUserType())) {
+            param.setType(EnterpriseTypeEnum.INDUSTRIAL.getCode());
+        }
+        // 仅加载商贸业企业
+        if (UserTypeEnum.ZF_SHANGWU.getName().equals(userSession.getUserType())) {
+            param.setType(EnterpriseTypeEnum.BUSINESS.getCode());
+        }
+        // 仅加载所在街道的企业
+        if (UserTypeEnum.ZF_STREET.getName().equals(userSession.getUserType())) {
+            UserDO user = userService.findByUsername(userSession.getUsername());
+            param.setStreet(user.getUserSubtype());
+        }
+        List<EnterpriseDO> enterpriseDOS = enterpriseMapper.findAllByCondition(param);
+        return enterpriseDOS.stream()
+                .map(EnterpriseListVO::new)
+                .collect(Collectors.toList());
+    }
 }

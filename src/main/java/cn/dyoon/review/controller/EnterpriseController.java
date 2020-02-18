@@ -6,11 +6,7 @@ import cn.dyoon.review.common.enums.ResumptionTypeEnum;
 import cn.dyoon.review.common.exception.BaseExceptionEnum;
 import cn.dyoon.review.common.exception.BusinessException;
 import cn.dyoon.review.common.response.Result;
-import cn.dyoon.review.controller.param.EnterpriseExportParam;
-import cn.dyoon.review.controller.param.EnterpriseRegisteredParam;
-import cn.dyoon.review.controller.param.EnterpriseReviewParam;
-import cn.dyoon.review.controller.param.EnterpriseSearchParam;
-import cn.dyoon.review.controller.param.EnterpriseUpdateParam;
+import cn.dyoon.review.controller.param.*;
 import cn.dyoon.review.controller.vo.EnterpriseInfoVO;
 import cn.dyoon.review.controller.vo.EnterpriseListVO;
 import cn.dyoon.review.controller.vo.PageVO;
@@ -62,6 +58,13 @@ public class EnterpriseController {
     public Result<PageVO<EnterpriseListVO>> getPage(@Validated @RequestBody EnterpriseSearchParam param) {
         UserSession userSession = UserSessionHolder.userSessionThreadLocal.get();
         return new Result<>(enterpriseService.getPage(userSession, param));
+    }
+
+    @PreAuthorize("!hasAuthority('ENTERPRISE_USER')")
+    @GetMapping("/findAll")
+    public Result<List<EnterpriseListVO>> findAll(@Validated @RequestBody EnterpriseSelectListParam param) {
+        UserSession userSession = UserSessionHolder.userSessionThreadLocal.get();
+        return new Result<>(enterpriseService.findAll(userSession, param));
     }
 
     @PreAuthorize("!hasAuthority('ENTERPRISE_USER')")

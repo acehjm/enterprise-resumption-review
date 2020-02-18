@@ -1,10 +1,6 @@
 package cn.dyoon.review.service;
 
-import cn.dyoon.review.controller.param.EnterpriseExportParam;
-import cn.dyoon.review.controller.param.EnterpriseRegisteredParam;
-import cn.dyoon.review.controller.param.EnterpriseReviewParam;
-import cn.dyoon.review.controller.param.EnterpriseSearchParam;
-import cn.dyoon.review.controller.param.EnterpriseUpdateParam;
+import cn.dyoon.review.controller.param.*;
 import cn.dyoon.review.controller.vo.EnterpriseInfoVO;
 import cn.dyoon.review.controller.vo.EnterpriseListVO;
 import cn.dyoon.review.controller.vo.PageVO;
@@ -132,4 +128,11 @@ public interface EnterpriseService {
      */
     void export(UserSession userSession, EnterpriseExportParam param, HttpServletResponse response);
 
+    /**
+     * 获取企业列表（不分页）
+     * @param userSession
+     * @param param
+     * @return
+     */
+    List<EnterpriseListVO> findAll(UserSession userSession, EnterpriseSelectListParam param);
 }

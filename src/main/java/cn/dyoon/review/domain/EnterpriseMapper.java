@@ -2,6 +2,7 @@ package cn.dyoon.review.domain;
 
 import cn.dyoon.review.controller.param.EnterpriseExportParam;
 import cn.dyoon.review.controller.param.EnterpriseSearchParam;
+import cn.dyoon.review.controller.param.EnterpriseSelectListParam;
 import cn.dyoon.review.domain.entity.EnterpriseDO;
 import cn.dyoon.review.util.ObjectUtil;
 import cn.dyoon.review.util.SQLUtil;
@@ -52,7 +53,7 @@ public interface EnterpriseMapper extends BaseMapper<EnterpriseDO> {
             wrapper.eq(EnterpriseDO::getScaleType, param.getScaleType());
         }
         if (ObjectUtil.isNotEmpty(param.getName())) {
-            wrapper.likeLeft(EnterpriseDO::getName, SQLUtil.mysqlEscape(param.getName()));
+            wrapper.like(EnterpriseDO::getName, SQLUtil.mysqlEscape(param.getName()));
         }
         wrapper.isNotNull(EnterpriseDO::getId);
         return selectList(wrapper);
@@ -86,7 +87,7 @@ public interface EnterpriseMapper extends BaseMapper<EnterpriseDO> {
             wrapper.eq(EnterpriseDO::getReviewStatus, param.getReviewStatus());
         }
         if (ObjectUtil.isNotEmpty(param.getName())) {
-            wrapper.likeLeft(EnterpriseDO::getName, SQLUtil.mysqlEscape(param.getName()));
+            wrapper.like(EnterpriseDO::getName, SQLUtil.mysqlEscape(param.getName()));
         }
         wrapper.orderByAsc(EnterpriseDO::getApplyTime);
         return selectPage(new Page<>(param.getPageNo(), param.getPageSize()), wrapper);
@@ -120,6 +121,39 @@ public interface EnterpriseMapper extends BaseMapper<EnterpriseDO> {
      */
     default boolean existsByUniqueCode(String uniqueCode) {
         return selectCount(Wrappers.<EnterpriseDO>lambdaQuery().eq(EnterpriseDO::getUnifiedSocialCreditCode, uniqueCode)) > 0;
+    }
+
+    /**
+     * 获取列表（不分页）
+     * @param param
+     * @return
+     */
+    default List<EnterpriseDO> findAllByCondition(EnterpriseSelectListParam param) {
+        LambdaQueryWrapper<EnterpriseDO> wrapper = Wrappers.lambdaQuery();
+        wrapper.isNotNull(EnterpriseDO::getId);
+        if (ObjectUtil.isNotEmpty(param.getStreet())) {
+            wrapper.eq(EnterpriseDO::getStreet, param.getStreet());
+        }
+        if (ObjectUtil.isNotEmpty(param.getResumptionType())) {
+            wrapper.eq(EnterpriseDO::getResumptionType, param.getResumptionType());
+        }
+        if (ObjectUtil.isNotEmpty(param.getIndustryType())) {
+            wrapper.eq(EnterpriseDO::getIndustryType, param.getIndustryType());
+        }
+        if (ObjectUtil.isNotEmpty(param.getScaleType())) {
+            wrapper.eq(EnterpriseDO::getScaleType, param.getScaleType());
+        }
+        if (ObjectUtil.isNotEmpty(param.getType())) {
+            wrapper.eq(EnterpriseDO::getType, param.getType());
+        }
+        if (ObjectUtil.isNotEmpty(param.getReviewStatus())) {
+            wrapper.eq(EnterpriseDO::getReviewStatus, param.getReviewStatus());
+        }
+        if (ObjectUtil.isNotEmpty(param.getName())) {
+            wrapper.like(EnterpriseDO::getName, SQLUtil.mysqlEscape(param.getName()));
+        }
+        wrapper.orderByAsc(EnterpriseDO::getApplyTime);
+        return selectList(wrapper);
     }
 
 }
